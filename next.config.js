@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const path = require("path");
 
-module.exports = nextConfig
+const nextConfig = {
+  images: {
+    domains: ["via.placeholder.com", "lipsum.app"],
+  },
+  sassOptions: {
+    includePaths: [path.join(__dirname, "assets/scss")],
+  },
+};
+
+module.exports = nextConfig;
