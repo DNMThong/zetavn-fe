@@ -1,11 +1,11 @@
-import { IActivityStatus, IActivityStatusDetail } from "@/data/activity";
+import { ActivityStatus, ActivityStatusDetail } from "@/types/post.type";
 import React from "react";
 
 const ActiveSuggestionItem = ({
   name,
   desc,
   pic,
-}: IActivityStatus | IActivityStatusDetail) => {
+}: ActivityStatus | ActivityStatusDetail) => {
   return (
     <div className="eac-item">
       <div className="template-wrapper">

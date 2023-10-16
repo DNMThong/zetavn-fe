@@ -38,6 +38,7 @@ const Input = ({
       {label && <label htmlFor={id || name}>{label}</label>}
       <div className={`control has-validation ${error ? "has-error" : ""}`}>
         <input
+          autoComplete="off"
           type={type}
           className="input"
           id={id || name}

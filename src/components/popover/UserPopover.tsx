@@ -1,3 +1,4 @@
+import User, { UserShort } from "@/types/user.type";
 import React from "react";
 import { createPortal } from "react-dom";
 import {
@@ -10,9 +11,10 @@ import {
 
 interface UserPopoverProps {
   stylesArrow?: {};
+  userInfo: UserShort;
 }
 
-const UserPopover = ({ stylesArrow }: UserPopoverProps) => {
+const UserPopover = ({ stylesArrow, userInfo }: UserPopoverProps) => {
   return (
     <div className="webui-popover pop webui-no-padding bottom in">
       <div className="webui-arrow" style={stylesArrow}></div>
@@ -26,30 +28,36 @@ const UserPopover = ({ stylesArrow }: UserPopoverProps) => {
 
             <div className="profile-popover-wrapper">
               <div className="popover-cover">
-                <img src="https://via.placeholder.com/1600x900" />
+                <img
+                  src={
+                    userInfo?.poster || "https://via.placeholder.com/1600x900"
+                  }
+                />
                 <div className="popover-avatar">
                   <img
                     className="avatar"
-                    src="https://via.placeholder.com/300x300"
+                    src={
+                      userInfo?.avatar || "https://via.placeholder.com/300x300"
+                    }
                   />
                 </div>
               </div>
 
               <div className="popover-meta">
                 <span className="user-meta">
-                  <span className="username">Thong</span>
+                  <span className="username">{userInfo?.display}</span>
                 </span>
-                <span className="job-title">{123}</span>
-                <div className="common-friends">
+                {/* <span className="job-title">{123}</span> */}
+                {/* <div className="common-friends">
                   <FiUser />
                   <div className="text">{1} mutual friend(s)</div>
-                </div>
-                <div className="user-location">
+                </div> */}
+                {/* <div className="user-location">
                   <FiMapPin />
                   <div className="text">
                     From <a href="#">{123}</a>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="popover-actions">

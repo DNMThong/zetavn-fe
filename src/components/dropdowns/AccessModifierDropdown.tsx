@@ -1,5 +1,8 @@
 "use client";
 import useClickOutside from "@/hooks/useClickOutside";
+import { setAccessModifier } from "@/redux/features/post/post.slice";
+import { useAppDispatch } from "@/redux/hooks";
+import { PostAccessModifier } from "@/types/contants.type";
 import { useState, useEffect } from "react";
 import {
   FiGlobe,
@@ -14,6 +17,7 @@ interface IAccessModifier {
   iconSelector: any;
   title: string;
   desc: string;
+  value: PostAccessModifier;
 }
 
 const dataDropdown: IAccessModifier[] = [
@@ -22,33 +26,35 @@ const dataDropdown: IAccessModifier[] = [
     iconSelector: FiGlobe,
     title: "Public",
     desc: "Anyone can see this publication.",
+    value: PostAccessModifier.PUBLIC,
   },
   {
     icon: FiUsers,
     iconSelector: FiSmile,
     title: "Friends",
     desc: "Only friends can see this publication.",
+    value: PostAccessModifier.FRIENDS,
   },
   {
     icon: FiUser,
     iconSelector: FiMeh,
     title: "Private",
     desc: "Only you can see this publication.",
+    value: PostAccessModifier.PRIVATE,
   },
 ];
 
 const AccessModifierDropdown = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
-  const [selectorDropdown, setSelectorDropdown] = useState<IAccessModifier>({
-    icon: FiUsers,
-    iconSelector: FiSmile,
-    title: "Friends",
-    desc: "Only friends can see this publication.",
-  });
+  const [selectorDropdown, setSelectorDropdown] = useState<IAccessModifier>(
+    dataDropdown[1]
+  );
+  const dispatch = useAppDispatch();
 
   const handleSelectorDropdown = (item: IAccessModifier) => {
     setSelectorDropdown(item);
     setShow(false);
+    dispatch(setAccessModifier(item.value));
   };
 
   return (

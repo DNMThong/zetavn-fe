@@ -1,13 +1,15 @@
+import Post from "@/types/post.type";
 import React from "react";
 import { createPortal } from "react-dom";
-import { FiX } from "react-icons/fi";
+import { FiSmile, FiX } from "react-icons/fi";
 
 interface ShareModalProps {
   open?: boolean;
   handleClose: () => void;
+  data: Post;
 }
 
-const ShareModal = ({ open, handleClose }: ShareModalProps) => {
+const ShareModal = ({ open, handleClose, data }: ShareModalProps) => {
   const component = (
     <div
       id="share-modal"
@@ -22,11 +24,11 @@ const ShareModal = ({ open, handleClose }: ShareModalProps) => {
               <div>
                 <div className="button">
                   <i className="mdi mdi-format-float-left"></i>
-                  <span>Share in your feed</span>
+                  <span>Chia sẻ về tường của bạn</span>
                   <i data-feather="chevron-down"></i>
                 </div>
               </div>
-              <div className="dropdown-menu" role="menu">
+              <div className="dropdown-menu is-active" role="menu">
                 <div className="dropdown-content">
                   <div className="dropdown-item" data-target-channel="feed">
                     <div className="media">
@@ -91,7 +93,7 @@ const ShareModal = ({ open, handleClose }: ShareModalProps) => {
               </span>
             </div>
           </div>
-          <div className="share-inputs">
+          {/* <div className="share-inputs">
             <div className="field is-autocomplete">
               <div
                 id="share-to-friend"
@@ -133,7 +135,7 @@ const ShareModal = ({ open, handleClose }: ShareModalProps) => {
                           data-demo-src="assets/img/avatars/hanzo.svg"
                           alt=""
                         />
-                        <span>Css Ninja</span>{" "}
+                        <span>Css Ninja</span>
                         <i data-feather="chevron-down"></i>
                       </div>
                     </div>
@@ -208,15 +210,15 @@ const ShareModal = ({ open, handleClose }: ShareModalProps) => {
                 <div className="input-heading">To :</div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="card-body">
             <div className="control">
               <textarea
                 className="textarea comment-textarea"
                 rows={1}
-                placeholder="Say something about this ..."></textarea>
+                placeholder="Nói gì đó ở đây ..."></textarea>
               <button className="emoji-button">
-                <i data-feather="smile"></i>
+                <FiSmile />
               </button>
             </div>
             <div className="shared-publication">

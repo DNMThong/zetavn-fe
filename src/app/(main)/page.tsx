@@ -5,14 +5,16 @@ import {
   RecommendedPagesWidget,
   SuggestedFriendsWidget,
 } from "@/components/widgets";
+import { useGetPostsByUserIdQuery } from "@/redux/features/post/post.service";
 import { useGetUsersQuery } from "@/redux/features/user/user.service";
+import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
 export default function Home() {
-  const { data } = useGetUsersQuery();
-
-  console.log("Data", data);
+  const user = useAppSelector((selector) => selector.auth.user);
+  const { data } = useGetPostsByUserIdQuery(user?.id || "");
+  console.log(data);
 
   return (
     <>
@@ -32,9 +34,10 @@ export default function Home() {
             {/* <!-- Middle column --> */}
             <div className="column is-6">
               <ComposeCard />
-              <CardPost />
-              <CardPost />
-              <CardPost />
+              {data?.data &&
+                data.data.length > 0 &&
+                data.data.map((post) => <CardPost key={post.id} data={post} />)}
+
               {/* <!-- Publishing Area -->
         <!-- /partials/pages/feed/compose-card.html -->
         {{> compose-card}}

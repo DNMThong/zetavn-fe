@@ -33,15 +33,20 @@ import { EmojiClickData } from "emoji-picker-react/dist/types/exposedTypes";
 import CardComposeUploadPhoto from "./CardComposeUploadPhoto";
 import FeedUpload from "./PhotosUploadDisplay";
 import PhotosUploadDisplay from "./PhotosUploadDisplay";
+import { useCreatePostMutation } from "@/redux/features/post/post.service";
+import { PostAccessModifier } from "@/types/contants.type";
+import { toast } from "react-toastify";
 
 const ComposeCard = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
-  const { activityMood, textContent, photos } = useAppSelector(
+  const { activityMood, textContent, photos, accessModifier } = useAppSelector(
     (selector) => selector.post
   );
+  const user = useAppSelector((selector) => selector.auth.user);
   const dispatch = useAppDispatch();
   const [showMoreOption, setShowMoreOption] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [createPost, { isLoading }] = useCreatePostMutation();
 
   const handleOpenComposeCard = () => {
     setShow(true);
@@ -78,11 +83,29 @@ const ComposeCard = () => {
     setShow(true);
   };
 
-  const handleUploadPost = () => {
+  const handleUploadPost = async () => {
     console.log({
-      activityMood,
-      textContent,
+      userId: user?.id as string,
+      content: textContent,
+      accessModifier,
+      activityId: activityMood?.detail.id,
     });
+    try {
+      const response = await createPost({
+        userId: user?.id as string,
+        content: textContent,
+        accessModifier,
+        activityId: activityMood?.detail.id,
+      }).unwrap();
+      if (response?.code === 201) {
+        console.log(response);
+        toast.success("Tạo bài viết thành công");
+      } else {
+        toast.warn("Đã có lỗi xảy ra vui lòng thử lại");
+      }
+    } catch (err) {
+      toast.error("Tạo bài viết thất bại vui lòng thử lại");
+    }
   };
 
   useEffect(() => {
@@ -465,7 +488,7 @@ const ComposeCard = () => {
               onClick={handleUploadPost}
               className={`button is-solid accent-button is-fullwidth ${
                 textContent ? "" : "is-disabled"
-              }`}>
+              } ${isLoading ? "is-loading" : ""}`}>
               Publish
             </button>
           </div>

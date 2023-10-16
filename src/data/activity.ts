@@ -1,22 +1,6 @@
-export interface IActivityStatusDetail {
-  name: string;
-  pic: string;
-  desc?: string;
-}
+import { ActivityStatus } from "@/types/post.type";
 
-export interface IActivityStatus {
-  title: string;
-  name: string;
-  desc: string;
-  pic: string;
-  details: IActivityStatusDetail[];
-}
-
-export type ActivityMood = Omit<IActivityStatus, "details"> & {
-  detail: IActivityStatusDetail;
-};
-
-export const activityStatus: IActivityStatus[] = [
+export const activityStatus: ActivityStatus[] = [
   {
     title: "Feels",
     name: "status",

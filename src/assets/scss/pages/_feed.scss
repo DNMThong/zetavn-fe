@@ -1653,27 +1653,29 @@ Main feed styles
     }
   }
 
-  .mood-display {
-    padding: 0 4px;
-    cursor: pointer;
+  
+}
 
-    img {
-      position: relative;
-      top: 2px;
-      height: 14px !important;
-      width: 14px !important;
-    }
+.mood-display {
+  padding: 0 4px;
+  cursor: pointer;
 
-    span {
-      font-size: 0.8rem;
-      color: $accent;
-      margin: 0 4px;
-    }
+  img {
+    position: relative;
+    top: 2px;
+    height: 14px !important;
+    width: 14px !important;
+  }
 
-    .action-text {
-      color: $dark-text;
-      margin-right: 4px;
-    }
+  span {
+    font-size: 0.8rem;
+    color: $accent;
+    margin: 0 4px;
+  }
+
+  .action-text {
+    color: $dark-text;
+    margin-right: 4px;
   }
 }
 

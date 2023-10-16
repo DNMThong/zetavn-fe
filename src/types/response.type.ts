@@ -1,3 +1,4 @@
+import Post, { ActivityStatus } from "./post.type";
 import User from "./user.type";
 
 export interface ApiResponse<T> {
@@ -19,3 +20,8 @@ export interface AuthErrorResponse {
   error: string;
   message: string;
 }
+
+export type CreatePostResponse = ApiResponse<Post>;
+export type ActivitiesResponse = ApiResponse<ActivityStatus[]>;
+
+export type PostsUsersResponse = ApiResponse<Post[]>;

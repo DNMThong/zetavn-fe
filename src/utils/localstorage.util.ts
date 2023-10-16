@@ -1,3 +1,12 @@
+export function isValidJSON(str: string): boolean {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 // Thêm một đối tượng vào LocalStorage với một key cụ thể
 export function setLocalStorageItem<T>(key: string, data: T): void {
   if (typeof window !== "undefined") {
@@ -16,12 +25,11 @@ export function setLocalStorageArrayItem<T>(key: string, item: T): void {
   setLocalStorageItem(key, existingItems);
 }
 
-// Lấy dữ liệu từ LocalStorage bằng key
 export function getLocalStorageItem<T>(key: string): T | null {
   if (typeof window !== "undefined") {
     try {
       const item = localStorage.getItem(key);
-      if (item) {
+      if (item && isValidJSON(item)) {
         return JSON.parse(item) as T;
       }
     } catch (error) {

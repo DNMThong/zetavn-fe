@@ -1,4 +1,4 @@
-import { apiNoAuthorization } from "@/redux/api/api.service";
+import { apiAuthorization, apiNoAuthorization } from "@/redux/api/api.service";
 import { API_URL } from "@/types/contants.type";
 import { LoginRequest, RegisterRequest } from "@/types/request.type";
 import { LoginResponse, RegisterResponse } from "@/types/response.type";
@@ -19,11 +19,18 @@ export const authApi = apiNoAuthorization.injectEndpoints({
         method: "POST",
         body,
       }),
-    }),
-    relogin: builder.mutation<unknown, void>({
-      query: () => "",
+    })
+  }),
+});
+
+export const authApiAuthorization = apiAuthorization.injectEndpoints({
+  endpoints: (builder) => ({
+    relogin: builder.query<LoginResponse, void>({
+      query: () => API_URL.RELOGIN,
     }),
   }),
 });
 
 export const { useLoginMutation, useRegisterMutation } = authApi;
+
+export const { useLazyReloginQuery } = authApiAuthorization;

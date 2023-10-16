@@ -1,10 +1,15 @@
 import { UserPopover } from "@/components/popover";
+import User, { UserShort } from "@/types/user.type";
 import Image from "next/image";
 import Link from "next/link";
-import { relative } from "path";
 import React, { useState } from "react";
 
-const UserMeta = () => {
+interface UserMetaProps {
+  userInfo: UserShort;
+  createdAt: string;
+}
+
+const UserMeta = ({ userInfo, createdAt }: UserMetaProps) => {
   const [hover, setHover] = useState(false);
 
   return (
@@ -15,18 +20,18 @@ const UserMeta = () => {
         onMouseLeave={() => setHover(false)}>
         <Image
           className="img"
-          src="https://via.placeholder.com/300x300"
+          src={userInfo.avatar || "https://via.placeholder.com/300x300"}
           alt="avatar"
           width={42}
           height={42}
         />
-        {hover && <UserPopover></UserPopover>}
+        {hover && <UserPopover userInfo={userInfo}></UserPopover>}
       </div>
       <div className="user-info">
         <Link className="link" href="#">
-          Dan Walker
+          {userInfo.display}
         </Link>
-        <span className="time">July 26 2018, 01:03pm</span>
+        <span className="time">{createdAt}</span>
       </div>
     </div>
   );

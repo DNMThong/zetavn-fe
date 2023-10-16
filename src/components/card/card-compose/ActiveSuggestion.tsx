@@ -2,26 +2,37 @@
 import React, { useEffect, useState } from "react";
 import ActiveSuggestionItem from "./ActiveSuggestionItem";
 import Autosuggest from "react-autosuggest";
-import { IActivityStatus, activityStatus } from "@/data/activity";
 import { FiSearch, FiX } from "react-icons/fi";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   closeActivities,
+  setActivities,
   setActivityStatusSelected,
 } from "@/redux/features/post/post.slice";
+import { ActivityStatus } from "@/types/post.type";
+import { useGetActivitiesQuery } from "@/redux/features/post/post.service";
 
 const ActiveSuggestion = () => {
+  const activities = useAppSelector((selector) => selector.post.activities);
+  const { data, isLoading, isSuccess } = useGetActivitiesQuery();
   const [value, setValue] = useState<string>("");
-  const [suggestions, setSuggestions] =
-    useState<IActivityStatus[]>(activityStatus);
+  const [suggestions, setSuggestions] = useState<ActivityStatus[]>(activities);
   const dispatch = useAppDispatch();
 
-  const getSuggestions = (value: string): IActivityStatus[] => {
+  const getSuggestions = (value: string): ActivityStatus[] => {
     const inputValue: string = value.trim().toLowerCase();
-    return activityStatus.filter((item) => item.name.includes(inputValue));
+    return activities.filter((item) =>
+      item.name.toLowerCase().includes(inputValue)
+    );
   };
 
-  const getSuggestionValue = (suggestion: IActivityStatus) => suggestion.name;
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setActivities(data.data));
+    }
+  }, [data, isSuccess,dispatch]);
+
+  const getSuggestionValue = (suggestion: ActivityStatus) => suggestion.name;
 
   const onChange = (_: any, { newValue }: { newValue: string }) => {
     setValue(newValue);
@@ -37,7 +48,7 @@ const ActiveSuggestion = () => {
 
   const handleSuggestionSelected = (
     _: any,
-    { suggestion }: { suggestion: IActivityStatus }
+    { suggestion }: { suggestion: ActivityStatus }
   ) => {
     dispatch(setActivityStatusSelected(suggestion));
   };

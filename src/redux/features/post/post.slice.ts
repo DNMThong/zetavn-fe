@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ActivityMood, IActivityStatus } from "@/data/activity";
-import { PhotoUpload } from "@/types/post.type";
+import { ActivityMood, ActivityStatus, PhotoUpload } from "@/types/post.type";
+import { PostAccessModifier } from "@/types/contants.type";
 
 interface PostState {
-  activityStatusSelected: IActivityStatus | undefined;
+  activityStatusSelected: ActivityStatus | undefined;
   openActivities: boolean;
   activityMood: ActivityMood | undefined;
   textContent: string;
   photos: PhotoUpload[];
+  accessModifier: PostAccessModifier;
+  activities: ActivityStatus[];
 }
 
 const initialState: PostState = {
@@ -16,6 +18,8 @@ const initialState: PostState = {
   activityMood: undefined,
   textContent: "",
   photos: [],
+  accessModifier: PostAccessModifier.FRIENDS,
+  activities: [],
 };
 
 const slice = createSlice({
@@ -29,7 +33,7 @@ const slice = createSlice({
       state.textContent = "";
       state.photos = [];
     },
-    setActivityStatusSelected(state, action: PayloadAction<IActivityStatus>) {
+    setActivityStatusSelected(state, action: PayloadAction<ActivityStatus>) {
       state.activityStatusSelected = action.payload;
     },
     clearActivityStatusSelected(state) {
@@ -69,6 +73,12 @@ const slice = createSlice({
     removePhoto(state, action: PayloadAction<number>) {
       state.photos.splice(action.payload, 1);
     },
+    setAccessModifier(state, action: PayloadAction<PostAccessModifier>) {
+      state.accessModifier = action.payload;
+    },
+    setActivities(state, action: PayloadAction<ActivityStatus[]>) {
+      state.activities = action.payload;
+    },
   },
 });
 const PostReducer = slice.reducer;
@@ -87,5 +97,7 @@ export const {
   setPhotos,
   addPhotos,
   removePhoto,
+  setAccessModifier,
+  setActivities,
 } = slice.actions;
 export default PostReducer;

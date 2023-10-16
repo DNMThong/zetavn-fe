@@ -1,14 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import type {
-  BaseQueryApi,
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query";
 import { API_URL } from "@/types/contants.type";
-import { AuthErrorResponse } from "@/types/response.type";
-import { isAuthErrorResponse } from "@/utils/check-type.util";
 import { logout, setAccessToken } from "../features/auth/auth.slice";
 
 export const baseQuery = fetchBaseQuery({
@@ -31,11 +28,9 @@ export const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions): Promise<any> => {
   let result: any = await baseQuery(args, api, extraOptions);
-  // console.log("RS: ", result);
-
   if (result?.error && result.error?.status === 401 && result.error?.data) {
     const { data } = result.error;
-    if (data?.error === "TokenExpired") {
+    if (data?.error === "TokenInvalid") {
       const query = fetchBaseQuery({
         baseUrl: API_URL.DOMAIN,
         credentials: "include",
@@ -45,7 +40,6 @@ export const baseQueryWithReauth: BaseQueryFn<
         api,
         extraOptions
       );
-      console.log(refreshResult);
       const { data: dataRefresh } = refreshResult;
       if (dataRefresh && dataRefresh?.data?.access_token) {
         api.dispatch(setAccessToken(dataRefresh?.data?.access_token));
@@ -53,26 +47,10 @@ export const baseQueryWithReauth: BaseQueryFn<
       } else {
         api.dispatch(logout());
       }
+    } else {
+      api.dispatch(logout());
     }
   }
-
-  // if (result?.error?.originalStatus === 403) {
-  //   console.log("sending refresh token");
-  // const refreshResult = await baseQuery(
-  //   "/api/v0/auth/token/refresh",
-  //   api,
-  //   extraOptions
-  // );
-  //   console.log(refreshResult);
-  //   if (refreshResult?.data) {
-  //     //   const user = api.getState().auth.user;
-  //     //   api.dispatch(setCredentials({ ...refreshResult.data, user }));
-  //     //   result = await baseQuery(args, api, extraOptions);
-  //   } else {
-  //     //   api.dispatch(logOut());
-  //   }
-  // }
-
   return result;
 };
 

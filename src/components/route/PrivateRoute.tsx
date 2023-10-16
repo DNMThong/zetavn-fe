@@ -1,12 +1,12 @@
 "use client";
 import { PageLoader } from "@/components/pageloader";
-import { setUser } from "@/redux/features/auth/auth.slice";
+import { useLazyReloginQuery } from "@/redux/features/auth/auth.service";
+import { setAccessToken, setUser } from "@/redux/features/auth/auth.slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import User from "@/types/user.type";
-import { getSessionData } from "@/utils/session.util";
+import { getSessionData, setSessionData } from "@/utils/session.util";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -15,8 +15,27 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  
+  const [relogin] = useLazyReloginQuery();
+
   useEffect(() => {
+    const handleRelogin = async () => {
+      try {
+        const response = await relogin().unwrap();
+        if (response.code === 200) {
+          const {
+            data: { userInfo },
+          } = response;
+          dispatch(setUser(userInfo));
+          setSessionData("userLogin", userInfo);
+          setLoading(false);
+        } else {
+          router.push("/login");
+        }
+      } catch (err) {
+        router.push("/login");
+      }
+    };
+
     const userLogin = getSessionData<User>("userLogin");
     if (userLogin) {
       if (!user) {
@@ -24,9 +43,9 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
       }
       setLoading(false);
     } else {
-      router.push("/login");
+      handleRelogin();
     }
-  }, [user, router, dispatch]);
+  }, [user, router, dispatch, relogin]);
 
   useEffect(() => {
     if (isDarkTheme) {

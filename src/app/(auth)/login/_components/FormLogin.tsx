@@ -39,7 +39,6 @@ const FormLogin = () => {
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  console.log("loading", isLoading);
 
   const onSubmit: SubmitHandler<IFormValues> = async (data) => {
     const { email, password } = data;

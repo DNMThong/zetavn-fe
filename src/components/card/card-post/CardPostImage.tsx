@@ -5,9 +5,10 @@ import CardPostAction from "./CardPostAction";
 
 interface CardPostImageProps {
   postAction?: React.ReactNode;
+  images: string[];
 }
 
-const CardPostImage = ({ postAction }: CardPostImageProps) => {
+const CardPostImage = ({ postAction, images }: CardPostImageProps) => {
   return (
     <div className="post-image">
       <Fancybox
@@ -16,120 +17,35 @@ const CardPostImage = ({ postAction }: CardPostImageProps) => {
             infinite: false,
           },
         }}>
-        <div className="masonry-grid-image mgi-el-5-more">
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x900"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <Image
-                src="https://via.placeholder.com/1600x900"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x900"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <Image
-                src="https://via.placeholder.com/1600x1200"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x1200"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <Image
-                src="https://via.placeholder.com/1600x1200"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x1200"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <Image
-                src="https://via.placeholder.com/1600x1200"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x1200"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <div className="mgi-el-item-overlay">+10</div>
-              <Image
-                src="https://via.placeholder.com/1600x1200"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x1200"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <Image
-                src="https://via.placeholder.com/1600x1200"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
-          <div className="mgi-el-item">
-            <a
-              data-fancybox="post3"
-              data-lightbox-type="comments"
-              data-thumb="assets/img/demo/unsplash/4.jpg"
-              href="https://via.placeholder.com/1600x1200"
-              data-demo-href="assets/img/demo/unsplash/4.jpg">
-              <Image
-                src="https://via.placeholder.com/1600x1200"
-                data-demo-src="assets/img/demo/unsplash/4.jpg"
-                alt=""
-                width={1600}
-                height={900}
-              />
-            </a>
-          </div>
+        <div
+          className={`masonry-grid-image  ${
+            images.length < 6 ? "mgi-el-" + images.length : "mgi-el-5-more"
+          }`}>
+          {images.map((image, index) => {
+            if (index === 4) {
+              return (
+                <div className="mgi-el-item" key={index}>
+                  <a
+                    data-fancybox="post"
+                    data-lightbox-type="image"
+                    href={image}>
+                    <div className="mgi-el-item-overlay">
+                      +{images.length - 5}
+                    </div>
+                    <Image src={image} alt="image" width={1600} height={900} />
+                  </a>
+                </div>
+              );
+            }
+
+            return (
+              <div className="mgi-el-item" key={index}>
+                <a data-fancybox="post" data-lightbox-type="image" href={image}>
+                  <Image src={image} alt="image" width={1600} height={900} />
+                </a>
+              </div>
+            );
+          })}
         </div>
       </Fancybox>
       {postAction !== undefined && postAction}

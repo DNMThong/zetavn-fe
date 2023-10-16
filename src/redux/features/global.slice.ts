@@ -13,7 +13,7 @@ interface GlobalState {
 const initialState: GlobalState = {
   openExplorerMenu: false,
   openChat: false,
-  isDarkTheme: getLocalStorageItem("theme") === "dark",
+  isDarkTheme: getLocalStorageItem<string>("theme") === "dark" || true,
 };
 
 const slice = createSlice({

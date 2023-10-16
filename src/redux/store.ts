@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import GlobalState from "./features/global.slice";
 import AuthReducer from "./features/auth/auth.slice";
 import PostReducer from "./features/post/post.slice";
-import { authApi } from "./features/auth/auth.service";
+import { authApi, authApiAuthorization } from "./features/auth/auth.service";
 import { apiAuthorization, apiNoAuthorization } from "./api/api.service";
 import { userApi } from "./features/user/user.service";
 
@@ -13,6 +13,7 @@ const store = configureStore({
     post: PostReducer,
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [authApiAuthorization.reducerPath]: authApiAuthorization.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

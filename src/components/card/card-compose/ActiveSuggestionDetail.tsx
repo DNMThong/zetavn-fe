@@ -1,4 +1,3 @@
-import { IActivityStatus, IActivityStatusDetail } from "@/data/activity";
 import React, { useEffect, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import { FiX } from "react-icons/fi";
@@ -9,9 +8,10 @@ import {
   closeActivities,
   setActivityMood,
 } from "@/redux/features/post/post.slice";
+import { ActivityStatus, ActivityStatusDetail } from "@/types/post.type";
 
 interface ActiveSuggestionDetailProps {
-  activityStatusSelected: IActivityStatus;
+  activityStatusSelected: ActivityStatus;
 }
 
 const ActiveSuggestionDetail = ({
@@ -25,19 +25,19 @@ const ActiveSuggestionDetail = ({
     details: activityStatusDetails,
   } = activityStatusSelected;
   const [value, setValue] = useState<string>("");
-  const [suggestions, setSuggestions] = useState<IActivityStatusDetail[]>(
+  const [suggestions, setSuggestions] = useState<ActivityStatusDetail[]>(
     activityStatusDetails
   );
   const dispatch = useAppDispatch();
 
-  const getSuggestions = (value: string): IActivityStatusDetail[] => {
+  const getSuggestions = (value: string): ActivityStatusDetail[] => {
     const inputValue: string = value.trim().toLowerCase();
     return activityStatusDetails.filter((item) =>
-      item.name.includes(inputValue)
+      item.name.toLowerCase().includes(inputValue)
     );
   };
 
-  const getSuggestionValue = (suggestion: IActivityStatusDetail) =>
+  const getSuggestionValue = (suggestion: ActivityStatusDetail) =>
     suggestion.name;
 
   const onChange = (_: any, { newValue }: { newValue: string }) => {
@@ -54,7 +54,7 @@ const ActiveSuggestionDetail = ({
 
   const handleSuggestionSelected = (
     _: any,
-    { suggestion }: { suggestion: IActivityStatusDetail }
+    { suggestion }: { suggestion: ActivityStatusDetail }
   ) => {
     dispatch(
       setActivityMood({

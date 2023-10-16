@@ -1,11 +1,11 @@
 "use client";
 
-import { ActivityMood } from "@/data/activity";
 import {
   clearActivityMood,
   setOpenActivities,
 } from "@/redux/features/post/post.slice";
 import { useAppDispatch } from "@/redux/hooks";
+import { ActivityMood } from "@/types/post.type";
 import React from "react";
 
 const MoodDisplay = ({ activityMood }: { activityMood: ActivityMood }) => {
