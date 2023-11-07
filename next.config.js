@@ -2,13 +2,19 @@
 const path = require("path");
 
 const nextConfig = {
-  images: {
-    domains: ["via.placeholder.com", "lipsum.app", "images.unsplash.com"],
-  },
-  sassOptions: {
-    includePaths: [path.join(__dirname, "assets/scss")],
-  },
-  reactStrictMode: false,
+   images: {
+      domains: [
+         "via.placeholder.com",
+         "lipsum.app",
+         "images.unsplash.com",
+         "res.cloudinary.com",
+         "plus.unsplash.com",
+      ],
+   },
+   sassOptions: {
+      includePaths: [path.join(__dirname, "assets/scss")],
+   },
+   reactStrictMode: false,
 };
 
 module.exports = nextConfig;
