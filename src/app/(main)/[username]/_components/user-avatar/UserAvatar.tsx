@@ -30,6 +30,7 @@ import {
 } from "@/redux/features/user/user.service";
 import { FollowPriority, FriendshipStatus } from "@/types/contants.type";
 import { toast } from "react-toastify";
+import { UserProfile } from "@/types/user.type";
 
 interface UserAvatarProps {
    avatarPath?: string;
@@ -37,7 +38,9 @@ interface UserAvatarProps {
 }
 
 const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
-   const source = useAppSelector((selector) => selector.auth.user);
+   const source: UserProfile | null = useAppSelector(
+      (selector) => selector.auth.user
+   );
    const { username } = useParams();
    const [sendFriendRequest] = useSendFriendRequestMutation();
    const [acceptFriendRequest] = useAcceptFriendRequestMutation();
@@ -147,8 +150,10 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             setFriendshipStatus(data?.status);
          }
       }
-      fetchFriendshipStatus();
-   }, [getFriendshipStatus, friendshipStatus, source, username]);
+      if (!isSelfProfile) {
+         fetchFriendshipStatus();
+      }
+   }, [getFriendshipStatus, friendshipStatus, source, username, isSelfProfile]);
 
    useEffect(() => {
       async function fetchFollowStatus() {
@@ -160,8 +165,10 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             setFollowStatus(data?.priority);
          }
       }
-      fetchFollowStatus();
-   }, [getFollowStatus, followStatus, source, username]);
+      if (!isSelfProfile) {
+         fetchFollowStatus();
+      }
+   }, [getFollowStatus, followStatus, source, username, isSelfProfile]);
 
    return (
       <div className="avatar">
@@ -381,6 +388,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             <ChangeCoverImageModal
                show={editCoverModal}
                handleCloseModal={handleCloseEditCoverModal}
+               type="avatar"
             />
          )}
 

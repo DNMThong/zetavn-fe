@@ -6,11 +6,13 @@ import UploadCropCoverModal from "./UploadCropCoverModal";
 interface ChangeCoverImageModalProps {
    show: boolean;
    handleCloseModal: () => void;
+   type: string;
 }
 
 const ChangeCoverImageModal = ({
    show,
    handleCloseModal,
+   type,
 }: ChangeCoverImageModalProps) => {
    const [uploadCropCoverModal, setUploadCropCoverModal] = useState(false);
    const handleCloseUploadCropCoverModal = () => {
@@ -28,6 +30,7 @@ const ChangeCoverImageModal = ({
             <UploadCropCoverModal
                show={uploadCropCoverModal}
                handleCloseModal={handleCloseUploadCropCoverModal}
+               type={type}
             />
          )}
          <div className="modal-background"></div>

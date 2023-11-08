@@ -168,10 +168,6 @@ const GeneralSetting = () => {
 
    useEffect(() => {
       if (user) {
-         console.log(
-            "🚀 ~ file: GeneralSetting.tsx:169 ~ useEffect ~ user:",
-            user
-         );
          const date = new Date(
             user.information?.birthday.split("/").reverse().join("-") // Chuyển định dạng thành "yyyy-MM-dd"
          );

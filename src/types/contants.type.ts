@@ -14,6 +14,7 @@ export enum API_URL {
    USERS = "/api/v0/users",
    FRIENDS = "/api/v0/friendship",
    FOLLOWS = "/api/v0/follows",
+   UPLOAD = "/api/v0/upload",
 }
 
 export enum PostAccessModifier {

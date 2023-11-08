@@ -58,3 +58,13 @@ export interface FollowRequest {
    followingId: string;
    priority: FollowPriority;
 }
+
+export interface UpdateUserImageRequest {
+   userId: string;
+   urlBase64: string;
+   type: string;
+}
+
+export interface UploadImageRequest {
+   images: string[];
+}

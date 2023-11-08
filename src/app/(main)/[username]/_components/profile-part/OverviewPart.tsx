@@ -1,7 +1,8 @@
 import { useLazyGetUserQuery } from "@/redux/features/user/user.service";
 import { useAppSelector } from "@/redux/hooks";
+import { SettingsTab } from "@/types/contants.type";
 import { UserProfile } from "@/types/user.type";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 
@@ -11,6 +12,7 @@ interface OverviewPartProps {
 
 const OverviewPart = ({ isActive }: OverviewPartProps) => {
    const user = useAppSelector((selector) => selector.auth.user);
+   const router = useRouter();
    const { username } = useParams();
    const [getUserInfo] = useLazyGetUserQuery();
    const [userProfile, setUserProfile] = useState<UserProfile>();
@@ -38,11 +40,23 @@ const OverviewPart = ({ isActive }: OverviewPartProps) => {
                            Làm việc tại{" "}
                            <a>{userProfile?.information?.worksAt}</a>
                         </span>
-                        <a className="action-link">
+                        <a
+                           onClick={() =>
+                              router.push(
+                                 `/settings/tab=${SettingsTab.GENERAL}`
+                              )
+                           }
+                           className="action-link"
+                        >
                            Chỉnh sửa thông tin giới thiệu
                         </a>
                      </div>
-                     <div className="go-button">
+                     <div
+                        className="go-button"
+                        onClick={() =>
+                           router.push(`/settings/tab=${SettingsTab.GENERAL}`)
+                        }
+                     >
                         <FiArrowRight></FiArrowRight>
                      </div>
                   </div>
@@ -55,11 +69,23 @@ const OverviewPart = ({ isActive }: OverviewPartProps) => {
                            Đã học tại{" "}
                            <a>{userProfile?.information?.studiedAt}</a>
                         </span>
-                        <a className="action-link">
+                        <a
+                           className="action-link"
+                           onClick={() =>
+                              router.push(
+                                 `/settings/tab=${SettingsTab.GENERAL}`
+                              )
+                           }
+                        >
                            Thay đổi thông tin trường học
                         </a>
                      </div>
-                     <div className="go-button">
+                     <div
+                        className="go-button"
+                        onClick={() =>
+                           router.push(`/settings/tab=${SettingsTab.GENERAL}`)
+                        }
+                     >
                         <FiArrowRight></FiArrowRight>
                      </div>
                   </div>
@@ -72,9 +98,23 @@ const OverviewPart = ({ isActive }: OverviewPartProps) => {
                            Đang sống tại{" "}
                            <a>{userProfile?.information?.livesAt}</a>
                         </span>
-                        <a className="action-link">Thay đổi nơi sống</a>
+                        <a
+                           className="action-link"
+                           onClick={() =>
+                              router.push(
+                                 `/settings/tab=${SettingsTab.GENERAL}`
+                              )
+                           }
+                        >
+                           Thay đổi nơi sống
+                        </a>
                      </div>
-                     <div className="go-button">
+                     <div
+                        className="go-button"
+                        onClick={() =>
+                           router.push(`/settings/tab=${SettingsTab.GENERAL}`)
+                        }
+                     >
                         <FiArrowRight></FiArrowRight>
                      </div>
                   </div>

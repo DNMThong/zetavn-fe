@@ -37,6 +37,14 @@ export interface FollowResponse {
    priority: FollowPriority;
 }
 
+export interface FileUpload {
+   id: string;
+   url: string;
+   type: string;
+   width: number;
+   height: number;
+}
+
 export type CreatePostResponse = ApiResponse<Post>;
 export type ActivitiesResponse = ApiResponse<ActivityStatus[]>;
 
@@ -45,3 +53,5 @@ export type PostsUsersResponse = ApiResponse<Post[]>;
 export type UserResponse = ApiResponse<UserProfile>;
 
 export type FriendshipResponse = ApiResponse<Friendship>;
+
+export type FileUploadResponse = ApiResponse<FileUpload>;

@@ -1,5 +1,11 @@
-import { useAppSelector } from "@/redux/hooks";
+import { setUser } from "@/redux/features/auth/auth.slice";
+import {
+   useUpdateUserImageMutation,
+   useUploadImageMutation,
+} from "@/redux/features/user/user.service";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fileImageToUrl } from "@/utils/file.util";
+import { setSessionData } from "@/utils/session.util";
 import React, { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import Cropper from "react-easy-crop";
@@ -8,15 +14,21 @@ import { FiX } from "react-icons/fi";
 interface UploadCropCoverModalProps {
    show: boolean;
    handleCloseModal: () => void;
+   type: string;
 }
 const UploadCropCoverModal = ({
    show,
    handleCloseModal,
+   type,
 }: UploadCropCoverModalProps) => {
    const source = useAppSelector((selector) => selector.auth.user);
+   const dispatch = useAppDispatch();
    const [fileSelected, setFileSelected] = useState<File>();
-   const [previewImage, setPreviewImage] = useState<string>();
+   const [previewImage, setPreviewImage] = useState<string | undefined>();
    const [isFilePicked, setIsFilePicked] = useState<boolean>(false);
+   const [updateUserImage] = useUpdateUserImageMutation();
+   const [uploadImage] = useUploadImageMutation();
+
    const handleUploadFile = async (e: any) => {
       const file: File | null = e.target.files[0]; // Lấy tệp hình ảnh từ trường input
       try {
@@ -39,10 +51,34 @@ const UploadCropCoverModal = ({
       }
    };
 
-   const handleSubmitImage = (e: any) => {
+   const handleSubmitImage = async (e: any) => {
       e.preventDefault();
       if (fileSelected && isFilePicked) {
-         console.log(fileSelected);
+         const { code, data } = await uploadImage({
+            images: [previewImage as string],
+         }).unwrap();
+         console.log(
+            "🚀 ~ file: UploadCropCoverModal.tsx:59 ~ handleSubmitImage ~ previewImage:",
+            previewImage
+         );
+         if (code === 201) {
+            const { url } = data;
+            const response = await updateUserImage({
+               userId: source?.id as string,
+               urlBase64: url,
+               type,
+            }).unwrap();
+            console.log(
+               "🚀 ~ file: UploadCropCoverModal.tsx:64 ~ handleSubmitImage ~ response:",
+               response
+            );
+            const { code: updateImageCode, data: newUserProfile }: any =
+               response;
+            if (updateImageCode === 200) {
+               setSessionData("userLogin", newUserProfile);
+               dispatch(setUser(newUserProfile));
+            }
+         }
       }
    };
 

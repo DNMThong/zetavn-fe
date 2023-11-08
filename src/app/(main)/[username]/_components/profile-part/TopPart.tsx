@@ -85,6 +85,7 @@ const TopPart = () => {
                      <ChangeCoverImageModal
                         show={editCoverModal}
                         handleCloseModal={handleCloseEditCoverModal}
+                        type="poster"
                      />
                   )}
                   {isSelfProfile && (

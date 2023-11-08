@@ -1,5 +1,6 @@
 import { apiAuthorization, apiNoAuthorization } from "@/redux/api/api.service";
 import { API_URL } from "@/types/contants.type";
+import { PhotoUpload } from "@/types/post.type";
 import {
    FollowRequest,
    FriendListRequest,
@@ -7,8 +8,11 @@ import {
    LoginRequest,
    RegisterRequest,
    UpdateInfoRequest,
+   UpdateUserImageRequest,
+   UploadImageRequest,
 } from "@/types/request.type";
 import {
+   FileUploadResponse,
    FollowResponse,
    FriendshipResponse,
    LoginResponse,
@@ -125,6 +129,25 @@ export const userApi = apiAuthorization.injectEndpoints({
             },
          }),
       }),
+
+      updateUserImage: builder.mutation<UserProfile, UpdateUserImageRequest>({
+         query: ({ userId, urlBase64, type }) => ({
+            url: `${API_URL.USERS}/${userId}/${type}`,
+            method: "PUT",
+            body: {
+               images: [urlBase64],
+            },
+         }),
+      }),
+      uploadImage: builder.mutation<FileUploadResponse, UploadImageRequest>({
+         query: ({ images }) => ({
+            url: `${API_URL.UPLOAD}/images`,
+            method: "POST",
+            body: {
+               images: [...images],
+            },
+         }),
+      }),
    }),
 });
 
@@ -140,4 +163,6 @@ export const {
    useLazyGetFollowStatusQuery,
    useUnFollowMutation,
    useFollowMutation,
+   useUpdateUserImageMutation,
+   useUploadImageMutation,
 } = userApi;

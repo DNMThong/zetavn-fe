@@ -22,6 +22,7 @@ enum ActiveFilter {
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
    const user = useAppSelector((selector) => selector.auth.user);
+   console.log("🚀 ~ file: page.tsx:25 ~ ProfilePage ~ user:", user);
    const isSelfProfile =
       user &&
       (user.id === params.username || user.username === params.username);
