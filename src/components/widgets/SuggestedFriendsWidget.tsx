@@ -11,7 +11,7 @@ const SuggestedFriendsWidget = () => {
   return (
     <div className="card">
       <div className="card-heading is-bordered">
-        <h4>Suggested Friends</h4>
+        <h4>Gợi ý kết bạn</h4>
         <div className="dropdown is-spaced is-right dropdown-trigger">
           <div>
             <div className="button">

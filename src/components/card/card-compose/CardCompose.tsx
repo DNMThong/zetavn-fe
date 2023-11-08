@@ -33,20 +33,47 @@ import { EmojiClickData } from "emoji-picker-react/dist/types/exposedTypes";
 import CardComposeUploadPhoto from "./CardComposeUploadPhoto";
 import FeedUpload from "./PhotosUploadDisplay";
 import PhotosUploadDisplay from "./PhotosUploadDisplay";
-import { useCreatePostMutation } from "@/redux/features/post/post.service";
-import { PostAccessModifier } from "@/types/contants.type";
+import {
+  useCreatePostMutation,
+  useLazyGetPostsNewsFeedQuery,
+} from "@/redux/features/post/post.service";
+import { ImageDefault, PostAccessModifier } from "@/types/contants.type";
 import { toast } from "react-toastify";
+import {
+  useUploadFileMutation,
+  useUploadImageBase64Mutation,
+  useUploadVideoBase64Mutation,
+} from "@/redux/features/upload/upload.service";
+import { Media, PostNewsfeed } from "@/types/post.type";
+import { PhotosUploadPlaceload } from "@/components/placeloads";
+import { addNewsfeedHead, setNewsfeed } from "@/redux/features/auth/auth.slice";
+import CardComposeUploadVideo from "./CardComposeUploadVideo";
+import ReactPlayer from "react-player";
+import VideoUploadDisplay from "./VideoUploadDisplay";
+import VideoUploadPlaceload from "@/components/placeloads/VideoUploadPlaceload";
 
 const ComposeCard = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
-  const { activityMood, textContent, photos, accessModifier } = useAppSelector(
-    (selector) => selector.post
-  );
+  const {
+    activityMood,
+    textContent,
+    photos,
+    accessModifier,
+    photosLoading,
+    video,
+    videoLoading,
+  } = useAppSelector((selector) => selector.post);
   const user = useAppSelector((selector) => selector.auth.user);
   const dispatch = useAppDispatch();
   const [showMoreOption, setShowMoreOption] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [createPost, { isLoading }] = useCreatePostMutation();
+  const [createPost, { isLoading: isLoadingCreatePost }] =
+    useCreatePostMutation();
+  const [uploadImageBase64, { isLoading: isLoadingUploadPhoto }] =
+    useUploadImageBase64Mutation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchPostsNewsFeed] = useLazyGetPostsNewsFeedQuery();
+  const [uploadVideBase64] = useUploadVideoBase64Mutation();
 
   const handleOpenComposeCard = () => {
     setShow(true);
@@ -84,28 +111,60 @@ const ComposeCard = () => {
   };
 
   const handleUploadPost = async () => {
-    console.log({
-      userId: user?.id as string,
-      content: textContent,
-      accessModifier,
-      activityId: activityMood?.detail.id,
-    });
+    setIsLoading(true);
     try {
+      let medias: Media[] = [];
+      if (photos.length > 0) {
+        const responseImage = await uploadImageBase64(photos).unwrap();
+        console.log(responseImage);
+        if (responseImage.code === 201) {
+          medias = responseImage.data.map((photo) => ({
+            mediaPath: photo.url,
+            mediaType: photo.type,
+          }));
+        } else {
+          toast.warn("Đã có lỗi xảy ra vui lòng thử lại");
+        }
+      }else if (video) {
+        const responseVideo = await uploadVideBase64([video]).unwrap();
+        if (responseVideo.code === 201) {
+          medias = [
+            {
+              mediaPath: responseVideo.data[0].url,
+              mediaType: responseVideo.data[0].type,
+            },
+          ];
+          console.log(responseVideo);
+        }
+      }
+
       const response = await createPost({
         userId: user?.id as string,
         content: textContent,
         accessModifier,
         activityId: activityMood?.detail.id,
+        medias,
       }).unwrap();
       if (response?.code === 201) {
         console.log(response);
+        handleCloseComposeCard();
         toast.success("Tạo bài viết thành công");
+        const responseNewsFeed = await fetchPostsNewsFeed({
+          userId: user?.id || "",
+          pageNumber: 0,
+          pageSize: 5,
+        }).unwrap();
+        if (responseNewsFeed.code === 200) {
+          const { data } = responseNewsFeed;
+          dispatch(setNewsfeed(data.data));
+        }
       } else {
         toast.warn("Đã có lỗi xảy ra vui lòng thử lại");
       }
     } catch (err) {
       toast.error("Tạo bài viết thất bại vui lòng thử lại");
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -137,7 +196,7 @@ const ComposeCard = () => {
                 <span className="icon is-small">
                   <FiEdit3 />
                 </span>
-                <span>Publish</span>
+                <span>Bài đăng</span>
               </a>
             </li>
             <li>
@@ -171,10 +230,12 @@ const ComposeCard = () => {
           <div className="compose">
             <div className="compose-form">
               <Image
-                src="https://via.placeholder.com/300x300"
+                style={{ objectFit: "cover" }}
+                src={user?.avatar || ImageDefault.AVATAR}
                 alt=""
-                width={300}
-                height={300}
+                sizes="100vw"
+                width={0}
+                height={0}
               />
               <div
                 className="control"
@@ -183,13 +244,28 @@ const ComposeCard = () => {
                 <CardComposeTextarea />
               </div>
             </div>
+
+            {activityMood && <MoodDisplay activityMood={activityMood} />}
+
             {/* Dislay photo upload */}
             <div id="feed-upload" className="feed-upload">
               {photos.length > 0 && <PhotosUploadDisplay photos={photos} />}
-            </div>
-
-            <div id="options-summary" className="options-summary">
-              {activityMood && <MoodDisplay activityMood={activityMood} />}
+              {photos.length <= 0 && photosLoading > 0 && (
+                <div className="upload-wrap">
+                  <PhotosUploadPlaceload amount={photosLoading} />
+                </div>
+              )}
+              {/* Display video upload */}
+              {video && (
+                <div className="upload-wrap">
+                  <VideoUploadDisplay video={video} />
+                </div>
+              )}
+              {!video && videoLoading && (
+                <div className="upload-wrap">
+                  <VideoUploadPlaceload />
+                </div>
+              )}
             </div>
 
             <div
@@ -361,7 +437,7 @@ const ComposeCard = () => {
               <div className="column is-6 is-narrower">
                 <CardComposeUploadPhoto
                   className="is-centered"
-                  title="Photo/Video"
+                  title="Ảnh"
                   onClick={handleShowPhoto}
                 />
               </div>
@@ -372,18 +448,22 @@ const ComposeCard = () => {
                   onClick={handleOpenActivities}
                   className="compose-option is-centered">
                   <img src="img/icons/emoji/emoji-1.svg" alt="" />
-                  <span>Mood/Activity</span>
+                  <span>Hoạt động</span>
                 </div>
               </div>
-              {/* <!-- Tag friends action --> */}
+              {/* Upload video ction */}
               <div className="column is-6 is-narrower">
+                <CardComposeUploadVideo title="Video"></CardComposeUploadVideo>
+              </div>
+              {/* <!-- Tag friends action --> */}
+              {/* <div className="column is-6 is-narrower">
                 <div
                   id="open-tag-suboption"
                   className="compose-option is-centered">
                   <FiTag />
-                  <span>Tag friends</span>
+                  <span>Gắn thẻ bạn bè</span>
                 </div>
-              </div>
+              </div> */}
               {/* <!-- Post location action --> */}
               <div className="column is-6 is-narrower">
                 <div
@@ -400,7 +480,7 @@ const ComposeCard = () => {
                   id="open-link-suboption"
                   className="compose-option is-centered">
                   <FiLink2 />
-                  <span>Share link</span>
+                  <span>Chia sẽ đường dẫn</span>
                 </div>
               </div>
               {/* <!-- Post GIF action --> */}
@@ -409,7 +489,7 @@ const ComposeCard = () => {
                   id="open-gif-suboption"
                   className="compose-option is-centered">
                   <FiImage />
-                  <span>Post GIF</span>
+                  <span>Đăng GIF</span>
                 </div>
               </div>
             </div>
@@ -421,14 +501,14 @@ const ComposeCard = () => {
             id="basic-options"
             className={`compose-options ${showMoreOption ? "is-hidden" : ""}`}>
             {/* <!-- Upload action --> */}
-            <CardComposeUploadPhoto title="Media" onClick={handleShowPhoto} />
+            <CardComposeUploadPhoto title="Ảnh" onClick={handleShowPhoto} />
             {/* <!-- Mood action --> */}
             <div
               id="show-activities"
               className="compose-option"
               onClick={handleOpenActivities}>
               <img src="img/icons/emoji/emoji-1.svg" alt="" />
-              <span>Activity</span>
+              <span>Hoạt động</span>
             </div>
             {/* <!-- Expand action --> */}
             <div
@@ -478,7 +558,7 @@ const ComposeCard = () => {
               className="button is-more"
               aria-haspopup="true">
               <FiMoreVertical />
-              <span>View More</span>
+              <span>Xem thêm</span>
             </button>
             {/* <!-- Publish button --> */}
             <button
@@ -489,7 +569,7 @@ const ComposeCard = () => {
               className={`button is-solid accent-button is-fullwidth ${
                 textContent ? "" : "is-disabled"
               } ${isLoading ? "is-loading" : ""}`}>
-              Publish
+              Bài đăng
             </button>
           </div>
         </div>

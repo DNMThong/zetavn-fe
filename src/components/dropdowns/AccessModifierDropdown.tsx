@@ -24,22 +24,22 @@ const dataDropdown: IAccessModifier[] = [
   {
     icon: FiGlobe,
     iconSelector: FiGlobe,
-    title: "Public",
-    desc: "Anyone can see this publication.",
+    title: "Công khai",
+    desc: "Mọi người có thể thấy.",
     value: PostAccessModifier.PUBLIC,
   },
   {
     icon: FiUsers,
     iconSelector: FiSmile,
-    title: "Friends",
-    desc: "Only friends can see this publication.",
+    title: "Bạn bè",
+    desc: "Chỉ có bạn bè mới có thể thấy.",
     value: PostAccessModifier.FRIENDS,
   },
   {
     icon: FiUser,
     iconSelector: FiMeh,
-    title: "Private",
-    desc: "Only you can see this publication.",
+    title: "Riêng tư",
+    desc: "Chỉ mình bạn có thể thấy.",
     value: PostAccessModifier.PRIVATE,
   },
 ];

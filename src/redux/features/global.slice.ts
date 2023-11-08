@@ -1,19 +1,26 @@
+import { API_URL } from "@/types/contants.type";
 import {
   getLocalStorageItem,
   setLocalStorageItem,
 } from "@/utils/localstorage.util";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Client } from "@stomp/stompjs";
+
 
 interface GlobalState {
   openExplorerMenu: boolean;
   openChat: boolean;
   isDarkTheme: boolean;
+  clientStomp: Client | null;
 }
 
 const initialState: GlobalState = {
   openExplorerMenu: false,
   openChat: false,
-  isDarkTheme: getLocalStorageItem<string>("theme") === "dark" || true,
+  isDarkTheme: getLocalStorageItem<string>("theme")
+    ? getLocalStorageItem<string>("theme") === "dark"
+    : true,
+  clientStomp: null,
 };
 
 const slice = createSlice({
@@ -37,7 +44,10 @@ const slice = createSlice({
       state.isDarkTheme = !state.isDarkTheme;
       setLocalStorageItem("theme", state.isDarkTheme ? "dark" : "light");
     },
-  },
+    setClientStomp(state, action: PayloadAction<Client>) {
+      state.clientStomp = action.payload;
+    },
+  }
 });
 
 const GlobalReducer = slice.reducer;
@@ -48,5 +58,6 @@ export const {
   setOpenChat,
   setIsDarkTheme,
   toggleChangeTheme,
+  setClientStomp,
 } = slice.actions;
 export default GlobalReducer;

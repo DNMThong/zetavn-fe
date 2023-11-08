@@ -91,7 +91,7 @@ const AccountDropdown = () => {
                 </div>
                 <div className="media-content">
                   <h3>{user?.display}</h3>
-                  <small>Main account</small>
+                  <small>Tài khoản chính</small>
                 </div>
                 <div className="media-right">
                   <FiCheck />
@@ -105,8 +105,8 @@ const AccountDropdown = () => {
                   <FiSettings />
                 </div>
                 <div className="media-content">
-                  <h3>Settings</h3>
-                  <small>Access widget settings.</small>
+                  <h3>Cài đặt</h3>
+                  <small>Truy cập cài đặt tiện ích.</small>
                 </div>
               </div>
             </a>
@@ -116,8 +116,8 @@ const AccountDropdown = () => {
                   <FiLifeBuoy />
                 </div>
                 <div className="media-content">
-                  <h3>Help</h3>
-                  <small>Contact our support.</small>
+                  <h3>Hỗ trợ</h3>
+                  <small>Liên hệ để được hỗ trợ.</small>
                 </div>
               </div>
             </a>
@@ -127,8 +127,8 @@ const AccountDropdown = () => {
                   <FiPower />
                 </div>
                 <div className="media-content">
-                  <h3>Log out</h3>
-                  <small>Log out from your account.</small>
+                  <h3>Đăng xuất</h3>
+                  <small>Đăng xuất khỏi tài khoản.</small>
                 </div>
               </div>
             </a>

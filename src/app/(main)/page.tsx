@@ -5,16 +5,42 @@ import {
   RecommendedPagesWidget,
   SuggestedFriendsWidget,
 } from "@/components/widgets";
-import { useGetPostsByUserIdQuery } from "@/redux/features/post/post.service";
+import { addNewsfeed } from "@/redux/features/auth/auth.slice";
+import {
+  useGetPostsByUserIdQuery,
+  useLazyGetPostsNewsFeedQuery,
+} from "@/redux/features/post/post.service";
 import { useGetUsersQuery } from "@/redux/features/user/user.service";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import InfiniteScroll from "react-infinite-scroll-component";
+import PostPlaceload from "@/components/placeloads/PostPlaceload";
 
 export default function Home() {
-  const user = useAppSelector((selector) => selector.auth.user);
-  const { data } = useGetPostsByUserIdQuery(user?.id || "");
-  console.log(data);
+  const { user, newsfeed } = useAppSelector((selector) => selector.auth);
+  const dispatch = useAppDispatch();
+  // const { data } = useGetPostsByUserIdQuery(user?.id || "");
+  const [fetchPostsNewsFeed] = useLazyGetPostsNewsFeedQuery();
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetchPostsNewsFeed({
+        userId: user?.id || "",
+        pageNumber: page,
+        pageSize: 5,
+      }).unwrap();
+      if (response.code === 200) {
+        const { data } = response;
+        dispatch(addNewsfeed(data.data));
+        if (data.lastPage) setHasMore(false);
+      }
+    };
+    fetchData();
+  }, [user, fetchPostsNewsFeed, page, dispatch]);
 
   return (
     <>
@@ -34,44 +60,22 @@ export default function Home() {
             {/* <!-- Middle column --> */}
             <div className="column is-6">
               <ComposeCard />
-              {data?.data &&
-                data.data.length > 0 &&
-                data.data.map((post) => <CardPost key={post.id} data={post} />)}
-
-              {/* <!-- Publishing Area -->
-        <!-- /partials/pages/feed/compose-card.html -->
-        {{> compose-card}}
-
-        <!-- Post 1 -->
-        <!-- /partials/pages/feed/posts/feed-post1.html -->
-        {{> feed-post1}}
-
-        <!-- Post 2 -->
-        <!-- /partials/pages/feed/posts/feed-post2.html -->
-        {{> feed-post2}}
-
-        <!-- Post 3 -->
-        <!-- /partials/pages/feed/posts/feed-post3.html -->
-        {{> feed-post3}}
-
-        <!-- Post 4 -->
-        <!-- /partials/pages/feed/posts/feed-post4.html -->
-        {{> feed-post4}}
-
-        <!-- Post 5 -->
-        <!-- /partials/pages/feed/posts/feed-post5.html -->
-        {{> feed-post5}}
-
-        <!-- Post 6 -->
-        <!-- /partials/pages/feed/posts/feed-post6.html -->
-        {{> feed-post6}} */}
+              <InfiniteScroll
+                loader={<PostPlaceload />}
+                hasMore={hasMore}
+                next={() => setPage((prev) => prev + 1)}
+                dataLength={newsfeed.length}>
+                {newsfeed.map((post) => (
+                  <CardPost key={post.id} data={post} />
+                ))}
+              </InfiniteScroll>
 
               {/* <!-- Load more posts --> */}
-              <div className="load-more-wrap narrow-top has-text-centered">
+              {/* <div className="load-more-wrap narrow-top has-text-centered">
                 <a href="#" className="load-more-button">
                   Load More
                 </a>
-              </div>
+              </div> */}
               {/* <!-- /Load more posts --> */}
             </div>
             {/* <!-- /Middle column --> */}

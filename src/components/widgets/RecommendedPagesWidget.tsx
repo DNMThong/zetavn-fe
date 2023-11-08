@@ -11,7 +11,7 @@ const RecommendedPagesWidget = () => {
   return (
     <div className="card">
       <div className="card-heading is-bordered">
-        <h4>Recommended Pages</h4>
+        <h4>Đề xuất</h4>
         <div className="dropdown is-spaced is-right is-neutral dropdown-trigger">
           <div>
             <div className="button">

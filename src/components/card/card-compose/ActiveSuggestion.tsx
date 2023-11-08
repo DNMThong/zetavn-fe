@@ -22,7 +22,7 @@ const ActiveSuggestion = () => {
   const getSuggestions = (value: string): ActivityStatus[] => {
     const inputValue: string = value.trim().toLowerCase();
     return activities.filter((item) =>
-      item.name.toLowerCase().includes(inputValue)
+      item.name.toLowerCase().includes(inputValue.toLowerCase())
     );
   };
 
@@ -30,7 +30,7 @@ const ActiveSuggestion = () => {
     if (isSuccess) {
       dispatch(setActivities(data.data));
     }
-  }, [data, isSuccess,dispatch]);
+  }, [data, isSuccess, dispatch]);
 
   const getSuggestionValue = (suggestion: ActivityStatus) => suggestion.name;
 

@@ -22,7 +22,7 @@ const CardPostImage = ({ postAction, images }: CardPostImageProps) => {
             images.length < 6 ? "mgi-el-" + images.length : "mgi-el-5-more"
           }`}>
           {images.map((image, index) => {
-            if (index === 4) {
+            if (index === 4 && images.length > 5) {
               return (
                 <div className="mgi-el-item" key={index}>
                   <a
@@ -32,7 +32,14 @@ const CardPostImage = ({ postAction, images }: CardPostImageProps) => {
                     <div className="mgi-el-item-overlay">
                       +{images.length - 5}
                     </div>
-                    <Image src={image} alt="image" width={1600} height={900} />
+                    <Image
+                      src={image}
+                      alt="image"
+                      width={0}
+                      height={0}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      style={{ width: "100%", height: "100%" }}
+                    />
                   </a>
                 </div>
               );
@@ -41,7 +48,14 @@ const CardPostImage = ({ postAction, images }: CardPostImageProps) => {
             return (
               <div className="mgi-el-item" key={index}>
                 <a data-fancybox="post" data-lightbox-type="image" href={image}>
-                  <Image src={image} alt="image" width={1600} height={900} />
+                  <Image
+                    src={image}
+                    alt="image"
+                    width={0}
+                    height={0}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ width: "100%", height: "100%" }}
+                  />
                 </a>
               </div>
             );

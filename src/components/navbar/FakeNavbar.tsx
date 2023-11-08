@@ -5,7 +5,7 @@ import React from "react";
 const FakeNavbar = () => {
   return (
     <div className="fake-nav">
-      <Link href="/" className="logo">
+      <Link href="/login" className="logo">
         <Image
           className="light-image"
           src="/img/vector/logo/friendkit-bold.svg"

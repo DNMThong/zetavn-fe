@@ -13,6 +13,7 @@ import {
 } from "@/redux/features/auth/auth.slice";
 import { useRouter } from "next/navigation";
 import { setSessionData } from "@/utils/session.util";
+import { toast } from "react-toastify";
 
 interface IFormValues {
   email: string;
@@ -47,16 +48,30 @@ const FormLogin = () => {
         username: email,
         password,
       }).unwrap();
+      console.log(response);
       const {
         code,
+        message,
         data: { userInfo, access_token },
       } = response;
       if (code === 200) {
-        setSessionData("userLogin", userInfo);
-        dispatch(setAccessToken(access_token));
-        router.push("/");
+        if (userInfo.isAuthorized) {
+          setSessionData("userLogin", userInfo);
+          dispatch(setAccessToken(access_token));
+          router.push("/");
+        } else {
+          router.push(`/confirmation?u=${userInfo.id}`);
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
+      if (
+        err.status === 500 &&
+        err.data.message === "Invalid Username or Password!!"
+      ) {
+        toast.warning("Sai tài khoản hoặc mật khẩu");
+      } else {
+        toast.warning("Vui lòng thử đăng nhập lại");
+      }
       console.log(err);
     }
   };
@@ -80,7 +95,7 @@ const FormLogin = () => {
           placeholder="Mật khẩu của bạn..."
         />
         <div className="field is-flex">
-          <Link href="#">Quên mật khẩu?</Link>
+          <Link href="/forgot-password">Quên mật khẩu?</Link>
         </div>
       </div>
 

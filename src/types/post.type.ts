@@ -1,5 +1,10 @@
-import { MediaType, PostAccessModifier } from "./contants.type";
+import {
+  MediaType,
+  PostAccessModifier,
+  PostNotificationType,
+} from "./contants.type";
 import User, { UserShort } from "./user.type";
+import { FileUpload } from "./response.type";
 
 export default interface Post {
   id: string;
@@ -13,14 +18,20 @@ export default interface Post {
   mentions: UserShort[];
 }
 
+export interface PostNewsfeed extends Post {
+  countLike: number;
+  countComment: number;
+  usersLike: UserShort[];
+}
+
 export interface Media {
   mediaPath: string;
   mediaType: MediaType;
 }
 
-export interface PhotoUpload {
-  urlBase64: string;
-}
+export type PhotoUpload = FileUpload & {
+  type: MediaType;
+};
 
 export interface ActivityStatusDetail {
   id: number;
@@ -42,7 +53,23 @@ export type ActivityMood = Omit<ActivityStatus, "details"> & {
   detail: ActivityStatusDetail;
 };
 
-export type PostMedia = {
+export interface Comment {
+  id: string;
+  user: UserShort;
+  content: string;
   mediaPath: string;
-  mediaType: string;
-};
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PostNotification {
+  id: number;
+  postId: string;
+  relatedId: number;
+  interacting: UserShort;
+  receiving: UserShort;
+  type: PostNotificationType;
+  isRead: boolean;
+  createdAt: string;
+  isCancel: boolean;
+}

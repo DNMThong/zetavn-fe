@@ -5,6 +5,7 @@ import PostReducer from "./features/post/post.slice";
 import { authApi, authApiAuthorization } from "./features/auth/auth.service";
 import { apiAuthorization, apiNoAuthorization } from "./api/api.service";
 import { userApi } from "./features/user/user.service";
+import { apiUpload } from "./features/upload/upload.service";
 
 const store = configureStore({
   reducer: {
@@ -14,12 +15,12 @@ const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [authApiAuthorization.reducerPath]: authApiAuthorization.reducer,
+    [apiUpload.reducerPath]: apiUpload.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      apiNoAuthorization.middleware,
-      apiAuthorization.middleware
-    ),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(apiNoAuthorization.middleware, apiAuthorization.middleware),
 });
 
 export default store;

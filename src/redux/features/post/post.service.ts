@@ -1,9 +1,19 @@
 import { apiAuthorization } from "@/redux/api/api.service";
 import { API_URL } from "@/types/contants.type";
-import { CreatePostRequest } from "@/types/request.type";
+import {
+  CommentRequest,
+  CreateCommentRequest,
+  CreatePostRequest,
+  LikePostRequest,
+  PostPaginationRequest,
+} from "@/types/request.type";
 import {
   ActivitiesResponse,
+  ApiResponse,
+  CommentsResponse,
+  CreateCommentResponse,
   CreatePostResponse,
+  PostPaginationResponse,
   PostsUsersResponse,
 } from "@/types/response.type";
 
@@ -22,8 +32,56 @@ const apiPost = apiAuthorization.injectEndpoints({
     getPostsByUserId: build.query<PostsUsersResponse, string>({
       query: (id) => `${API_URL.USERS}/${id}/posts`,
     }),
-    getComments: build.query<any, string>({
-      query: (id) => `${API_URL.POSTS}/${id}/comments`,
+    getPostsNewsFeed: build.query<
+      PostPaginationResponse,
+      PostPaginationRequest
+    >({
+      query: (request) => ({
+        url: `${API_URL.USERS}/${request.userId}/newsfeed`,
+        params: {
+          pageNumber: request.pageNumber,
+          pageSize: request.pageSize,
+        },
+      }),
+    }),
+    getComments: build.query<CommentsResponse, CommentRequest>({
+      query: (data) => ({
+        url: `${API_URL.POSTS}/${data.postId}/comments`,
+        params: {
+          pageNumber: data.pageNumber || 0,
+          pageSize: data.pageSize || 10,
+        },
+      }),
+    }),
+    createComment: build.mutation<CreateCommentResponse, CreateCommentRequest>({
+      query: (data) => ({
+        url: `${API_URL.POSTS}/${data.postId}/comments`,
+        method: "POST",
+        body: data.comment,
+      }),
+    }),
+    likePost: build.mutation<ApiResponse<unknown>, LikePostRequest>({
+      query: (body) => ({
+        url: API_URL.LIKE,
+        method: "POST",
+        body,
+      }),
+    }),
+    unlikePost: build.mutation<ApiResponse<unknown>, LikePostRequest>({
+      query: (body) => ({
+        url: API_URL.LIKE,
+        method: "DELETE",
+        body,
+      }),
+    }),
+    checkLikePost: build.query<ApiResponse<boolean>, LikePostRequest>({
+      query: (request) => ({
+        url: API_URL.LIKE,
+        params: {
+          userId: request.userId,
+          postId: request.postId,
+        },
+      }),
     }),
   }),
 });
@@ -33,4 +91,10 @@ export const {
   useGetActivitiesQuery,
   useGetPostsByUserIdQuery,
   useGetCommentsQuery,
+  useLazyGetPostsNewsFeedQuery,
+  useGetPostsNewsFeedQuery,
+  useCreateCommentMutation,
+  useLikePostMutation,
+  useUnlikePostMutation,
+  useLazyCheckLikePostQuery,
 } = apiPost;

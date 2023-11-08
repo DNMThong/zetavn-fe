@@ -1,3 +1,5 @@
+import { convertTextContent, getInfoMention } from "@/utils/text.util";
+import Link from "next/link";
 import React from "react";
 
 interface ICardPostText {
@@ -15,7 +17,20 @@ const CardPostText = ({ postAction, content }: ICardPostText) => {
           <a href="#">#Rock n Rolla</a> concert in LA. Was totally fantastic!
           People were really excited about this one!
         </p> */}
-        <p>{content}</p>
+
+        <p>
+          {convertTextContent(content).map((text, index) => {
+            const mention = getInfoMention(text);
+            if (mention) {
+              return (
+                <Link key={index} href={`/${mention.id}`}>
+                  @{mention.display}
+                </Link>
+              );
+            }
+            return <span key={index}>{text}</span>;
+          })}
+        </p>
       </div>
       {postAction !== undefined && (
         <div className="post-actions">{postAction}</div>

@@ -7,9 +7,12 @@ interface PostState {
   openActivities: boolean;
   activityMood: ActivityMood | undefined;
   textContent: string;
-  photos: PhotoUpload[];
+  photos: string[];
   accessModifier: PostAccessModifier;
   activities: ActivityStatus[];
+  photosLoading: number;
+  video: string;
+  videoLoading: boolean;
 }
 
 const initialState: PostState = {
@@ -20,6 +23,9 @@ const initialState: PostState = {
   photos: [],
   accessModifier: PostAccessModifier.FRIENDS,
   activities: [],
+  photosLoading: 0,
+  video: "",
+  videoLoading: false,
 };
 
 const slice = createSlice({
@@ -32,6 +38,7 @@ const slice = createSlice({
       state.activityMood = undefined;
       state.textContent = "";
       state.photos = [];
+      state.video = "";
     },
     setActivityStatusSelected(state, action: PayloadAction<ActivityStatus>) {
       state.activityStatusSelected = action.payload;
@@ -64,11 +71,11 @@ const slice = createSlice({
     addTextContent(state, action: PayloadAction<string>) {
       state.textContent += action.payload;
     },
-    setPhotos(state, action: PayloadAction<PhotoUpload[]>) {
+    setPhotos(state, action: PayloadAction<string[]>) {
       state.photos = action.payload;
     },
-    addPhotos(state, action: PayloadAction<PhotoUpload[]>) {
-      state.photos.concat(action.payload);
+    addPhotos(state, action: PayloadAction<string[]>) {
+      state.photos = [...state.photos, ...action.payload];
     },
     removePhoto(state, action: PayloadAction<number>) {
       state.photos.splice(action.payload, 1);
@@ -78,6 +85,15 @@ const slice = createSlice({
     },
     setActivities(state, action: PayloadAction<ActivityStatus[]>) {
       state.activities = action.payload;
+    },
+    setPhotosLoading(state, action: PayloadAction<number>) {
+      state.photosLoading = action.payload;
+    },
+    setVideoUploadPost(state, action: PayloadAction<string>) {
+      state.video = action.payload;
+    },
+    setVideoLoading(state, action: PayloadAction<boolean>) {
+      state.videoLoading = action.payload;
     },
   },
 });
@@ -99,5 +115,8 @@ export const {
   removePhoto,
   setAccessModifier,
   setActivities,
+  setPhotosLoading,
+  setVideoUploadPost,
+  setVideoLoading
 } = slice.actions;
 export default PostReducer;

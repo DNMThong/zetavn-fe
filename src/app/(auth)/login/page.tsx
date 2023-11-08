@@ -4,8 +4,8 @@ import React from "react";
 import FormLogin from "./_components/FormLogin";
 
 export const metadata: Metadata = {
-  title: "Zetavn | Login",
-  description: "Zetavn login",
+  title: "Zetavn | Đăng nhập",
+  description: "Zetavn đăng nhập",
 };
 
 const LoginPage = () => {
@@ -31,7 +31,7 @@ const LoginPage = () => {
               />
             </div>
             <div className="column is-6">
-              <h2 className="form-title">Chào bạn đã trở lại</h2>
+              <h2 className="form-title">Chào mừng bạn đã trở lại</h2>
               <h3 className="form-subtitle">
                 Nhập thông tin đăng nhập để đăng nhập
               </h3>

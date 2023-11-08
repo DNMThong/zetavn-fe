@@ -19,11 +19,16 @@ body {
         border-color: lighten($dark, 4%);
         background: $dark;
 
-        .star-friend {
-          &:not(.is-active) {
-            svg {
-              fill: lighten($dark, 8%);
-              stroke: lighten($dark, 8%);
+        .action-friend {
+          svg {
+            fill: transparent;
+            stroke: lighten($dark, 8%);
+            
+          }
+
+          .action-friend-icon {
+            &:hover {
+              background: lighten($dark, 4%);
             }
           }
         }
@@ -57,6 +62,13 @@ body {
             }
           }
         }
+      }
+    }
+
+    .pagination {
+
+      a {
+        color: #fff;
       }
     }
   }

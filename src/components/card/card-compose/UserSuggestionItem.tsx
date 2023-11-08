@@ -1,8 +1,9 @@
-import User from "@/types/user.type";
+import User, { UserShort } from "@/types/user.type";
+import Image from "next/image";
 import React from "react";
 
 interface IUserSuggestionItem {
-  suggestion: User;
+  suggestion: UserShort;
   search: string;
   highlightedDisplay: React.ReactNode;
   index: number;
@@ -14,10 +15,17 @@ const UserSuggestionItem = ({
   focused,
   highlightedDisplay,
 }: IUserSuggestionItem) => {
+  console.log(suggestion);
   return (
     <div className="template-wrapper">
       <div className="avatar-wrapper">
-        <img className="autocpl-avatar" src={suggestion?.avartar} />
+        <Image
+          className="autocpl-avatar"
+          src={suggestion?.avatar || ""}
+          alt=""
+          width={300}
+          height={300}
+        />
       </div>
       <div className="entry-text">
         {highlightedDisplay}

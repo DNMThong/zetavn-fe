@@ -7,8 +7,8 @@ import React from "react";
 import FormRegister from "./_components/FormRegister";
 
 export const metadata: Metadata = {
-  title: "Zetavn | Register",
-  description: "Zetavn register",
+  title: "Zetavn | Đăng ký",
+  description: "Zetavn đăng ký",
 };
 
 const RegisterPage = () => {

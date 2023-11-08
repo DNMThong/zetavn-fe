@@ -9,12 +9,13 @@ import { FeedPostDropdown } from "@/components/dropdowns";
 import { ShareModal } from "@/components/modals";
 import CardPostImage from "./CardPostImage";
 import CardPostText from "./CardPostText";
-import Post from "@/types/post.type";
+import Post, { PostNewsfeed } from "@/types/post.type";
 import { MediaType } from "@/types/contants.type";
 import MoodDisplay from "../card-compose/MoodDisplay";
+import ReactPlayer from "react-player";
 
 interface CardPostProps {
-  data: Post;
+  data: PostNewsfeed;
 }
 
 const CardPost = ({ data }: CardPostProps) => {
@@ -23,13 +24,23 @@ const CardPost = ({ data }: CardPostProps) => {
 
   const images = useMemo<string[]>(() => {
     let images: string[] = [];
-    if (data.medias) {
+    if (data.medias.length > 0) {
       images = data.medias
         .filter((media) => media.mediaType === MediaType.IMAGE)
         .map((media) => media.mediaPath);
     }
-
     return images;
+  }, [data]);
+
+  const video = useMemo<string>(() => {
+    let video: string = "";
+    if (data.medias.length > 0) {
+      video =
+        data.medias[0].mediaType === MediaType.VIDEO
+          ? data.medias[0].mediaPath
+          : "";
+    }
+    return video;
   }, [data]);
 
   return (
@@ -40,7 +51,11 @@ const CardPost = ({ data }: CardPostProps) => {
           {/* <!-- Post header --> */}
           <div className="card-heading">
             {/* <!-- User meta --> */}
-            <UserMeta createdAt={data.createdAt} userInfo={data.user} />
+            <UserMeta
+              accessModifier={data.accessModifier}
+              createdAt={data.createdAt}
+              userInfo={data.user}
+            />
             {/* <!-- Right side dropdown --> */}
             <FeedPostDropdown />
           </div>
@@ -51,9 +66,18 @@ const CardPost = ({ data }: CardPostProps) => {
             {/* <!-- Post body text --> */}
             {data.content && <CardPostText content={data.content} />}
             {data?.activity && <MoodDisplay activityMood={data.activity} />}
+            {video && (
+              <ReactPlayer
+                width="100%"
+                height="auto"
+                controls={true}
+                url={video}
+              />
+            )}
             {images.length === 0 && (
               <div className="post-actions">
                 <CardPostAction
+                  postId={data.id}
                   onClickComment={() => setOpenComment(true)}
                   onClickShare={() => setOpenShare(true)}
                 />
@@ -65,6 +89,7 @@ const CardPost = ({ data }: CardPostProps) => {
                 images={images}
                 postAction={
                   <CardPostAction
+                    postId={data.id}
                     onClickComment={() => setOpenComment(true)}
                     onClickShare={() => setOpenShare(true)}
                   />
@@ -75,16 +100,23 @@ const CardPost = ({ data }: CardPostProps) => {
           {/* <!-- /Post body --> */}
 
           {/* <!-- Post footer --> */}
-          <CardPostFooter />
+          <CardPostFooter
+            userLike={data.usersLike}
+            countComment={data.countComment}
+            countLike={data.countLike}
+          />
           {/* <!-- /Post footer --> */}
         </div>
         {/* <!-- /Main wrap --> */}
 
         {/* <!-- Post #1 Comments --> */}
-        <CardPostCmt
-          open={openComment}
-          handleClose={() => setOpenComment(false)}
-        />
+        {openComment && (
+          <CardPostCmt
+            postId={data.id}
+            open={openComment}
+            handleClose={() => setOpenComment(false)}
+          />
+        )}
         {/* <!-- /Post #1 Comments --> */}
       </div>
 

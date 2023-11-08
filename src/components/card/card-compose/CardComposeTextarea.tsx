@@ -1,6 +1,6 @@
 "use client";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import User from "@/types/user.type";
+import User, { UserShort } from "@/types/user.type";
 import React, { RefObject, useEffect, useRef, useState } from "react";
 import Autosuggest from "react-autosuggest";
 import ActiveSuggestionItem from "./ActiveSuggestionItem";
@@ -28,14 +28,6 @@ const CardComposeTextarea = () => {
     }
   }, [mentionRef]);
 
-  const inputProps = {
-    placeholder: "Write something about you...",
-    value: textContent,
-    id: "publish",
-    className: "textarea",
-    rows: 3,
-  };
-
   const handleChangeInput = (
     event: any,
     newValue: any,
@@ -43,6 +35,7 @@ const CardComposeTextarea = () => {
     mentions: any
   ) => {
     dispatch(setTextContent(newValue));
+    console.log(newValue);
   };
   return (
     <>
@@ -51,7 +44,7 @@ const CardComposeTextarea = () => {
         className="post-mention"
         id="publish"
         rows={3}
-        placeholder="Write something about you..."
+        placeholder="Viết điều gì đó về bạn..."
         value={textContent}
         onChange={handleChangeInput}>
         <Mention
@@ -68,7 +61,7 @@ const CardComposeTextarea = () => {
             focused: boolean
           ) => (
             <UserSuggestionItem
-              suggestion={suggestion as User}
+              suggestion={suggestion as UserShort}
               search={search}
               highlightedDisplay={highlightedDisplay}
               index={index}

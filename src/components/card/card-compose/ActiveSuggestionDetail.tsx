@@ -33,7 +33,7 @@ const ActiveSuggestionDetail = ({
   const getSuggestions = (value: string): ActivityStatusDetail[] => {
     const inputValue: string = value.trim().toLowerCase();
     return activityStatusDetails.filter((item) =>
-      item.name.toLowerCase().includes(inputValue)
+      item.name.toLowerCase().includes(inputValue.toLowerCase())
     );
   };
 
@@ -58,6 +58,7 @@ const ActiveSuggestionDetail = ({
   ) => {
     dispatch(
       setActivityMood({
+        id: activityStatusSelected.id,
         title,
         desc,
         name,

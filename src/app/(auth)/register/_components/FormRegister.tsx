@@ -73,10 +73,9 @@ const FormRegister = () => {
         gender,
         birthday: birthday.toISOString(),
       }).unwrap();
-      const { code, status, message } = response;
+      const { code, status, message, data } = response;
       if (code === 200) {
-        toast.success("Tạo tài khoản thành công");
-        router.push("/login");
+        router.push(`/confirmation?u=${data.id}`);
       } else if (code === 409 && status === "CONFLICT") {
         toast.info("Email này đã được dùng!!!");
       } else {
@@ -94,6 +93,7 @@ const FormRegister = () => {
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="login-form"
+      style={{ margin: "0 auto" }}
       autoComplete="off">
       <div className="form-panel">
         <div className="columns is-multiline">
@@ -175,18 +175,18 @@ const FormRegister = () => {
           </div>
 
           {/* <div className="column is-12">
-                      <div className="field is-flex">
-                        <div className="switch-block">
-                          <label className="f-switch">
-                            <input type="checkbox" className="is-switch" />
-                            <i></i>
-                          </label>
-                          <div className="meta">
-                            <p>Subscribe to Newsletter?</p>
-                          </div>
-                        </div>
+                  <div className="field is-flex">
+                    <div className="switch-block">
+                      <label className="f-switch">
+                        <input type="checkbox" className="is-switch" />
+                        <i></i>
+                      </label>
+                      <div className="meta">
+                        <p>Subscribe to Newsletter?</p>
                       </div>
-                    </div> */}
+                    </div>
+                  </div>
+                </div> */}
         </div>
       </div>
 

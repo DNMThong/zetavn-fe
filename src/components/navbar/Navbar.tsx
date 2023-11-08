@@ -75,7 +75,7 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-end">
-            <SearchWidget></SearchWidget>
+            <SearchWidget classNameWapper="navbar-item"></SearchWidget>
             <AccountDropdown />
           </div>
         </div>

@@ -15,17 +15,19 @@ const MoodDisplay = ({ activityMood }: { activityMood: ActivityMood }) => {
     dispatch(clearActivityMood());
   };
   return (
-    <span className="mood-display">
-      <img src={activityMood.detail.pic} />
-      <span className="is-inverted" onClick={handleChangeActivityMood}>
-        {activityMood.name !== "status" ? (
-          <span className="action-text">{activityMood.name}</span>
-        ) : (
-          ""
-        )}
-        {activityMood.detail.name}
+    <div id="options-summary" className="options-summary">
+      <span className="mood-display">
+        <img src={activityMood.detail.pic} />
+        <span className="is-inverted" onClick={handleChangeActivityMood}>
+          {activityMood.name !== "status" ? (
+            <span className="action-text">{activityMood.name}</span>
+          ) : (
+            ""
+          )}
+          {activityMood.detail.name}
+        </span>
       </span>
-    </span>
+    </div>
   );
 };
 

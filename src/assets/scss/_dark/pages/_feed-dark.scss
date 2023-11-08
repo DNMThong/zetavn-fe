@@ -76,9 +76,8 @@ body {
             }
           }
 
-          .options-summary {
-            background: lighten($dark, 4%);
-          }
+         
+          
         }
 
         .compose-options {
@@ -280,6 +279,18 @@ body {
                     &::placeholder {
                       color: lighten($dark, 24%);
                     }
+                  }
+                }
+              }
+
+              .comment-upload {
+                border-left: 1px solid lighten($dark, 10%);
+                border-right: 1px solid lighten($dark, 10%);
+
+
+                .upload-wrap {
+                  .remove-file {
+                    background: darken($dark, 4%);
                   }
                 }
               }
@@ -577,6 +588,7 @@ body {
 body {
   &.is-dark {
     .options-summary {
+      background: lighten($dark, 4%);
       .mood-display {
         .action-text {
           color: $light-text;

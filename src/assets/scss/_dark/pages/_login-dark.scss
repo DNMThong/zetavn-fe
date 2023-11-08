@@ -93,5 +93,18 @@ body {
         }
       }
     }
+
+    .confirmation-email {
+      .title {
+        color: $white-light;
+
+      }
+
+      .text-content {
+        color: $light-text;
+      }
+    }
   }
+
+
 }

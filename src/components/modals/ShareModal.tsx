@@ -1,3 +1,4 @@
+import { PostAccessModifier } from "@/types/contants.type";
 import Post from "@/types/post.type";
 import React from "react";
 import { createPortal } from "react-dom";
@@ -222,43 +223,61 @@ const ShareModal = ({ open, handleClose, data }: ShareModalProps) => {
               </button>
             </div>
             <div className="shared-publication">
-              <div className="featured-image">
-                <img
-                  id="share-modal-image"
-                  src="https://via.placeholder.com/1600x900"
-                  data-demo-src="assets/img/demo/unsplash/1.jpg"
-                  alt=""
-                />
-              </div>
+              {data.medias.length > 0 && (
+                <div className="featured-image">
+                  <img
+                    id="share-modal-image"
+                    src={data.medias[0].mediaPath}
+                    alt=""
+                  />
+                </div>
+              )}
               <div className="publication-meta">
                 <div className="inner-flex">
                   <img
                     id="share-modal-avatar"
-                    src="https://via.placeholder.com/300x300"
-                    data-demo-src="assets/img/avatars/dan.jpg"
-                    data-user-popover="1"
+                    src={
+                      data.user.avatar || "https://via.placeholder.com/300x300"
+                    }
                     alt=""
                   />
                   <p id="share-modal-text">
-                    Yesterday with <a href="#">@Karen Miller</a> and
+                    {/* Yesterday with <a href="#">@Karen Miller</a> and
                     <a href="#">@Marvin Stemperd</a> at the
                     <a href="#">#Rock Rolla</a> concert in LA. Was totally
-                    fantastic! People were really excited about this one!
+                    fantastic! People were really excited about this one! */}
+                    {data.content}
                   </p>
                 </div>
                 <div className="publication-footer">
                   <div className="stats">
                     <div className="stat-block">
-                      <i className="mdi mdi-earth"></i>
-                      <small>Public</small>
+                      {data.accessModifier === PostAccessModifier.PUBLIC && (
+                        <>
+                          <i className="mdi mdi-earth"></i>
+                          <small>Công khai</small>
+                        </>
+                      )}
+                      {data.accessModifier === PostAccessModifier.FRIENDS && (
+                        <>
+                          <i className="mdi mdi-account"></i>
+                          <small>Bạn bè</small>
+                        </>
+                      )}
+                      {data.accessModifier === PostAccessModifier.PRIVATE && (
+                        <>
+                          <i className="mdi mdi-eye"></i>
+                          <small>Riêng tư</small>
+                        </>
+                      )}
                     </div>
                     <div className="stat-block">
                       <i className="mdi mdi-eye"></i>
-                      <small>163 views</small>
+                      <small>0 views</small>
                     </div>
                   </div>
                   <div className="publication-origin">
-                    <small>Friendkit.io</small>
+                    {/* <small>Friendkit.io</small> */}
                   </div>
                 </div>
               </div>
@@ -361,12 +380,12 @@ const ShareModal = ({ open, handleClose, data }: ShareModalProps) => {
                 onClick={handleClose}
                 type="button"
                 className="button is-solid dark-grey-button close-modal">
-                Cancel
+                Hủy
               </button>
               <button
                 type="button"
                 className="button is-solid primary-button close-modal">
-                Publish
+                Chia sẻ
               </button>
             </div>
           </div>

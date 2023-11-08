@@ -24,13 +24,17 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
           const {
             data: { access_token, userInfo },
           } = response;
-          dispatch(setAccessToken(access_token));
-          setSessionData("userLogin", userInfo);
-          router.push("/");
+          if (userInfo.isAuthorized) {
+            dispatch(setAccessToken(access_token));
+            setSessionData("userLogin", userInfo);
+            router.push("/");
+          } else {
+            router.push(`/confirmation?u=${userInfo.id}`);
+          }
         } else {
           setLoading(false);
         }
-      }catch(err) {
+      } catch (err) {
         setLoading(false);
       }
     };

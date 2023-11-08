@@ -28,9 +28,12 @@ export const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions): Promise<any> => {
   let result: any = await baseQuery(args, api, extraOptions);
-  if (result?.error && result.error?.status === 401 && result.error?.data) {
-    const { data } = result.error;
-    if (data?.error === "TokenInvalid") {
+  if (result?.error && result.error?.status) {
+    if (
+      (result.error?.status === 401 &&
+        result.error?.data?.error === "TokenInvalid") ||
+      result.error?.status === "FETCH_ERROR"
+    ) {
       const query = fetchBaseQuery({
         baseUrl: API_URL.DOMAIN,
         credentials: "include",
@@ -51,12 +54,14 @@ export const baseQueryWithReauth: BaseQueryFn<
       api.dispatch(logout());
     }
   }
+
   return result;
 };
 
 export const apiAuthorization = createApi({
   reducerPath: "apiAuthorization",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["Posts", "Comments"],
   endpoints: (builder) => ({}),
 });
 

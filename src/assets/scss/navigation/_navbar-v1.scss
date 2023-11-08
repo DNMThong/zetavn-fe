@@ -170,6 +170,7 @@ Navbar styles
       .user-image img {
         max-height: 42px;
         max-width: 42px;
+        object-fit: cover;
       }
 
       &:hover {

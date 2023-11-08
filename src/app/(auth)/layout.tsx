@@ -41,7 +41,7 @@ export default function SignUpLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css"
           rel="stylesheet"></link>
       </head>
-      <body className={`${montserrat.className} ${roboto.className}`}>
+      <body className={`${roboto.className}`}>
         <Providers>
           <AuthRoute>
             <div className="signup-wrapper">{children}</div>

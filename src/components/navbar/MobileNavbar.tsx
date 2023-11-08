@@ -5,7 +5,7 @@ import {
   MessagesDropdown,
   NotificationsDropdown,
 } from "@/components/dropdowns";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setOpenChat, toggleExplorerMenu } from "@/redux/features/global.slice";
 import useClickOutside from "@/hooks/useClickOutside";
 import Link from "next/link";
@@ -22,15 +22,23 @@ import {
   FiUser,
   FiX,
 } from "react-icons/fi";
+import { logout } from "@/redux/features/auth/auth.slice";
+import { SearchWidget } from ".";
 
 const MobileNavbar = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
   const [openSearch, setOpenSearch] = useState(false);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((selector) => selector.auth.user);
 
   const handleTriggerExplorer = () => {
     dispatch(toggleExplorerMenu());
   };
+
+  const handleLogOut = () => {
+    dispatch(logout());
+  };
+
   return (
     <nav
       className="navbar mobile-navbar is-hidden-desktop"
@@ -90,11 +98,11 @@ const MobileNavbar = () => {
         <div className="navbar-item has-dropdown is-active">
           <Link href="/navbar-v1-profile-main.html" className="navbar-link">
             <img
-              src="https://via.placeholder.com/150x150"
+              src={user?.avatar || "https://via.placeholder.com/150x150"}
               data-demo-src="img/avatars/jenna.png"
               alt=""
             />
-            <span className="is-heading">Jenna Davis</span>
+            <span className="is-heading">{user?.display}</span>
           </Link>
 
           {/* Mobile Dropdown */}
@@ -175,7 +183,9 @@ const MobileNavbar = () => {
                 Settings
               </span>
             </a>
-            <a href="#" className="navbar-item is-flex is-mobile-icon">
+            <a
+              className="navbar-item is-flex is-mobile-icon"
+              onClick={handleLogOut}>
               <span>
                 <FiLogOut />
                 Logout
@@ -185,7 +195,12 @@ const MobileNavbar = () => {
         </div>
       </div>
       {/* Search */}
-      <div className={`mobile-search ${!openSearch && "is-hidden"}`}>
+      <SearchWidget
+        classNameWapper={`mobile-search ${openSearch? "" : "is-hidden"}`}
+        onClose={() => setOpenSearch(false)}
+        mobile={true}
+      />
+      {/* <div>
         <div className="control">
           <input
             id="tipue_drop_input_mobile"
@@ -195,14 +210,14 @@ const MobileNavbar = () => {
           <div className="form-icon">
             <FiSearch />
           </div>
-          <div className="close-icon" onClick={() => setOpenSearch(false)}>
+          <div className="close-icon" onClick={}>
             <FiX />
           </div>
           <div
             id="tipue_drop_content_mobile"
             className="tipue-drop-content"></div>
         </div>
-      </div>
+      </div> */}
     </nav>
   );
 };

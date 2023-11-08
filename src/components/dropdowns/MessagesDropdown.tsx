@@ -10,7 +10,7 @@ const MessagesDropdown = () => {
     <div className="navbar-item is-icon drop-trigger" ref={nodeRefParent}>
       <button
         onClick={() => setShow((prev) => !prev)}
-        className="icon-link is-active">
+        className="icon-link">
         <FiMail />
         <span className="indicator"></span>
       </button>

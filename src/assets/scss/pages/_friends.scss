@@ -85,17 +85,35 @@ Friend lists
     display: none;
   }
 
-  .star-friend {
+  .action-friend {
     position: absolute;
     top: 10px;
     right: 10px;
-    height: 44px;
-    width: 44px;
+    height: auto;
+    width: 60px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     margin-left: auto;
     cursor: pointer;
+
+   
+
+    .icon-active {
+      stroke: $primary!important;
+      fill: transparent!important;
+    }
+
+    .icon-success {
+      stroke: $success!important;
+      fill: transparent!important;
+      
+    }
+
+    .icon-error {
+      stroke: $danger!important;
+      fill: $danger!important;
+    }
 
     &.is-active {
       svg {
@@ -105,14 +123,26 @@ Friend lists
       }
     }
 
-    svg {
-      height: 20px;
-      width: 20px;
-      stroke: $placeholder;
-      fill: $placeholder;
-      transition: all 0.3s;
-      transform: rotate(0);
+    .action-friend-icon {
+      height: 30px;
+      width: 30px;
+      padding: 4px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        background: lighten($placeholder, 10%);
+      }
+      svg {
+        stroke: $placeholder;
+        fill: transparent;
+        width: 100%;
+      }
     }
+
+    
   }
 
   .img-container {
@@ -122,9 +152,13 @@ Friend lists
     margin: 10px auto;
     z-index: 1;
 
+
     .avatar {
       display: block;
       border-radius: 50%;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
 
       &.is-placeholder {
         filter: grayscale(1);
