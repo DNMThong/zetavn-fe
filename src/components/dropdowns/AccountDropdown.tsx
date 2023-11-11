@@ -14,6 +14,8 @@ import { toggleChangeTheme } from "@/redux/features/global.slice";
 import { logout } from "@/redux/features/auth/auth.slice";
 import { useRouter } from "next/navigation";
 import { setLocalStorageItem } from "@/utils/localstorage.util";
+import Link from "next/link";
+import { SettingsTab } from "@/types/contants.type";
 
 const AccountDropdown = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
@@ -26,14 +28,6 @@ const AccountDropdown = () => {
     dispatch(logout());
     router.push("/login");
   };
-
-  useEffect(() => {
-    if (isDarkTheme) {
-      document.body.classList.add("is-dark");
-    } else {
-      document.body.classList.remove("is-dark");
-    }
-  }, [isDarkTheme]);
 
   const handleChangeTheme = () => {
     dispatch(toggleChangeTheme());
@@ -75,9 +69,9 @@ const AccountDropdown = () => {
             </label>
           </div>
           <div className="nav-drop-body account-items">
-            <a
+            <Link
               id="profile-link"
-              href="/profile-main.html"
+              href={`/${user?.id}`}
               className="account-item">
               <div className="media">
                 <div className="media-left">
@@ -97,9 +91,9 @@ const AccountDropdown = () => {
                   <FiCheck />
                 </div>
               </div>
-            </a>
+            </Link>
             <hr className="account-divider" />
-            <a href="/options-settings.html" className="account-item">
+            <Link href={`/settings?tab=${SettingsTab.GENERAL}`} className="account-item">
               <div className="media">
                 <div className="icon-wrap">
                   <FiSettings />
@@ -109,7 +103,7 @@ const AccountDropdown = () => {
                   <small>Truy cập cài đặt tiện ích.</small>
                 </div>
               </div>
-            </a>
+            </Link>
             <a className="account-item">
               <div className="media">
                 <div className="icon-wrap">

@@ -1,4 +1,5 @@
 import User, { UserShort } from "@/types/user.type";
+import Link from "next/link";
 import React from "react";
 import { createPortal } from "react-dom";
 import {
@@ -44,9 +45,9 @@ const UserPopover = ({ stylesArrow, userInfo }: UserPopoverProps) => {
               </div>
 
               <div className="popover-meta">
-                <span className="user-meta">
+                <Link href={`/${userInfo.id}`} className="user-meta">
                   <span className="username">{userInfo?.display}</span>
-                </span>
+                </Link>
                 {/* <span className="job-title">{123}</span> */}
                 {/* <div className="common-friends">
                   <FiUser />

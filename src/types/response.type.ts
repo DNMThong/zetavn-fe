@@ -9,7 +9,8 @@ import Post, {
   PostNewsfeed,
   PostNotification,
 } from "./post.type";
-import User, { Friendship, SearchUserData, UserShort } from "./user.type";
+import User, { SearchUserData, UserShort, UserProfile } from "./user.type";
+import { FollowPriority, FriendshipStatus } from "./contants.type";
 
 export interface ApiResponse<T> {
   code: number;
@@ -20,7 +21,7 @@ export interface ApiResponse<T> {
 }
 
 export type LoginResponse = ApiResponse<{
-  userInfo: User;
+  userInfo: UserProfile;
   access_token: string;
 }>;
 
@@ -29,6 +30,21 @@ export type RegisterResponse = ApiResponse<User>;
 export interface AuthErrorResponse {
   error: string;
   message: string;
+}
+
+export interface Friendship {
+  id: number;
+  sender: UserProfile;
+  receiver: UserProfile;
+  status: FriendshipStatus;
+  createdAt: Date;
+}
+
+export interface FollowResponse {
+  followId: number;
+  followerId: string;
+  followingId: string;
+  priority: FollowPriority;
 }
 
 export interface FileUpload {
@@ -66,7 +82,7 @@ export type PostNotificationPagination = Pagination<PostNotification[]>;
 
 export type CreatePostResponse = ApiResponse<Post>;
 export type ActivitiesResponse = ApiResponse<ActivityStatus[]>;
-export type PostsUsersResponse = ApiResponse<Post[]>;
+export type PostsUsersResponse = ApiResponse<PostNewsfeed[]>;
 export type PostPaginationResponse = ApiResponse<PostPagination>;
 export type FilesUploadResponse = ApiResponse<FileUpload[]>;
 export type ImagesUploadResponse = ApiResponse<ImagesUpload[]>;
@@ -78,3 +94,9 @@ export type AddFriendResponse = ApiResponse<Friendship>;
 export type GetFriendRequestResponse = ApiResponse<FriendRequestPagination>;
 export type GetPostNotificationsResponse =
   ApiResponse<PostNotificationPagination>;
+
+export type UserResponse = ApiResponse<UserProfile>;
+
+export type FriendshipResponse = ApiResponse<Friendship>;
+
+export type FileUploadResponse = ApiResponse<FileUpload>;

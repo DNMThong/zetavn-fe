@@ -1,4 +1,4 @@
-import { FriendshipStatus, StatusFriend } from "./contants.type";
+import { FriendshipStatus, Gender, StatusFriend } from "./contants.type";
 
 export default interface User {
   id: string;
@@ -11,11 +11,9 @@ export default interface User {
   avatar: string | null;
   poster: string | null;
   isAuthorized: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
-export type CurrentUser = User | null;
+export type CurrentUser = UserProfile | null;
 
 export interface UserShort {
   id: string;
@@ -25,6 +23,22 @@ export interface UserShort {
   display: string;
   avatar: string | null;
   poster: string | null;
+}
+
+export interface UserProfile extends User {
+  information: {
+    genderEnum: Gender;
+    aboutMe: string;
+    birthday: string;
+    worksAt: string;
+    studiedAt: string;
+    livesAt: string;
+    updateAt: string;
+    totalFriends: number;
+    totalPosts: number;
+    countLikesOfPosts: number;
+    followers: number;
+  };
 }
 
 export interface Friendship {

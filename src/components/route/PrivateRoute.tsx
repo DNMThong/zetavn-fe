@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { API_URL, NotificationFriendRequest } from "@/types/contants.type";
 import { PostNotification } from "@/types/post.type";
 import { FriendRequestResponse } from "@/types/response.type";
-import User from "@/types/user.type";
+import User, { UserProfile } from "@/types/user.type";
 import { getLocalStorageItem } from "@/utils/localstorage.util";
 import { getSessionData, setSessionData } from "@/utils/session.util";
 import { Client } from "@stomp/stompjs";
@@ -33,6 +33,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [relogin] = useLazyReloginQuery();
   const [getFriends] = useLazyGetFriendsQuery();
+
 
   const connectStomp = useCallback(() => {
     console.log("accessToken", accessToken);
@@ -107,7 +108,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    const userLogin = getSessionData<User>("userLogin");
+    const userLogin = getSessionData<UserProfile>("userLogin");
     if (userLogin) {
       if (!user) {
         dispatch(setUser(userLogin));

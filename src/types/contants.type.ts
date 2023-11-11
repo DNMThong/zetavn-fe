@@ -21,6 +21,7 @@ export enum API_URL {
   LIKE = "/api/v0/post-like",
   FRIENDSHIP = "/api/v0/friendship",
   NOTIFICATIONS = "/api/v0/notifications",
+  FOLLOWS = "/api/v0/follows",
 }
 
 export enum PostAccessModifier {
@@ -32,6 +33,44 @@ export enum PostAccessModifier {
 export enum MediaType {
   IMAGE = "image",
   VIDEO = "video",
+}
+
+export enum ProfileActive {
+  TIMELINE = "Timeline",
+  ABOUT = "About",
+  FRIENDS = "Friends",
+  PHOTOS = "Photos",
+}
+
+export enum ProfileAboutContent {
+  OVERVIEW = "overview-content",
+  PERSONAL = "personal-content",
+  EDUCATION = "education-content",
+  JOB = "job-content",
+}
+
+export enum FriendshipStatus {
+  SENDER = "SENDER",
+  FRIEND = "FRIEND",
+  NONE = "NONE",
+  RECEIVER = "RECEIVER",
+}
+
+export enum SettingsTab {
+  GENERAL = "general",
+  SECURITY = "security",
+  PERSONAL = "personal",
+  PRIVACY = "privacy",
+  PREFERENCES = "preferences",
+  NOTIFICATIONS = "notifications",
+  SUPPORT = "support",
+}
+
+export enum FollowPriority {
+  HIGH = "HIGH",
+  MEDIUM = "MEDIUM",
+  LOW = "LOW",
+  NONE = "NONE",
 }
 
 export enum ImageDefault {

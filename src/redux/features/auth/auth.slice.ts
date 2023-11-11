@@ -1,5 +1,10 @@
 import Post, { PostNewsfeed, PostNotification } from "@/types/post.type";
-import User, { CurrentUser, Friendship, UserShort } from "@/types/user.type";
+import User, {
+  CurrentUser,
+  Friendship,
+  UserProfile,
+  UserShort,
+} from "@/types/user.type";
 import {
   getLocalStorageItem,
   removeLocalStorageItem,
@@ -19,7 +24,7 @@ interface AuthState {
 }
 
 interface Credentials {
-  userInfo: User;
+  userInfo: UserProfile;
   accessToken: string;
 }
 

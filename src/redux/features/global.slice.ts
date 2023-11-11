@@ -1,4 +1,5 @@
 import { API_URL } from "@/types/contants.type";
+import { ProfileActive } from "@/types/contants.type";
 import {
   getLocalStorageItem,
   setLocalStorageItem,
@@ -6,12 +7,12 @@ import {
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Client } from "@stomp/stompjs";
 
-
 interface GlobalState {
   openExplorerMenu: boolean;
   openChat: boolean;
   isDarkTheme: boolean;
   clientStomp: Client | null;
+  profilePageActive: ProfileActive;
 }
 
 const initialState: GlobalState = {
@@ -21,6 +22,7 @@ const initialState: GlobalState = {
     ? getLocalStorageItem<string>("theme") === "dark"
     : true,
   clientStomp: null,
+  profilePageActive: ProfileActive.TIMELINE,
 };
 
 const slice = createSlice({
@@ -34,6 +36,11 @@ const slice = createSlice({
       state.openExplorerMenu = !state.openExplorerMenu;
     },
     setOpenChat(state, action: PayloadAction<boolean>) {
+      if (action.payload) {
+        document.body.classList.add("is-frozen");
+      } else {
+        document.body.classList.remove("is-frozen");
+      }
       state.openChat = action.payload;
     },
     setIsDarkTheme(state, action: PayloadAction<boolean>) {
@@ -47,7 +54,10 @@ const slice = createSlice({
     setClientStomp(state, action: PayloadAction<Client>) {
       state.clientStomp = action.payload;
     },
-  }
+    setProfilePageActive(state, action: PayloadAction<ProfileActive>) {
+      state.profilePageActive = action.payload;
+    },
+  },
 });
 
 const GlobalReducer = slice.reducer;
@@ -59,5 +69,6 @@ export const {
   setIsDarkTheme,
   toggleChangeTheme,
   setClientStomp,
+  setProfilePageActive,
 } = slice.actions;
 export default GlobalReducer;

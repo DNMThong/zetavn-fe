@@ -83,6 +83,14 @@ const apiPost = apiAuthorization.injectEndpoints({
         },
       }),
     }),
+    getPostMediaByUserId: build.query<PostsUsersResponse, string>({
+      query: (userId: any) => ({
+        url: `${API_URL.POSTS}/postMedia`,
+        params: {
+          userId,
+        },
+      }),
+    }),
   }),
 });
 
@@ -97,4 +105,5 @@ export const {
   useLikePostMutation,
   useUnlikePostMutation,
   useLazyCheckLikePostQuery,
+  useLazyGetPostMediaByUserIdQuery,
 } = apiPost;

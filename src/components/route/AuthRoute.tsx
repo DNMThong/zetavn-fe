@@ -17,6 +17,14 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (isDarkTheme) {
+      document.body.classList.add("is-dark");
+    } else {
+      document.body.classList.remove("is-dark");
+    }
+  }, [isDarkTheme]);
+
+  useEffect(() => {
     const handleRelogin = async () => {
       try {
         const response = await relogin().unwrap();
@@ -46,13 +54,6 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [router, dispatch, relogin]);
 
-  useEffect(() => {
-    if (isDarkTheme) {
-      document.body.classList.add("is-dark");
-    } else {
-      document.body.classList.remove("is-dark");
-    }
-  }, [isDarkTheme]);
 
   if (loading) return <PageLoader />;
   return (

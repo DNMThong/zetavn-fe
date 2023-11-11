@@ -58,6 +58,56 @@ const ChatBody = () => {
             </div>
           </div>
         </div>
+        <div className="chat-message is-sent">
+          <img src="https://via.placeholder.com/300x300" alt="" />
+          <div className="message-block">
+            <span>8:17am</span>
+            <div className="message-text">
+              Great to hear it. Just send me the PSD files so i can have a look
+              at it.
+            </div>
+          </div>
+        </div>
+        <div className="chat-message is-sent">
+          <img src="https://via.placeholder.com/300x300" alt="" />
+          <div className="message-block">
+            <span>8:17am</span>
+            <div className="message-text">
+              Great to hear it. Just send me the PSD files so i can have a look
+              at it.
+            </div>
+          </div>
+        </div>
+        <div className="chat-message is-sent">
+          <img src="https://via.placeholder.com/300x300" alt="" />
+          <div className="message-block">
+            <span>8:17am</span>
+            <div className="message-text">
+              Great to hear it. Just send me the PSD files so i can have a look
+              at it.
+            </div>
+          </div>
+        </div>
+        <div className="chat-message is-sent">
+          <img src="https://via.placeholder.com/300x300" alt="" />
+          <div className="message-block">
+            <span>8:17am</span>
+            <div className="message-text">
+              Great to hear it. Just send me the PSD files so i can have a look
+              at it.
+            </div>
+          </div>
+        </div>
+        <div className="chat-message is-sent">
+          <img src="https://via.placeholder.com/300x300" alt="" />
+          <div className="message-block">
+            <span>8:17am</span>
+            <div className="message-text">
+              Great to hear it. Just send me the PSD files so i can have a look
+              at it.
+            </div>
+          </div>
+        </div>
 
         <div className="chat-message is-sent">
           <img src="https://via.placeholder.com/300x300" alt="" />

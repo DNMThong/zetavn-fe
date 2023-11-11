@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import React from "react";
+import React, { useEffect } from "react";
 import { FiUser, FiX } from "react-icons/fi";
 import ChatNav from "./ChatNav";
 import ChatSidebar from "./ChatSidebar";
@@ -10,6 +10,15 @@ import ChatDetail from "./ChatDetail";
 
 const ChatWrapper = () => {
   const openChat = useAppSelector((selector) => selector.global.openChat);
+
+  // useEffect(() => {
+  //   if (openChat) {
+  //     document.body.classList.add("is-frozen");
+  //   } else {
+  //     document.body.classList.remove("is-frozen");
+  //   }
+  // }, [openChat]);
+
   return (
     <>
       <div className={`chat-wrapper ${openChat && "is-active"}`}>

@@ -7,6 +7,8 @@ import { useAppSelector } from "@/redux/hooks";
 import { ImageDefault, StatusFriend } from "@/types/contants.type";
 import { SearchUserData, UserShort } from "@/types/user.type";
 import Image from "next/image";
+import Link from "next/link";
+import { userInfo } from "os";
 import React, { useEffect, useState } from "react";
 import { FaUser, FaUserCheck, FaUserPlus } from "react-icons/fa";
 import { FiCheck, FiUser, FiUserMinus, FiUserPlus, FiX } from "react-icons/fi";
@@ -128,7 +130,9 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
         /> */}
       </div>
       <div className="friend-info">
-        <h3>{data.user.display}</h3>
+        <Link href={`/${data.user.id}`}>
+          <h3>{data.user.display}</h3>
+        </Link>
         <p></p>
       </div>
       <div className="friend-stats">

@@ -31,7 +31,7 @@ const UserMeta = ({ userInfo, createdAt, accessModifier }: UserMetaProps) => {
         {hover && <UserPopover userInfo={userInfo}></UserPopover>}
       </div>
       <div className="user-info">
-        <Link className="link" href="#">
+        <Link className="link" href={`/${userInfo.id}`}>
           {userInfo.display}
         </Link>
 

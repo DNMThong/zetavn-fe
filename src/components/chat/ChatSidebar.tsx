@@ -1,4 +1,5 @@
 import React from "react";
+import { FiUser } from "react-icons/fi";
 
 const ChatSidebar = () => {
   return (
@@ -17,7 +18,7 @@ const ChatSidebar = () => {
         />
       </div>
       {/* <!-- User list --> */}
-      <div className="conversations-list has-slimscroll-xs">
+      <div className="conversations-list has-slimscroll-xs  ">
         {Array.from([1, 2, 3, 4, 5]).map((item) => (
           <div
             key={item}
@@ -38,7 +39,7 @@ const ChatSidebar = () => {
         <div
           className="add-button modal-trigger"
           data-modal="add-conversation-modal">
-          <i data-feather="user"></i>
+          <FiUser />
         </div>
       </div>
     </div>

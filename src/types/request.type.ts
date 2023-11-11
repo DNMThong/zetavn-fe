@@ -1,4 +1,8 @@
-import { PostAccessModifier, SearchUserOption } from "./contants.type";
+import {
+  FollowPriority,
+  PostAccessModifier,
+  SearchUserOption,
+} from "./contants.type";
 import { Media } from "./post.type";
 
 export interface LoginRequest {
@@ -22,6 +26,50 @@ export interface CreatePostRequest {
   activityId?: number;
   medias: Media[];
   mentions?: { userId: string }[];
+}
+
+export interface UpdateInfoRequest {
+  userId: string;
+  info: {
+    email: string;
+    username: string;
+    phone: string;
+    firstName: string;
+    lastName: string;
+    aboutMe: string;
+    genderEnum: string;
+    birthday: string;
+    livesAt: string;
+    worksAt: string;
+    studiedAt: string;
+  };
+}
+
+export interface FriendListRequest {
+  userId: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface FriendshipStatusRequest {
+  sourceId: string;
+  targetId: string;
+}
+
+export interface FollowRequest {
+  followerId: string;
+  followingId: string;
+  priority: FollowPriority;
+}
+
+export interface UpdateUserImageRequest {
+  userId: string;
+  urlBase64: string;
+  type: string;
+}
+
+export interface UploadImageRequest {
+  images: string[];
 }
 
 export interface PostPaginationRequest {

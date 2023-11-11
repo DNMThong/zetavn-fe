@@ -48,7 +48,7 @@ const CardComment = ({ data }: CardCommentProps) => {
       </div>
       {/* <!-- Content --> */}
       <div className="media-content">
-        <Link href={`/profile/${data.user.id}`}>{data.user.display}</Link>
+        <Link href={`/${data.user.id}`}>{data.user.display}</Link>
         <span className="time">{calculateTime(data.createdAt)}</span>
         <p>{data.content}</p>
 
