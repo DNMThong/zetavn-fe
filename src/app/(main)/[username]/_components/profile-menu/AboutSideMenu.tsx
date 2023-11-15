@@ -1,4 +1,5 @@
 import { ProfileAboutContent } from "@/types/contants.type";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 const sideMenuItems: IMenuItem[] = [
@@ -32,16 +33,20 @@ interface IMenuItem {
 
 interface AboutSideMenuItemProps extends IMenuItem {
    className?: string;
-   onClick?: () => {};
 }
 
 const AboutSideMenuItem = (data: AboutSideMenuItemProps) => {
+   const router = useRouter();
+   const { username } = useParams();
    const { icon, title, dataContent } = data;
+   const handleClick = () => {
+      router.push(`/${username}/about?content=${dataContent}`);
+   };
    return (
       <div
          className={`menu-item ${data?.className}`}
          data-content={dataContent}
-         onClick={data?.onClick}
+         onClick={handleClick}
       >
          <div className="menu-icon">
             {icon}
@@ -56,23 +61,22 @@ interface AboutSideMenuProps {
    setActiveAboutContent?: any;
 }
 
-const AboutSideMenu = ({
-   activeAboutContent,
-   setActiveAboutContent,
-}: AboutSideMenuProps) => {
+const AboutSideMenu = () => {
+   const params = useSearchParams();
    return (
       <div className="left-menu">
          <div className="left-menu-inner">
             {sideMenuItems.map((item, index) => (
                <AboutSideMenuItem
                   className={
-                     activeAboutContent === item.dataContent ? "is-active" : ""
+                     params.get("content") === item.dataContent
+                        ? "is-active"
+                        : ""
                   }
                   key={index}
                   icon={item.icon}
                   title={item.title}
                   dataContent={item.dataContent}
-                  onClick={() => setActiveAboutContent(item.dataContent)}
                />
             ))}
          </div>

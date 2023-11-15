@@ -1,255 +1,211 @@
 import { apiAuthorization, apiNoAuthorization } from "@/redux/api/api.service";
 import { API_URL, SearchUserOption } from "@/types/contants.type";
 import {
-  AddFriendRequest,
-  FollowRequest,
-  FriendRequest,
-  FriendshipStatusRequest,
-  GetPostNotificationsRequest,
-  LoginRequest,
-  RegisterRequest,
-  SearchUsersRequest,
-  UpdateInfoRequest,
-  UpdateUserImageRequest,
-  UploadImageRequest,
+   AddFriendRequest,
+   FollowRequest,
+   FriendRequest,
+   FriendshipStatusRequest,
+   GetPostNotificationsRequest,
+   LoginRequest,
+   RegisterRequest,
+   SearchUsersRequest,
+   UpdateInfoRequest,
+   UpdateUserImageRequest,
+   UploadImageRequest,
 } from "@/types/request.type";
 import {
-  AddFriendResponse,
-  ApiResponse,
-  FileUploadResponse,
-  FollowResponse,
-  FriendshipResponse,
-  GetFriendRequestResponse,
-  GetFriendsResponse,
-  GetPostNotificationsResponse,
-  LoginResponse,
-  RegisterResponse,
-  SearchUserResponse,
-  UserResponse,
+   AddFriendResponse,
+   ApiResponse,
+   FileUploadResponse,
+   FollowResponse,
+   FriendshipResponse,
+   GetFriendRequestResponse,
+   GetFriendsResponse,
+   GetPostNotificationsResponse,
+   LoginResponse,
+   RegisterResponse,
+   SearchUserResponse,
+   UserResponse,
 } from "@/types/response.type";
 import User, { UserProfile } from "@/types/user.type";
 import { FriendListRequest } from "./../../../types/request.type";
 
 export const userApi = apiAuthorization.injectEndpoints({
-  endpoints: (builder) => ({
-    getUsers: builder.query<unknown, void>({
-      query: () => "/api/v0/users",
-    }),
-    getFriends: builder.query<GetFriendsResponse, string>({
-      query: (id) => `${API_URL.USERS}/${id}/friends`,
-    }),
-    searchUsers: builder.query<SearchUserResponse, SearchUsersRequest>({
-      query: (data) => ({
-        url: `${API_URL.USERS}/search`,
-        params: {
-          userId: data.userId,
-          kw: data.kw,
-          pageNumber: data.pageNumber || 0,
-          pageSize: data.pageSize || 8,
-          option: data.option || SearchUserOption.ALL,
-        },
+   endpoints: (builder) => ({
+      getUsers: builder.query<unknown, void>({
+         query: () => "/api/v0/users",
       }),
-    }),
-    addFriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
-      query: (body) => ({
-        url: API_URL.FRIENDSHIP,
-        method: "POST",
-        body,
+      getFriends: builder.query<GetFriendsResponse, string>({
+         query: (id) => `${API_URL.USERS}/${id}/friends`,
       }),
-    }),
-    acceptFriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
-      query: (body) => ({
-        url: `${API_URL.FRIENDSHIP}/accept`,
-        method: "PUT",
-        body,
+      searchUsers: builder.query<SearchUserResponse, SearchUsersRequest>({
+         query: (data) => ({
+            url: `${API_URL.USERS}/search`,
+            params: {
+               userId: data.userId,
+               kw: data.kw,
+               pageNumber: data.pageNumber || 0,
+               pageSize: data.pageSize || 8,
+               option: data.option || SearchUserOption.ALL,
+            },
+         }),
       }),
-    }),
-    rejectFriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
-      query: (body) => ({
-        url: `${API_URL.FRIENDSHIP}/reject`,
-        method: "PUT",
-        body,
+      addFriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
+         query: (body) => ({
+            url: API_URL.FRIENDSHIP,
+            method: "POST",
+            body,
+         }),
       }),
-    }),
-    getFriendRequest: builder.query<GetFriendRequestResponse, FriendRequest>({
-      query: (data) => ({
-        url: API_URL.FRIENDSHIP,
-        params: {
-          id: data.userId,
-          pageNumber: data.pageNumber || 0,
-          pageSize: data.pageSize || 5,
-        },
+      acceptFriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
+         query: (body) => ({
+            url: `${API_URL.FRIENDSHIP}/accept`,
+            method: "PUT",
+            body,
+         }),
       }),
-    }),
-    getPostNotifications: builder.query<
-      GetPostNotificationsResponse,
-      GetPostNotificationsRequest
-    >({
-      query: (data) => ({
-        url: API_URL.NOTIFICATIONS,
-        params: {
-          id: data.userId,
-          pageNumber: data.pageNumber || 0,
-          pageSize: data.pageSize || 5,
-        },
+      rejectFriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
+         query: (body) => ({
+            url: `${API_URL.FRIENDSHIP}/reject`,
+            method: "PUT",
+            body,
+         }),
       }),
-    }),
-    updateReadPostNotification: builder.mutation<
-      ApiResponse<null>,
-      { ids: number[] }
-    >({
-      query: (body) => ({
-        url: `${API_URL.NOTIFICATIONS}/read`,
-        method: "PUT",
-        body,
+      getFriendRequest: builder.query<GetFriendRequestResponse, FriendRequest>({
+         query: (data) => ({
+            url: API_URL.FRIENDSHIP,
+            params: {
+               id: data.userId || "",
+               pageNumber: data.pageNumber || 0,
+               pageSize: data.pageSize || 5,
+            },
+         }),
       }),
-    }),
-    getUser: builder.query<SearchUserResponse, string>({
-      query: (id) => `${API_URL.USERS}/${id}`,
-    }),
-    updateUserInfo: builder.mutation<UserResponse, UpdateInfoRequest>({
-      query: (data) => ({
-        url: `${API_URL.USERS}/${data.userId}/info`,
-        body: data.info,
-        method: "PUT",
+      getPostNotifications: builder.query<
+         GetPostNotificationsResponse,
+         GetPostNotificationsRequest
+      >({
+         query: (data) => ({
+            url: API_URL.NOTIFICATIONS,
+            params: {
+               id: data.userId,
+               pageNumber: data.pageNumber || 0,
+               pageSize: data.pageSize || 5,
+            },
+         }),
       }),
-    }),
-    getFriendsListByUserId: builder.query<UserProfile, FriendListRequest>({
-      query: ({ userId, pageNumber = 0, pageSize = 5 }) => ({
-        url: `${API_URL.FRIENDSHIP}/friends`,
-        params: {
-          id: userId,
-          pageNumber: pageNumber as number,
-          pageSize: pageSize as number,
-        },
+      updateReadPostNotification: builder.mutation<
+         ApiResponse<null>,
+         { ids: number[] }
+      >({
+         query: (body) => ({
+            url: `${API_URL.NOTIFICATIONS}/read`,
+            method: "PUT",
+            body,
+         }),
       }),
-    }),
-    getFriendshipStatus: builder.query<
-      FriendshipResponse,
-      FriendshipStatusRequest
-    >({
-      query: ({ sourceId, targetId }) => ({
-        url: `${API_URL.FRIENDSHIP}/status`,
-        params: {
-          sourceId,
-          targetId,
-        },
+      getUser: builder.query<SearchUserResponse, string>({
+         query: (id) => `${API_URL.USERS}/${id}`,
       }),
-    }),
-    sendFriendRequest: builder.mutation<
-      FriendshipResponse,
-      FriendshipStatusRequest
-    >({
-      query: (data) => {
-        return {
-          url: `${API_URL.FRIENDSHIP}`,
-          method: "POST",
-          body: {
-            senderId: data?.sourceId,
-            receiverId: data?.targetId,
-          },
-        };
-      },
-    }),
-    acceptFriendRequest: builder.mutation<
-      FriendshipResponse,
-      FriendshipStatusRequest
-    >({
-      query: (data) => ({
-        url: `${API_URL.FRIENDSHIP}/accept`,
-        method: "PUT",
-        body: {
-          senderId: data?.targetId,
-          receiverId: data?.sourceId,
-        },
+      updateUserInfo: builder.mutation<UserResponse, UpdateInfoRequest>({
+         query: (data) => ({
+            url: `${API_URL.USERS}/${data.userId}/info`,
+            body: data.info,
+            method: "PUT",
+         }),
       }),
-    }),
-    rejectFriendRequest: builder.mutation<
-      FriendshipResponse,
-      FriendshipStatusRequest
-    >({
-      query: (data) => ({
-        url: `${API_URL.FRIENDSHIP}/reject`,
-        method: "PUT",
-        body: {
-          senderId: data?.sourceId,
-          receiverId: data?.targetId,
-        },
+      getFriendsListByUserId: builder.query<UserProfile, FriendListRequest>({
+         query: ({ userId, pageNumber = 0, pageSize = 5 }) => ({
+            url: `${API_URL.FRIENDSHIP}/friends`,
+            params: {
+               id: userId,
+               pageNumber: pageNumber as number,
+               pageSize: pageSize as number,
+            },
+         }),
       }),
-    }),
-    getFollowStatus: builder.query<FollowResponse, FriendshipStatusRequest>({
-      query: ({ sourceId, targetId }) => ({
-        url: `${API_URL.FOLLOWS}/check-follow`,
-        params: {
-          sourceId: sourceId,
-          targetId: targetId,
-        },
+      getFriendshipStatus: builder.query<
+         FriendshipResponse,
+         FriendshipStatusRequest
+      >({
+         query: ({ sourceId, targetId }) => ({
+            url: `${API_URL.FRIENDSHIP}/status`,
+            params: {
+               sourceId,
+               targetId,
+            },
+         }),
       }),
-    }),
-    unFollow: builder.mutation<FollowResponse, FriendshipStatusRequest>({
-      query: ({ sourceId: followerId, targetId: followingId }) => ({
-        url: `${API_URL.FOLLOWS}`,
-        method: "DELETE",
-        params: {
-          followerId,
-          followingId,
-        },
+      getFollowStatus: builder.query<FollowResponse, FriendshipStatusRequest>({
+         query: ({ sourceId, targetId }) => ({
+            url: `${API_URL.FOLLOWS}/check-follow`,
+            params: {
+               sourceId: sourceId,
+               targetId: targetId,
+            },
+         }),
       }),
-    }),
-    follow: builder.mutation<FollowResponse, FollowRequest>({
-      query: ({ followerId, followingId, priority }) => ({
-        url: `${API_URL.FOLLOWS}`,
-        method: "POST",
-        body: {
-          followerId,
-          followingId,
-          priority,
-        },
+      unFollow: builder.mutation<FollowResponse, FriendshipStatusRequest>({
+         query: ({ sourceId: followerId, targetId: followingId }) => ({
+            url: `${API_URL.FOLLOWS}`,
+            method: "DELETE",
+            params: {
+               followerId,
+               followingId,
+            },
+         }),
       }),
-    }),
+      follow: builder.mutation<FollowResponse, FollowRequest>({
+         query: ({ followerId, followingId, priority }) => ({
+            url: `${API_URL.FOLLOWS}`,
+            method: "POST",
+            body: {
+               followerId,
+               followingId,
+               priority,
+            },
+         }),
+      }),
 
-    updateUserImage: builder.mutation<UserProfile, UpdateUserImageRequest>({
-      query: ({ userId, urlBase64, type }) => ({
-        url: `${API_URL.USERS}/${userId}/${type}`,
-        method: "PUT",
-        body: {
-          images: [urlBase64],
-        },
+      updateUserImage: builder.mutation<UserProfile, UpdateUserImageRequest>({
+         query: ({ userId, urlBase64, type }) => ({
+            url: `${API_URL.USERS}/${userId}/${type}`,
+            method: "PUT",
+            body: {
+               images: [urlBase64],
+            },
+         }),
       }),
-    }),
-    uploadImage: builder.mutation<FileUploadResponse, UploadImageRequest>({
-      query: ({ images }) => ({
-        url: `${API_URL.UPLOAD}/images`,
-        method: "POST",
-        body: {
-          images: [...images],
-        },
+      uploadImage: builder.mutation<FileUploadResponse, UploadImageRequest>({
+         query: ({ images }) => ({
+            url: `${API_URL.UPLOAD}/images`,
+            method: "POST",
+            body: {
+               images: [...images],
+            },
+         }),
       }),
-    }),
-  }),
+   }),
 });
 
 export const {
-  useGetUsersQuery,
-  useLazyGetFriendsQuery,
-  useLazySearchUsersQuery,
-  useAddFriendMutation,
-  useGetFriendRequestQuery,
-  useLazyGetFriendRequestQuery,
-  useAcceptFriendMutation,
-  useRejectFriendMutation,
-  useLazyGetPostNotificationsQuery,
-  useUpdateReadPostNotificationMutation,
-  useLazyGetUserQuery,
-  useUpdateUserInfoMutation,
-  useLazyGetFriendsListByUserIdQuery,
-  useSendFriendRequestMutation,
-  useLazyGetFriendshipStatusQuery,
-  useAcceptFriendRequestMutation,
-  useRejectFriendRequestMutation,
-  useLazyGetFollowStatusQuery,
-  useUnFollowMutation,
-  useFollowMutation,
-  useUpdateUserImageMutation,
-  useUploadImageMutation,
+   useGetUsersQuery,
+   useLazyGetFriendsQuery,
+   useLazySearchUsersQuery,
+   useAddFriendMutation,
+   useGetFriendRequestQuery,
+   useLazyGetFriendRequestQuery,
+   useAcceptFriendMutation,
+   useRejectFriendMutation,
+   useLazyGetPostNotificationsQuery,
+   useUpdateReadPostNotificationMutation,
+   useLazyGetUserQuery,
+   useUpdateUserInfoMutation,
+   useLazyGetFriendsListByUserIdQuery,
+   useLazyGetFriendshipStatusQuery,
+   useLazyGetFollowStatusQuery,
+   useUnFollowMutation,
+   useFollowMutation,
+   useUpdateUserImageMutation,
+   useUploadImageMutation,
 } = userApi;

@@ -4,6 +4,8 @@ import React from "react";
 import GeneralSetting from "./_components/settings-part/GeneralSetting";
 
 const SettingsPage = () => {
+   console.log("Setting");
+
    return (
       <>
          <SettingsSidebar></SettingsSidebar>
@@ -11,6 +13,7 @@ const SettingsPage = () => {
             <GeneralSetting></GeneralSetting>
          </div>
       </>
+      // /settings/tab=general
    );
 };
 

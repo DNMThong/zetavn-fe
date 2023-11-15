@@ -28,7 +28,12 @@ const RadioButton = ({
    });
    return (
       <label className={`material-radio ${color}`}>
-         <input type="radio" {...field} value={value} />
+         <input
+            type="radio"
+            {...field}
+            value={value}
+            checked={field.value === value}
+         />
          <span className="dot"></span>
          <span className="radio-label">{label}</span>
       </label>
