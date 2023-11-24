@@ -56,37 +56,38 @@ const defaultValues: IFormValues = {
 const FormRegister = () => {
   const { control, handleSubmit, reset } = useForm<IFormValues>({
     defaultValues: defaultValues,
-    resolver: yupResolver(schema),
+    // resolver: yupResolver(schema),
     mode: "all",
   });
   const [register, { isLoading }] = useRegisterMutation();
   const router = useRouter();
 
   const onSubmit: SubmitHandler<IFormValues> = async (values) => {
-    const { email, firstName, lastName, password, gender, birthday } = values;
-    try {
-      const response = await register({
-        email,
-        firstName,
-        lastName,
-        password,
-        gender,
-        birthday: birthday.toISOString(),
-      }).unwrap();
-      const { code, status, message, data } = response;
-      if (code === 200) {
-        router.push(`/confirmation?u=${data.id}`);
-      } else if (code === 409 && status === "CONFLICT") {
-        toast.info("Email này đã được dùng!!!");
-      } else {
-        reset(defaultValues);
-        toast.error("Đã có lỗi xảy ra vui lòng thử lại");
-      }
-    } catch (err) {
-      reset(defaultValues);
-      toast.error("Đã có lỗi xảy ra vui lòng thử lại");
-      console.log(err);
-    }
+    console.log(values);
+    // const { email, firstName, lastName, password, gender, birthday } = values;
+    // try {
+    //   const response = await register({
+    //     email,
+    //     firstName,
+    //     lastName,
+    //     password,
+    //     gender,
+    //     birthday: birthday.toISOString(),
+    //   }).unwrap();
+    //   const { code, status, message, data } = response;
+    //   if (code === 200) {
+    //     router.push(`/confirmation?u=${data.id}`);
+    //   } else if (code === 409 && status === "CONFLICT") {
+    //     toast.info("Email này đã được dùng!!!");
+    //   } else {
+    //     reset(defaultValues);
+    //     toast.error("Đã có lỗi xảy ra vui lòng thử lại");
+    //   }
+    // } catch (err) {
+    //   reset(defaultValues);
+    //   toast.error("Đã có lỗi xảy ra vui lòng thử lại");
+    //   console.log(err);
+    // }
   };
 
   return (

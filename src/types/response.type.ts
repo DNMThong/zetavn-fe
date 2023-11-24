@@ -9,8 +9,14 @@ import Post, {
   PostNewsfeed,
   PostNotification,
 } from "./post.type";
-import User, { SearchUserData, UserShort, UserProfile } from "./user.type";
+import User, {
+  SearchUserData,
+  UserShort,
+  UserProfile,
+  UserContact,
+} from "./user.type";
 import { FollowPriority, FriendshipStatus } from "./contants.type";
+import { Message } from "./chat.type";
 
 export interface ApiResponse<T> {
   code: number;
@@ -79,6 +85,7 @@ export type SearchUserPagination = Pagination<SearchUserData[]>;
 export type FriendRequestPagination = Pagination<FriendRequestResponse[]>;
 export type CommentPagination = Pagination<Comment[]>;
 export type PostNotificationPagination = Pagination<PostNotification[]>;
+export type ChatMessagesPagination = Pagination<Message[]>;
 
 export type CreatePostResponse = ApiResponse<Post>;
 export type ActivitiesResponse = ApiResponse<ActivityStatus[]>;
@@ -100,3 +107,6 @@ export type UserResponse = ApiResponse<UserProfile>;
 export type FriendshipResponse = ApiResponse<Friendship>;
 
 export type FileUploadResponse = ApiResponse<FileUpload>;
+export type GetContactResponse = ApiResponse<UserContact[]>;
+export type GetChatMessagesResponse = ApiResponse<ChatMessagesPagination>;
+export type CreateChatMessagesResponse = ApiResponse<Message>;

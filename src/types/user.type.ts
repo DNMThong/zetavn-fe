@@ -1,3 +1,5 @@
+import { boolean } from "yup";
+import { Message } from "./chat.type";
 import { FriendshipStatus, Gender, StatusFriend } from "./contants.type";
 
 export default interface User {
@@ -24,6 +26,10 @@ export interface UserShort {
   avatar: string | null;
   poster: string | null;
 }
+
+export type UserShortPrivate = UserShort & {
+  isOnline: boolean;
+};
 
 export interface UserProfile extends User {
   information: {
@@ -55,4 +61,10 @@ export interface SearchUserData {
   totalFriends: number;
   totalPosts: number;
   status: StatusFriend;
+}
+
+export interface UserContact {
+  user: UserShortPrivate;
+  newMessage: Message;
+  totalUnreadMessage: number;
 }

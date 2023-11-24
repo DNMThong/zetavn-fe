@@ -1,134 +1,101 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { ComposeAddDropdown } from "../dropdowns";
+import ChatCompose from "./ChatCompose";
+import { BsCheck, BsCheckAll } from "react-icons/bs";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useLazyGetChatMessagesQuery } from "@/redux/features/chat/chat.service";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  addChatMessageSelected,
+  addChatMessageSelectedHead,
+  setChatMessageSelected,
+} from "@/redux/features/chat/chat.slice";
+import { ImageDefault } from "@/types/contants.type";
+import { calculateTime } from "@/utils/calculate-time.util";
+import MessageChatStatus from "./message/MessageChatStatus";
+import MessageItem from "./message/MessageItem";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Fancybox } from "../fancybox";
 
 const ChatBody = () => {
+  const { openChatDetails, userContactSelected, chatMessageSelected } =
+    useAppSelector((selector) => selector.chat);
+  const user = useAppSelector((selector) => selector.auth.user);
+  const [getChatMessages] = useLazyGetChatMessagesQuery();
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchGetChatMessages = async () => {
+      const response = await getChatMessages({
+        userIdGetChat: user?.id || "",
+        userIdContact: userContactSelected?.id || "",
+        pageNumber: page,
+        pageSize: 20,
+      }).unwrap();
+
+      if (response.code === 200) {
+        const { data } = response;
+        if (page === 0) {
+          dispatch(setChatMessageSelected(data.data));
+        } else {
+          dispatch(addChatMessageSelected(data.data));
+        }
+        if (data.lastPage) setHasMore(false);
+      }
+    };
+    if (userContactSelected) {
+      fetchGetChatMessages();
+    }
+  }, [dispatch, getChatMessages, user, userContactSelected, page]);
+
+  useEffect(() => {
+    setPage(0);
+    setHasMore(true);
+  }, [userContactSelected]);
+
   return (
-    <div id="chat-body" className="chat-body is-opened">
-      <div className="chat-body-inner has-slimscroll">
-        <div className="date-divider">
+    <Fancybox
+      options={{
+        Carousel: {
+          infinite: false,
+        },
+      }}>
+      <div
+        id="chat-body"
+        className={`chat-body ${openChatDetails ? "is-opened" : ""}`}>
+        <div id="chat-scroll" className="chat-body-inner has-slimscroll">
+          <InfiniteScroll
+            inverse={true}
+            loader={<></>}
+            hasMore={hasMore}
+            next={() => setPage((prev) => prev + 1)}
+            style={{
+              display: "flex",
+              flexDirection: "column-reverse",
+              overflow: "unset",
+              height: "100%",
+            }}
+            dataLength={chatMessageSelected.length}
+            scrollableTarget="chat-scroll">
+            {chatMessageSelected.map((chatMessage) => (
+              <MessageItem
+                key={chatMessage.id + chatMessage.createdAt}
+                message={chatMessage}
+              />
+            ))}
+          </InfiniteScroll>
+        </div>
+        {/* <div className="date-divider">
           <hr className="date-divider-line" />
           <span className="date-divider-text">Today</span>
-        </div>
-
-        <div className="chat-message is-received">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:03am</span>
-            <div className="message-text">
-              Hi Jenna! I made a new design, and i wanted to show it to you.
-            </div>
-          </div>
-        </div>
-
-        <div className="chat-message is-received">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:03am</span>
-            <div className="message-text">
-              It is quite clean and it is inspired from Bulkit.
-            </div>
-          </div>
-        </div>
-
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:12am</span>
-            <div className="message-text">Oh really??! I want to see that.</div>
-          </div>
-        </div>
-
-        <div className="chat-message is-received">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:13am</span>
-            <div className="message-text">
-              FYI it was done in less than a day.
-            </div>
-          </div>
-        </div>
-
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:17am</span>
-            <div className="message-text">
-              Great to hear it. Just send me the PSD files so i can have a look
-              at it.
-            </div>
-          </div>
-        </div>
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:17am</span>
-            <div className="message-text">
-              Great to hear it. Just send me the PSD files so i can have a look
-              at it.
-            </div>
-          </div>
-        </div>
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:17am</span>
-            <div className="message-text">
-              Great to hear it. Just send me the PSD files so i can have a look
-              at it.
-            </div>
-          </div>
-        </div>
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:17am</span>
-            <div className="message-text">
-              Great to hear it. Just send me the PSD files so i can have a look
-              at it.
-            </div>
-          </div>
-        </div>
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:17am</span>
-            <div className="message-text">
-              Great to hear it. Just send me the PSD files so i can have a look
-              at it.
-            </div>
-          </div>
-        </div>
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:17am</span>
-            <div className="message-text">
-              Great to hear it. Just send me the PSD files so i can have a look
-              at it.
-            </div>
-          </div>
-        </div>
-
-        <div className="chat-message is-sent">
-          <img src="https://via.placeholder.com/300x300" alt="" />
-          <div className="message-block">
-            <span>8:18am</span>
-            <div className="message-text">
-              And if you have a prototype, you can also send me the link to it.
-            </div>
-          </div>
-        </div>
+        </div> */}
+        {/* Compose message area */}
+        <ChatCompose />
       </div>
-      {/* Compose message area */}
-      <div className="chat-action">
-        <div className="chat-action-inner">
-          <div className="control">
-            <textarea className="textarea comment-textarea" rows={1}></textarea>
-            <ComposeAddDropdown />
-          </div>
-        </div>
-      </div>
-    </div>
+    </Fancybox>
   );
 };
 

@@ -22,6 +22,7 @@ export enum API_URL {
   FRIENDSHIP = "/api/v0/friendship",
   NOTIFICATIONS = "/api/v0/notifications",
   FOLLOWS = "/api/v0/follows",
+  MESSAGES = "/api/v0/messages",
 }
 
 export enum PostAccessModifier {
@@ -107,4 +108,16 @@ export enum PostNotificationType {
   LIKE = "LIKE",
   SHARE = "SHARE",
   COMMENT = "COMMENT",
+}
+
+export enum MessageType {
+  TEXT = "TEXT",
+  VIDEO = "VIDEO",
+  IMAGE = "IMAGE",
+  AUDIO = "AUDIO",
+}
+
+export enum MessageStatus {
+  SENT = "SENT",
+  READ = "READ",
 }

@@ -1,13 +1,27 @@
+"use client";
 import React from "react";
 import { FiX } from "react-icons/fi";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setOpenChatDetails } from "@/redux/features/chat/chat.slice";
+import { ImageDefault } from "@/types/contants.type";
 
 const ChatDetail = () => {
+  const { openChatDetails, userContactSelected } = useAppSelector(
+    (selector) => selector.chat
+  );
+  const dispatch = useAppDispatch();
+  const handleCloseChatDetails = () => {
+    dispatch(setOpenChatDetails(false));
+  };
+
   return (
-    <div id="chat-panel" className="chat-panel is-opened">
+    <div
+      id="chat-panel"
+      className={`chat-panel ${openChatDetails ? "is-opened" : ""}`}>
       <div className="panel-inner">
         <div className="panel-header">
-          <h3>Details</h3>
-          <div className="panel-close">
+          <h3>Thông tin</h3>
+          <div className="panel-close" onClick={handleCloseChatDetails}>
             <FiX />
           </div>
         </div>
@@ -27,15 +41,18 @@ const ChatDetail = () => {
             </div>
 
             <div className="details-avatar">
-              <img src="https://via.placeholder.com/300x300" alt="" />
+              <img
+                src={userContactSelected?.avatar || ImageDefault.AVATAR}
+                alt=""
+              />
               <div className="call-me">
                 <i className="mdi mdi-phone"></i>
               </div>
             </div>
 
             <div className="user-meta has-text-centered">
-              <h3>Dan Walker</h3>
-              <h4>IOS Developer</h4>
+              <h3>{userContactSelected?.display}</h3>
+              {/* <h4>IOS Developer</h4> */}
             </div>
 
             <div className="user-badges">

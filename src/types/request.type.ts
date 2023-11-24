@@ -1,5 +1,7 @@
+import { Message } from "./chat.type";
 import {
   FollowPriority,
+  MessageType,
   PostAccessModifier,
   SearchUserOption,
 } from "./contants.type";
@@ -132,4 +134,23 @@ export interface GetPostNotificationsRequest {
   userId: string;
   pageNumber?: number;
   pageSize?: number;
+}
+
+export interface GetChatMessagesRequest {
+  userIdGetChat: string;
+  userIdContact: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface CreateChatMessagesRequest {
+  senderId: string;
+  recieverId: string;
+  message: string;
+  type: MessageType;
+}
+
+export interface UploadFileChatMessageRequest
+  extends CreateChatMessagesRequest {
+  file: File;
 }

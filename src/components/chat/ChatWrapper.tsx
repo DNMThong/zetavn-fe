@@ -9,15 +9,7 @@ import ChatBody from "./ChatBody";
 import ChatDetail from "./ChatDetail";
 
 const ChatWrapper = () => {
-  const openChat = useAppSelector((selector) => selector.global.openChat);
-
-  // useEffect(() => {
-  //   if (openChat) {
-  //     document.body.classList.add("is-frozen");
-  //   } else {
-  //     document.body.classList.remove("is-frozen");
-  //   }
-  // }, [openChat]);
+  const openChat = useAppSelector((selector) => selector.chat.openChat);
 
   return (
     <>

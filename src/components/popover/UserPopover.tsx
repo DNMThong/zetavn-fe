@@ -1,3 +1,9 @@
+"use client";
+import {
+  setOpenChat,
+  setUserContactSelected,
+} from "@/redux/features/chat/chat.slice";
+import { useAppDispatch } from "@/redux/hooks";
 import User, { UserShort } from "@/types/user.type";
 import Link from "next/link";
 import React from "react";
@@ -16,6 +22,17 @@ interface UserPopoverProps {
 }
 
 const UserPopover = ({ stylesArrow, userInfo }: UserPopoverProps) => {
+  const dispatch = useAppDispatch();
+  const handleChatUser = () => {
+    dispatch(setOpenChat(true));
+    dispatch(
+      setUserContactSelected({
+        ...userInfo,
+        isOnline: false,
+      })
+    );
+  };
+
   return (
     <div className="webui-popover pop webui-no-padding bottom in">
       <div className="webui-arrow" style={stylesArrow}></div>
@@ -62,13 +79,13 @@ const UserPopover = ({ stylesArrow, userInfo }: UserPopoverProps) => {
               </div>
             </div>
             <div className="popover-actions">
-              <a href="#" className="popover-icon">
+              <a className="popover-icon">
                 <FiMoreHorizontal />
               </a>
-              <a href="#" className="popover-icon">
+              <a className="popover-icon">
                 <FiBookmark />
               </a>
-              <a href="#" className="popover-icon">
+              <a className="popover-icon" onClick={handleChatUser}>
                 <FiMessageCircle />
               </a>
             </div>

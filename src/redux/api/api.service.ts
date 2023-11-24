@@ -26,7 +26,6 @@ export const baseQueryWithReauth: BaseQueryFn<
   FetchBaseQueryError
 > = async (args, api, extraOptions): Promise<any> => {
   let result: any = await baseQuery(args, api, extraOptions);
-  console.log(result,"result");
   if (result?.error && result.error?.status) {
     if (
       (result.error?.status === 401 &&

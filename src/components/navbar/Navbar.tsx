@@ -9,9 +9,10 @@ import {
   MessagesDropdown,
   NotificationsDropdown,
 } from "../dropdowns";
-import { setOpenChat, toggleExplorerMenu } from "@/redux/features/global.slice";
+import { toggleExplorerMenu } from "@/redux/features/global.slice";
 import { FiMessageSquare } from "react-icons/fi";
 import Link from "next/link";
+import { setOpenChat } from "@/redux/features/chat/chat.slice";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();

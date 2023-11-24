@@ -9,7 +9,6 @@ import { Client } from "@stomp/stompjs";
 
 interface GlobalState {
   openExplorerMenu: boolean;
-  openChat: boolean;
   isDarkTheme: boolean;
   clientStomp: Client | null;
   profilePageActive: ProfileActive;
@@ -17,7 +16,6 @@ interface GlobalState {
 
 const initialState: GlobalState = {
   openExplorerMenu: false,
-  openChat: false,
   isDarkTheme: getLocalStorageItem<string>("theme")
     ? getLocalStorageItem<string>("theme") === "dark"
     : true,
@@ -35,14 +33,7 @@ const slice = createSlice({
     toggleExplorerMenu(state) {
       state.openExplorerMenu = !state.openExplorerMenu;
     },
-    setOpenChat(state, action: PayloadAction<boolean>) {
-      if (action.payload) {
-        document.body.classList.add("is-frozen");
-      } else {
-        document.body.classList.remove("is-frozen");
-      }
-      state.openChat = action.payload;
-    },
+
     setIsDarkTheme(state, action: PayloadAction<boolean>) {
       state.isDarkTheme = action.payload;
       setLocalStorageItem("theme", state.isDarkTheme ? "dark" : "light");
@@ -51,7 +42,7 @@ const slice = createSlice({
       state.isDarkTheme = !state.isDarkTheme;
       setLocalStorageItem("theme", state.isDarkTheme ? "dark" : "light");
     },
-    setClientStomp(state, action: PayloadAction<Client>) {
+    setClientStomp(state, action: PayloadAction<Client | null>) {
       state.clientStomp = action.payload;
     },
     setProfilePageActive(state, action: PayloadAction<ProfileActive>) {
@@ -65,7 +56,6 @@ const GlobalReducer = slice.reducer;
 export const {
   setOpenExplorerMenu,
   toggleExplorerMenu,
-  setOpenChat,
   setIsDarkTheme,
   toggleChangeTheme,
   setClientStomp,
