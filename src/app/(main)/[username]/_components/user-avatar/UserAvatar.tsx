@@ -359,9 +359,11 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             <>
                <AvatarButton
                   id="change-profile-pic"
-                  className={`"modal-trigger" ${
+                  className={`modal-trigger ${
                      isSelfProfile ? "is-center" : "is-far-left"
                   }`}
+                  tooltipId="change-profile-pic"
+                  tooltipContent="Bạn bè"
                   dataModal="change-profile-pic-modal"
                   dataPlacement={isSelfProfile ? "top" : "right"}
                   dataTitle="Change profile picture"
@@ -381,6 +383,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                show={editCoverModal}
                handleCloseModal={handleCloseEditCoverModal}
                type="avatar"
+               setShow={setEditCoverModal}
             />
          )}
 

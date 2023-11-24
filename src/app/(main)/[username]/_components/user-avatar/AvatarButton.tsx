@@ -10,6 +10,8 @@ interface AvatarButtonProps {
    show: boolean;
    onClick?: any;
    style?: any;
+   tooltipId?: string;
+   tooltipContent?: string;
 }
 
 const AvatarButton = ({
@@ -17,6 +19,8 @@ const AvatarButton = ({
    className,
    dataPlacement,
    dataTitle,
+   tooltipId,
+   tooltipContent,
    children,
    show,
    onClick,
@@ -28,6 +32,8 @@ const AvatarButton = ({
          className={`pop-button has-tooltip ${className} ${
             show ? "is-active" : ""
          }`}
+         data-tooltip-content={tooltipContent}
+         data-tooltip-id={tooltipId}
          data-placement={dataPlacement}
          data-title={dataTitle}
          onClick={onClick}

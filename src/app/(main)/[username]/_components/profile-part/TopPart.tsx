@@ -90,6 +90,7 @@ const TopPart = () => {
                         show={editCoverModal}
                         handleCloseModal={handleCloseEditCoverModal}
                         type="poster"
+                        setShow={setEditCoverModal}
                      />
                   )}
                   {isSelfProfile && (

@@ -55,7 +55,11 @@ const ListPhoto = () => {
                      <FiUploadCloud></FiUploadCloud>
                   </DropdownItem>
                   <hr className="dropdown-divider" />
-                  <DropdownItem title="Xem tất cả" subTitle="Xem tất cả ảnh.">
+                  <DropdownItem
+                     title="Xem tất cả"
+                     subTitle="Xem tất cả ảnh."
+                     href={`/${username}/photos`}
+                  >
                      <FiImage></FiImage>
                   </DropdownItem>
                </WidgetDropdown>

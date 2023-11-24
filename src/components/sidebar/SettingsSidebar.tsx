@@ -1,4 +1,6 @@
+import { useAppSelector } from "@/redux/hooks";
 import { SettingsTab } from "@/types/contants.type";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import {
@@ -18,6 +20,7 @@ const SettingsSidebar = () => {
    const handleClick = (e: any, tab: SettingsTab) => {
       router.push("/settings?tab=" + tab);
    };
+   const user = useAppSelector((selector) => selector.auth.user);
    return (
       <div className="settings-sidebar is-active">
          <div className="settings-sidebar-inner">
@@ -26,18 +29,18 @@ const SettingsSidebar = () => {
                   <i data-feather="x"></i>
                </a>
                <div className="avatar-wrap">
-                  <img
-                     src="https://via.placeholder.com/150x150"
-                     data-demo-src="assets/img/avatars/jenna.png"
-                     data-user-popover="0"
-                     alt=""
+                  <Image
+                     src={user?.avatar || ""}
+                     width={58}
+                     height={58}
+                     alt="image"
                   />
                   <div className="badge">
                      <i data-feather="check"></i>
                   </div>
                </div>
-               <h4>Jenna Davis</h4>
-               <p>Melbourne, AU</p>
+               <h4>{user?.display}</h4>
+               <p>{user?.information.livesAt}</p>
             </div>
             <div className="user-menu">
                <div className="user-menu-inner has-slimscroll">
@@ -57,7 +60,7 @@ const SettingsSidebar = () => {
                               }
                            >
                               <FiSettings></FiSettings>
-                              <span>General</span>
+                              <span>Cài đặt chung</span>
                            </a>
                         </li>
                         <li
@@ -74,7 +77,7 @@ const SettingsSidebar = () => {
                               }
                            >
                               <FiShield></FiShield>
-                              <span>Security</span>
+                              <span>Bảo mật</span>
                            </a>
                         </li>
                         <li
@@ -87,7 +90,7 @@ const SettingsSidebar = () => {
                         >
                            <a>
                               <FiAlertTriangle></FiAlertTriangle>
-                              <span>Account</span>
+                              <span>Tài khoản</span>
                            </a>
                         </li>
                      </ul>
@@ -109,7 +112,7 @@ const SettingsSidebar = () => {
                               }
                            >
                               <FiLock></FiLock>
-                              <span>Privacy</span>
+                              <span>Riêng tư</span>
                            </a>
                         </li>
                         <li
@@ -126,7 +129,7 @@ const SettingsSidebar = () => {
                               }
                            >
                               <FiSliders></FiSliders>
-                              <span>Preferences</span>
+                              <span>Ưu tiên</span>
                            </a>
                         </li>
                      </ul>
@@ -148,7 +151,7 @@ const SettingsSidebar = () => {
                               }
                            >
                               <FiBell></FiBell>
-                              <span>Notifications</span>
+                              <span>Thông báo</span>
                            </a>
                         </li>
                         <li
@@ -165,7 +168,7 @@ const SettingsSidebar = () => {
                               }
                            >
                               <FiLifeBuoy></FiLifeBuoy>
-                              <span>Help</span>
+                              <span>Hỗ trợ</span>
                            </a>
                         </li>
                      </ul>

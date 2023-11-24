@@ -1,44 +1,16 @@
-import React from "react";
-import { HeaderWidget } from ".";
+import React, { useState } from "react";
 import { DropdownItem, WidgetDropdown } from "../dropdowns";
-import useClickOutside from "@/hooks/useClickOutside";
-import {
-   FiBell,
-   FiChevronDown,
-   FiCoffee,
-   FiHeart,
-   FiSearch,
-} from "react-icons/fi";
-
-interface IDropdownItem {
-   icon: any;
-   href: string;
-   title: string;
-   subTitle: string;
-}
-
-const dropdownItems: IDropdownItem[] = [
-   // {
-   //    icon: FiHeart,
-   //    href: "profile-about.html",
-   //    title: "Ban",
-   //    subTitle: "Your closest friends list.",
-   // },
-   {
-      icon: FiBell,
-      href: "#",
-      title: "Đã theo dõi",
-      subTitle: "Bạn bè mà bạn đã theo dõi.",
-   },
-   {
-      icon: FiCoffee,
-      href: "#",
-      title: "Công việc",
-      subTitle: "Mối quan hệ công việc.",
-   },
-];
+import { FiBell, FiChevronDown, FiSearch } from "react-icons/fi";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const FriendsFilterWidget = () => {
+   const { username } = useParams();
+   const [dropdownActive, setDropdownActive] =
+      useState<string>("Tất cả bạn bè");
+   const handleClick = (e: any, activeDropdown: string) => {
+      setDropdownActive(activeDropdown);
+   };
    return (
       <>
          <div className="box-heading">
@@ -46,27 +18,39 @@ const FriendsFilterWidget = () => {
                wclassName="friends-dropdown is-neutral"
                button={
                   <>
-                     <span>Tất cả bạn bè</span>
+                     <span>{dropdownActive}</span>
                      <FiChevronDown></FiChevronDown>
                   </>
                }
             >
-               {dropdownItems.map((item, index) => {
-                  return (
-                     <DropdownItem
-                        key={index}
-                        href={item.href}
-                        title={item.title}
-                        subTitle={item.subTitle}
-                     >
-                        {<item.icon />}
-                     </DropdownItem>
-                  );
-               })}
+               <DropdownItem
+                  href={`/${username}/friends?tab=follow`}
+                  title="Đã theo dõi"
+                  subTitle="Bạn bè mà bạn đã theo dõi."
+                  onClick={() => setDropdownActive("Đã theo dõi")}
+               >
+                  {<FiBell />}
+               </DropdownItem>
                <hr className="dropdown-divider" />
-               <a
+               <Link
                   className="dropdown-item modal-trigger"
                   data-modal="albums-modal"
+                  href={`/${username}/friends?tab=friend`}
+                  onClick={(e: any) => handleClick(e, "Tất cả bạn bè")}
+               >
+                  <div className="media">
+                     <i data-feather="mail"></i>
+                     <div className="media-content">
+                        <h3>Tất cả bạn bè</h3>
+                        <small>Tất cả bạn bè của bạn.</small>
+                     </div>
+                  </div>
+               </Link>
+               <Link
+                  className="dropdown-item modal-trigger"
+                  data-modal="albums-modal"
+                  href={`/${username}/friends?tab=request`}
+                  onClick={(e: any) => handleClick(e, "Lời mời kết bạn")}
                >
                   <div className="media">
                      <i data-feather="mail"></i>
@@ -75,7 +59,7 @@ const FriendsFilterWidget = () => {
                         <small>Lời mời kết bạn đã nhận.</small>
                      </div>
                   </div>
-               </a>
+               </Link>
             </WidgetDropdown>
 
             <div className="control heading-search">

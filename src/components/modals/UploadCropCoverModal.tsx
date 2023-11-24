@@ -15,11 +15,13 @@ interface UploadCropCoverModalProps {
    show: boolean;
    handleCloseModal: () => void;
    type: string;
+   setShow: any;
 }
 const UploadCropCoverModal = ({
    show,
    handleCloseModal,
    type,
+   setShow,
 }: UploadCropCoverModalProps) => {
    const source = useAppSelector((selector) => selector.auth.user);
    const dispatch = useAppDispatch();
@@ -57,14 +59,6 @@ const UploadCropCoverModal = ({
          const { code, data } = await uploadImage([
             previewImage as string,
          ]).unwrap();
-         console.log(
-            "🚀 ~ file: UploadCropCoverModal.tsx:58 ~ handleSubmitImage ~ data:",
-            data
-         );
-         console.log(
-            "🚀 ~ file: UploadCropCoverModal.tsx:59 ~ handleSubmitImage ~ previewImage:",
-            previewImage
-         );
          if (code === 201) {
             const { url } = data[0];
             const response = await updateUserImage({
@@ -72,15 +66,16 @@ const UploadCropCoverModal = ({
                urlBase64: url,
                type,
             }).unwrap();
-            console.log(
-               "🚀 ~ file: UploadCropCoverModal.tsx:64 ~ handleSubmitImage ~ response:",
-               response
-            );
             const { code: updateImageCode, data: newUserProfile }: any =
                response;
             if (updateImageCode === 200) {
                setSessionData("userLogin", newUserProfile);
                dispatch(setUser(newUserProfile));
+               setShow(false);
+               handleCloseModal();
+               setFileSelected(undefined);
+               setPreviewImage(undefined);
+               setIsFilePicked(false);
             }
          }
       }

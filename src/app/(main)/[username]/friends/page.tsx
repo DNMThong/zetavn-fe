@@ -2,28 +2,33 @@
 import React, { useEffect, useState } from "react";
 import TopPart from "../_components/profile-part/TopPart";
 import { FriendsFilterWidget } from "@/components/widgets";
-import { CardFriend } from "@/components/card";
+import { CardFriend, CardFriendRequest } from "@/components/card";
 import { useAppSelector } from "@/redux/hooks";
 import { useLazyGetFriendsListByUserIdQuery } from "@/redux/features/user/user.service";
 import { useParams, useSearchParams } from "next/navigation";
 import { UserShort } from "@/types/user.type";
+import CardFriendReqCol4 from "../_components/card/CardFriendReqCol4";
+import { StatusFriend } from "@/types/contants.type";
 
 enum Tab {
-   ALL = "all",
-   FOLLOW = "follow",
-   REQUEST = "request",
+   FRIENDS = "friend",
+   FOLLOWS = "follow",
+   REQUESTS = "request",
 }
 
 const ProfileFriendsPage = () => {
    const { username } = useParams();
    const query = useSearchParams();
 
-   console.log(
-      "🚀 ~ file: page.tsx:13 ~ ProfileFriendsPage ~ query:",
-      query.get("tab")
-   );
-
    const user = useAppSelector((selector) => selector.auth.user);
+   const friends = useAppSelector((selector) => selector.auth.friends);
+   const friendRequests = useAppSelector(
+      (selector) => selector.auth.friendRequest
+   );
+   console.log(
+      "🚀 ~ file: page.tsx:26 ~ ProfileFriendsPage ~ friendRequests:",
+      friendRequests
+   );
    const isSelfProfile =
       user && (user.id === username || user.username === username);
    const [friendsList, setFriendsList] = useState<UserShort[]>([]);
@@ -32,7 +37,9 @@ const ProfileFriendsPage = () => {
       friendsList
    );
    const [getFriendsList] = useLazyGetFriendsListByUserIdQuery(username as any);
-   const [tabQuery, setTabQuery] = useState<Tab>(Tab.ALL);
+   const [tabQuery, setTabQuery] = useState<Tab>(
+      (query.get("tab") as Tab) || Tab.FRIENDS
+   );
    const [paginate, setPaginate] = useState<{
       pageNumber: number;
       pageSize: number;
@@ -44,6 +51,11 @@ const ProfileFriendsPage = () => {
          ...prev,
       }));
    };
+
+   useEffect(() => {
+      setTabQuery(query.get("tab") as Tab);
+   }, [query, tabQuery]);
+
    useEffect(() => {
       async function fetchFriendsList() {
          const response: any = await getFriendsList({
@@ -67,7 +79,8 @@ const ProfileFriendsPage = () => {
                   <FriendsFilterWidget></FriendsFilterWidget>
                   <div className="friends-grid">
                      <div className="columns is-multiline">
-                        {friendsList &&
+                        {tabQuery === Tab.FRIENDS &&
+                           friendsList &&
                            friendsList.length > 0 &&
                            friendsList.map((f: any, index: any) => {
                               return (
@@ -79,9 +92,23 @@ const ProfileFriendsPage = () => {
                                  </div>
                               );
                            })}
+
+                        {tabQuery === Tab.REQUESTS &&
+                           friendRequests &&
+                           friendRequests.length > 0 &&
+                           friendRequests.map((fq: any, index: any) => {
+                              return (
+                                 <div className="column is-4" key={index}>
+                                    <CardFriendReqCol4
+                                       data={fq}
+                                       isFriend={false}
+                                    ></CardFriendReqCol4>
+                                 </div>
+                              );
+                           })}
                      </div>
                      {/* <!-- Load more photos --> */}
-                     <div className="load-more-wrap has-text-centered">
+                     {/* <div className="load-more-wrap has-text-centered">
                         <a
                            href="#"
                            className="load-more-button"
@@ -89,7 +116,7 @@ const ProfileFriendsPage = () => {
                         >
                            Load More
                         </a>
-                     </div>
+                     </div> */}
                   </div>
                </div>
             </div>

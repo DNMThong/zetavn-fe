@@ -10,7 +10,16 @@ interface UserImageProps {
 
 const UserImage = ({ id, imageClass, path, alt }: UserImageProps) => {
    return (
-      <img id={id} className={imageClass} src={path} alt={alt || "Image"} />
+      <img
+         id={id}
+         className={imageClass}
+         src={path}
+         alt={alt || "Image"}
+         style={{
+            objectFit: "fill",
+            objectPosition: "center",
+         }}
+      />
    );
 };
 
