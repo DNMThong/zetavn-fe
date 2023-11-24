@@ -15,7 +15,7 @@ import { logout } from "@/redux/features/auth/auth.slice";
 import { useRouter } from "next/navigation";
 import { setLocalStorageItem } from "@/utils/localstorage.util";
 import Link from "next/link";
-import { SettingsTab } from "@/types/contants.type";
+import { ImageDefault, SettingsTab } from "@/types/contants.type";
 
 const AccountDropdown = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
@@ -33,16 +33,23 @@ const AccountDropdown = () => {
     dispatch(toggleChangeTheme());
   };
 
+  const handleClickProfile = () => {
+    router.push(`/${user?.id}`);
+    setShow(false);
+  };
+
+  const handleClickSetting = () => {
+    router.push(`/settings?tab=${SettingsTab.GENERAL}`);
+    setShow(false);
+  };
+
   return (
     <div
       id="account-dropdown"
       className="navbar-item is-account drop-trigger has-caret"
       ref={nodeRefParent}>
       <div className="user-image" onClick={() => setShow((prev) => !prev)}>
-        <img
-          src={user?.avatar || "https://via.placeholder.com/400x400"}
-          alt=""
-        />
+        <img src={user?.avatar || ImageDefault.AVATAR} alt="" />
         <span className="indicator"></span>
       </div>
 
@@ -69,18 +76,14 @@ const AccountDropdown = () => {
             </label>
           </div>
           <div className="nav-drop-body account-items">
-            <Link
+            <a
               id="profile-link"
-              href={`/${user?.id}`}
+              onClick={handleClickProfile}
               className="account-item">
               <div className="media">
                 <div className="media-left">
                   <div className="image">
-                    <img
-                      src="https://via.placeholder.com/400x400"
-                      data-demo-src="/img/avatars/jenna.png"
-                      alt=""
-                    />
+                    <img src={user?.avatar || ImageDefault.AVATAR} alt="" />
                   </div>
                 </div>
                 <div className="media-content">
@@ -91,9 +94,9 @@ const AccountDropdown = () => {
                   <FiCheck />
                 </div>
               </div>
-            </Link>
+            </a>
             <hr className="account-divider" />
-            <Link href={`/settings?tab=${SettingsTab.GENERAL}`} className="account-item">
+            <a onClick={handleClickSetting} className="account-item">
               <div className="media">
                 <div className="icon-wrap">
                   <FiSettings />
@@ -103,7 +106,7 @@ const AccountDropdown = () => {
                   <small>Truy cập cài đặt tiện ích.</small>
                 </div>
               </div>
-            </Link>
+            </a>
             <a className="account-item">
               <div className="media">
                 <div className="icon-wrap">

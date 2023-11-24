@@ -54,7 +54,7 @@ const Navbar = () => {
 
             <FriendRequestsDropdown />
             <NotificationsDropdown />
-            <MessagesDropdown />
+            {/* <MessagesDropdown /> */}
 
             <div
               className="navbar-item is-icon open-chat"
@@ -65,14 +65,14 @@ const Navbar = () => {
               </button>
             </div>
 
-            <div
+            {/* <div
               id="explorer-trigger"
               className="navbar-item is-icon"
               onClick={handleTriggerExplorer}>
               <button className="icon-link is-primary">
                 <i className="mdi mdi-apps"></i>
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="navbar-end">

@@ -68,7 +68,7 @@ const SearchWidget = ({
           id={mobile ? "tipue_drop_input_mobile" : "tipue_drop_input"}
           className="input is-rounded"
           type="text"
-          placeholder="Search"
+          placeholder="Tìm kiếm"
           value={searchValue}
         />
 

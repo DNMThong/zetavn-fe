@@ -15,10 +15,7 @@ const UserImage = ({ id, imageClass, path, alt }: UserImageProps) => {
          className={imageClass}
          src={path}
          alt={alt || "Image"}
-         style={{
-            objectFit: "fill",
-            objectPosition: "center",
-         }}
+        
       />
    );
 };

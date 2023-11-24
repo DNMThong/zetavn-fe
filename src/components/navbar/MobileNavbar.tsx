@@ -6,7 +6,7 @@ import {
   NotificationsDropdown,
 } from "@/components/dropdowns";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setOpenChat, toggleExplorerMenu } from "@/redux/features/global.slice";
+import { toggleExplorerMenu } from "@/redux/features/global.slice";
 import useClickOutside from "@/hooks/useClickOutside";
 import Link from "next/link";
 import {
@@ -21,15 +21,24 @@ import {
   FiShoppingCart,
   FiUser,
   FiX,
+  FiMessageSquare,
 } from "react-icons/fi";
 import { logout } from "@/redux/features/auth/auth.slice";
 import { SearchWidget } from ".";
+import { setOpenChat } from "@/redux/features/chat/chat.slice";
+import { ImageDefault, SettingsTab } from "@/types/contants.type";
+import { useRouter } from "next/navigation";
 
 const MobileNavbar = () => {
   const { show, setShow, nodeRefParent, nodeRefChild } = useClickOutside();
   const [openSearch, setOpenSearch] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((selector) => selector.auth.user);
+  const router = useRouter();
+
+  const handleOpenChat = () => {
+    dispatch(setOpenChat(true));
+  };
 
   const handleTriggerExplorer = () => {
     dispatch(toggleExplorerMenu());
@@ -39,13 +48,23 @@ const MobileNavbar = () => {
     dispatch(logout());
   };
 
+  const handleClickProfile = () => {
+    router.push(`/${user?.id}`);
+    setShow(false);
+  };
+
+  const handleClickSetting = () => {
+    router.push(`/settings?tab=${SettingsTab.GENERAL}`);
+    setShow(false);
+  };
+
   return (
     <nav
       className="navbar mobile-navbar is-hidden-desktop"
       aria-label="main navigation">
       {/* Brand */}
       <div className={`navbar-brand ${openSearch && "is-hidden"}`}>
-        <a className="navbar-item" href="/">
+        <Link className="navbar-item" href="/">
           <img
             className="light-image"
             src="img/vector/logo/friendkit-bold.svg"
@@ -56,20 +75,26 @@ const MobileNavbar = () => {
             src="img/vector/logo/friendkit-white.svg"
             alt=""
           />
-        </a>
+        </Link>
         <>
           <FriendRequestsDropdown />
           <NotificationsDropdown />
-          <MessagesDropdown />
+          {/* <MessagesDropdown /> */}
         </>
-        <div
+        <div className="navbar-item is-icon open-chat" onClick={handleOpenChat}>
+          <button className="icon-link is-primary">
+            <FiMessageSquare />
+            <span className="indicator"></span>
+          </button>
+        </div>
+        {/* <div
           id="mobile-explorer-trigger"
           className="navbar-item is-icon"
           onClick={handleTriggerExplorer}>
           <button className="icon-link is-primary">
             <i className="mdi mdi-apps"></i>
           </button>
-        </div>
+        </div> */}
         <div
           id="open-mobile-search"
           className="navbar-item is-icon"
@@ -96,17 +121,13 @@ const MobileNavbar = () => {
         ref={nodeRefChild}>
         {/* Account */}
         <div className="navbar-item has-dropdown is-active">
-          <Link href="/navbar-v1-profile-main.html" className="navbar-link">
-            <img
-              src={user?.avatar || "https://via.placeholder.com/150x150"}
-              data-demo-src="img/avatars/jenna.png"
-              alt=""
-            />
+          <a onClick={handleClickProfile} className="navbar-link">
+            <img src={user?.avatar || ImageDefault.AVATAR} alt="" />
             <span className="is-heading">{user?.display}</span>
-          </Link>
+          </a>
 
           {/* Mobile Dropdown */}
-          <div className="navbar-dropdown">
+          {/* <div className="navbar-dropdown">
             <a
               href="/navbar-v1-feed.html"
               className="navbar-item is-flex is-mobile-icon">
@@ -157,30 +178,30 @@ const MobileNavbar = () => {
                 Bookmarks
               </span>
             </a>
-          </div>
+          </div> */}
         </div>
 
         {/* More */}
         <div className="navbar-item has-dropdown">
-          <Link href="/navbar-v1-settings.html" className="navbar-link">
+          {/* <Link className="navbar-link">
             <FiUser />
             <span className="is-heading">Account</span>
-          </Link>
+          </Link> */}
 
           {/* Mobile Dropdown  */}
           <div className="navbar-dropdown">
-            <a href="#" className="navbar-item is-flex is-mobile-icon">
+            <a className="navbar-item is-flex is-mobile-icon">
               <span>
                 <FiLifeBuoy />
-                Support
+                Hỗ trợ
               </span>
             </a>
             <a
-              href="/navbar-v1-settings.html"
+              onClick={handleClickSetting}
               className="navbar-item is-flex is-mobile-icon">
               <span>
                 <FiSettings />
-                Settings
+                Cài đặt
               </span>
             </a>
             <a
@@ -188,7 +209,7 @@ const MobileNavbar = () => {
               onClick={handleLogOut}>
               <span>
                 <FiLogOut />
-                Logout
+                Đăng xuất
               </span>
             </a>
           </div>
@@ -196,7 +217,7 @@ const MobileNavbar = () => {
       </div>
       {/* Search */}
       <SearchWidget
-        classNameWapper={`mobile-search ${openSearch? "" : "is-hidden"}`}
+        classNameWapper={`mobile-search ${openSearch ? "" : "is-hidden"}`}
         onClose={() => setOpenSearch(false)}
         mobile={true}
       />

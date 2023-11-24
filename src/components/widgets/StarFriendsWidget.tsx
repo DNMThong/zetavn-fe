@@ -65,7 +65,7 @@ const FriendItem = ({
          />
          <div className="text-content">
             <Link href={username || id}>{display}</Link>
-            <span>{mutualFriends} mutual friend(s)</span>
+            <span>{mutualFriends} bạn chung</span>
          </div>
          {/* {isSelfProfile && (
             <div className="star-friend">
