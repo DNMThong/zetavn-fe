@@ -1,4 +1,5 @@
 import { setUser } from "@/redux/features/auth/auth.slice";
+import { useUploadImageBase64Mutation } from "@/redux/features/upload/upload.service";
 import {
    useUpdateUserImageMutation,
    useUploadImageMutation,
@@ -8,7 +9,6 @@ import { fileImageToUrl } from "@/utils/file.util";
 import { setSessionData } from "@/utils/session.util";
 import React, { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
-import Cropper from "react-easy-crop";
 import { FiX } from "react-icons/fi";
 
 interface UploadCropCoverModalProps {
@@ -27,7 +27,7 @@ const UploadCropCoverModal = ({
    const [previewImage, setPreviewImage] = useState<string | undefined>();
    const [isFilePicked, setIsFilePicked] = useState<boolean>(false);
    const [updateUserImage] = useUpdateUserImageMutation();
-   const [uploadImage] = useUploadImageMutation();
+   const [uploadImage] = useUploadImageBase64Mutation();
 
    const handleUploadFile = async (e: any) => {
       const file: File | null = e.target.files[0]; // Lấy tệp hình ảnh từ trường input
@@ -54,15 +54,19 @@ const UploadCropCoverModal = ({
    const handleSubmitImage = async (e: any) => {
       e.preventDefault();
       if (fileSelected && isFilePicked) {
-         const { code, data } = await uploadImage({
-            images: [previewImage as string],
-         }).unwrap();
+         const { code, data } = await uploadImage([
+            previewImage as string,
+         ]).unwrap();
+         console.log(
+            "🚀 ~ file: UploadCropCoverModal.tsx:58 ~ handleSubmitImage ~ data:",
+            data
+         );
          console.log(
             "🚀 ~ file: UploadCropCoverModal.tsx:59 ~ handleSubmitImage ~ previewImage:",
             previewImage
          );
          if (code === 201) {
-            const { url } = data;
+            const { url } = data[0];
             const response = await updateUserImage({
                userId: source?.id as string,
                urlBase64: url,

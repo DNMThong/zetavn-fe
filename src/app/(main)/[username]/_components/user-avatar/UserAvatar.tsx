@@ -20,12 +20,12 @@ import { Tooltip } from "@/components/tooltip";
 import { ChangeCoverImageModal } from "@/components/modals";
 import { useParams } from "next/navigation";
 import {
-   useAcceptFriendRequestMutation,
+   useAcceptFriendMutation,
+   useAddFriendMutation,
    useFollowMutation,
    useLazyGetFollowStatusQuery,
    useLazyGetFriendshipStatusQuery,
-   useRejectFriendRequestMutation,
-   useSendFriendRequestMutation,
+   useRejectFriendMutation,
    useUnFollowMutation,
 } from "@/redux/features/user/user.service";
 import { FollowPriority, FriendshipStatus } from "@/types/contants.type";
@@ -42,9 +42,9 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
       (selector) => selector.auth.user
    );
    const { username } = useParams();
-   const [sendFriendRequest] = useSendFriendRequestMutation();
-   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
-   const [rejectFriendRequest] = useRejectFriendRequestMutation();
+   const [sendFriendRequest] = useAddFriendMutation();
+   const [acceptFriendRequest] = useAcceptFriendMutation();
+   const [rejectFriendRequest] = useRejectFriendMutation();
    const [getFriendshipStatus] = useLazyGetFriendshipStatusQuery();
    const [getFollowStatus] = useLazyGetFollowStatusQuery();
    const [unFollow] = useUnFollowMutation();
@@ -65,8 +65,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
 
    const handleSendFriendRequest = async (e: any) => {
       const { code, data } = await sendFriendRequest({
-         sourceId: source?.id as string,
-         targetId: username as string,
+         senderId: source?.id as string,
+         receiverId: username as string,
       }).unwrap();
       if (code === 200) {
          setFriendshipStatus(data?.status);
@@ -75,8 +75,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
 
    const handleAcceptFriendRequest = async () => {
       const { code, data } = await acceptFriendRequest({
-         sourceId: source?.id as string,
-         targetId: username as string,
+         senderId: source?.id as string,
+         receiverId: username as string,
       }).unwrap();
       if (code === 200) {
          toast.success("Chấp nhận lời mời kết bạn thành công!");
@@ -85,8 +85,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
    };
    const handleRejectFriendRequest = async () => {
       const response = await rejectFriendRequest({
-         sourceId: source?.id as string,
-         targetId: username as string,
+         senderId: source?.id as string,
+         receiverId: username as string,
       }).unwrap();
       const { code, data } = response;
       if (code === 200) {
@@ -98,13 +98,9 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
 
    const handleRetrieveFriendRequest = async () => {
       const response = await rejectFriendRequest({
-         sourceId: source?.id as string,
-         targetId: username as string,
+         senderId: source?.id as string,
+         receiverId: username as string,
       }).unwrap();
-      console.log(
-         "🚀 ~ file: UserAvatar.tsx:100 ~ handleRetrieveFriendRequest ~ response:",
-         response
-      );
       const { code, data } = response;
       if (code === 200) {
          setFriendshipStatus(FriendshipStatus.NONE);
@@ -129,10 +125,6 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             sourceId: source?.id as string,
             targetId: username as string,
          }).unwrap();
-         console.log(
-            "🚀 ~ file: UserAvatar.tsx:130 ~ handleFollow ~ response:",
-            response
-         );
          const { code, data }: any = response;
          if (code === 204) {
             setFollowStatus(data?.priority);

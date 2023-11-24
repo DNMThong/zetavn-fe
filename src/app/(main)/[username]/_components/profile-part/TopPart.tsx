@@ -28,12 +28,16 @@ const TopPart = () => {
    useEffect(() => {
       const fetchUserProfile = async () => {
          const response = await getUserQuery(username as string).unwrap();
+         console.log(
+            "🚀 ~ file: TopPart.tsx:31 ~ fetchUserProfile ~ response:",
+            response
+         );
          if (response?.code === 200) {
-            const { data } = response;
+            const { data }: any | undefined = response;
             setUserProfile(data);
          } else {
             console.log("ERROR Fetching");
-            router.push(pathname + "/404");
+            // router.push(pathname + "/404");
          }
       };
       if (isSelfProfile) {
