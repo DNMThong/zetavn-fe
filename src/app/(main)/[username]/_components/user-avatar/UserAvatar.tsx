@@ -181,8 +181,13 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                <AvatarButton
                   id="follow-pop"
                   className="pop-shift is-far-left"
-                  dataPlacement="top"
-                  dataTitle="Subscription"
+                  dataPlacement="bottom"
+                  tooltipId="follow-tooltip"
+                  tooltipContent={
+                     followStatus === FollowPriority.NONE
+                        ? "Theo dõi"
+                        : "Hủy theo dõi"
+                  }
                   show={avatarButtonActive}
                   onClick={handleFollow}
                >
@@ -219,7 +224,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                      id="invite-pop"
                      className="pop-shift is-center"
                      dataPlacement="top"
-                     dataTitle="Relationship"
+                     tooltipId="send-friend-req-tooltip"
+                     tooltipContent={"Gửi lời mời kết bạn"}
                      show={avatarButtonActive}
                      onClick={handleSendFriendRequest}
                   >
@@ -236,7 +242,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                      id="invite-pop"
                      className="pop-shift is-center"
                      dataPlacement="top"
-                     dataTitle="Relationship"
+                     tooltipId="cancel-friend-req-tooltip"
+                     tooltipContent={"Hủy lời mời kết bạn"}
                      show={avatarButtonActive}
                      onClick={handleRetrieveFriendRequest}
                   >
@@ -260,7 +267,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                         id="invite-pop"
                         className="pop-shift is-center"
                         dataPlacement="top"
-                        dataTitle="Relationship"
+                        tooltipId="accept-friend-req-tooltip"
+                        tooltipContent={"Chấp nhận lời mời kết bạn"}
                         show={avatarButtonActive}
                         onClick={handleAcceptFriendRequest}
                      >
@@ -281,7 +289,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                         id="invite-pop"
                         className="pop-shift is-left"
                         dataPlacement="top"
-                        dataTitle="Relationship"
+                        tooltipId="reject-friend-req-tooltip"
+                        tooltipContent={"Từ chối lời mời kết bạn"}
                         show={avatarButtonActive}
                         onClick={handleRejectFriendRequest}
                      >
@@ -306,7 +315,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                      id="invite-pop"
                      className="pop-shift is-center"
                      dataPlacement="top"
-                     dataTitle="Relationship"
+                     tooltipId="delete-friend-tooltip"
+                     tooltipContent={"Hủy kết bạn"}
                      show={avatarButtonActive}
                   >
                      <a
@@ -333,7 +343,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                   id="chat-pop"
                   className="is-right"
                   dataPlacement="top"
-                  dataTitle="Chat"
+                  tooltipId="send-message-tooltip"
+                  tooltipContent={"Nhắn tin"}
                   show={avatarButtonActive}
                >
                   <a className="inner">
@@ -346,8 +357,9 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                         ? "is-far-right"
                         : "is-left"
                   }`}
-                  dataPlacement="right"
-                  dataTitle="Send message"
+                  dataPlacement="top"
+                  tooltipId="send-mail-tooltip"
+                  tooltipContent={"Gửi mail"}
                   show={avatarButtonActive}
                >
                   <a href="messages-inbox.html" className="inner">
@@ -359,12 +371,13 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             <>
                <AvatarButton
                   id="change-profile-pic"
-                  className={`"modal-trigger" ${
+                  className={`modal-trigger ${
                      isSelfProfile ? "is-center" : "is-far-left"
                   }`}
+                  tooltipId="change-profile-pic-tooltip"
+                  tooltipContent="Thay đổi avatar"
                   dataModal="change-profile-pic-modal"
                   dataPlacement={isSelfProfile ? "top" : "right"}
-                  dataTitle="Change profile picture"
                   show={avatarButtonActive}
                   onClick={() => setEditCoverModal(true)}
                >
@@ -381,17 +394,11 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                show={editCoverModal}
                handleCloseModal={handleCloseEditCoverModal}
                type="avatar"
+               setShow={setEditCoverModal}
             />
          )}
 
          {/* Need fix tooltip */}
-         {/* <Tooltip
-            place="top"
-            variant="info"
-            id="change-profile-pic"
-            content="Change profile picture"
-            className="ggtooltip right in fade"
-         ></Tooltip> */}
       </div>
    );
 };

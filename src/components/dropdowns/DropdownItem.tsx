@@ -23,7 +23,7 @@ const DropdownItem = ({
       <Link
          href={href || "#"}
          className={`dropdown-item ${className}`}
-         // onClick={handleDropdownClick}
+         onClick={onClick}
       >
          <div className="media">
             {children}

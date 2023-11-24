@@ -150,8 +150,11 @@ const GeneralSetting = () => {
                gender: user?.information?.genderEnum,
                birthday:
                   new Date(
-                     user?.information?.birthday.split("/").reverse().join("-")
-                  ) || "",
+                     user?.information?.birthday
+                        .split("/")
+                        .reverse()
+                        .join("-") || new Date()
+                  ) || undefined,
                username: user?.username === user?.id ? "" : user?.username,
                aboutMe: user?.information?.aboutMe || "",
                livesIn: user?.information?.livesAt || "",
@@ -199,7 +202,7 @@ const GeneralSetting = () => {
                <a className="mobile-sidebar-trigger">
                   <i data-feather="menu"></i>
                </a>
-               <h2>General Settings</h2>
+               <h2>Cài đặt chung</h2>
             </div>
 
             <div className="settings-form-wrapper">
@@ -263,9 +266,10 @@ const GeneralSetting = () => {
                            {/* <!--Field--> */}
                            <div className="form-text">
                               <p>
-                                 Be sure to fill out your location settings.
-                                 This will help us suggest you relevant friends
-                                 and places you could like.
+                                 Hãy chắc chắn điền vào cài đặt vị trí của bạn.
+                                 Điều này sẽ giúp chúng tôi gợi ý cho bạn những
+                                 người bạn phù hợp và những địa điểm mà bạn có
+                                 thể thích.
                               </p>
                            </div>
                         </div>
@@ -355,13 +359,13 @@ const GeneralSetting = () => {
                                  type="submit"
                                  className={`button is-solid accent-button form-button}`}
                               >
-                                 Save Changes
+                                 Lưu thay đổi
                               </button>
                               <button
                                  className="button is-light form-button"
                                  onClick={handleClickShowAdvance}
                               >
-                                 {!!showAdvance ? "Hide Advanced" : "Advanced"}
+                                 {!!showAdvance ? "Ẩn bớt" : "Nâng cao"}
                               </button>
                            </div>
                         </div>
@@ -381,8 +385,8 @@ const GeneralSetting = () => {
                      alt=""
                   />
                   <p>
-                     If you would like to learn more about general settings, you
-                     can read about it in the <a>user guide</a>.
+                     Nếu bạn muốn tìm hiểu thêm về cài đặt chung, bạn có thể đọc
+                     về nó trong <a>hướng dẫn sử dụng.</a>.
                   </p>
                </div>
             </div>

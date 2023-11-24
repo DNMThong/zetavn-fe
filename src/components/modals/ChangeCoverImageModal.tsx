@@ -7,12 +7,14 @@ interface ChangeCoverImageModalProps {
    show: boolean;
    handleCloseModal: () => void;
    type: string;
+   setShow: any;
 }
 
 const ChangeCoverImageModal = ({
    show,
    handleCloseModal,
    type,
+   setShow,
 }: ChangeCoverImageModalProps) => {
    const [uploadCropCoverModal, setUploadCropCoverModal] = useState(false);
    const handleCloseUploadCropCoverModal = () => {
@@ -31,6 +33,7 @@ const ChangeCoverImageModal = ({
                show={uploadCropCoverModal}
                handleCloseModal={handleCloseUploadCropCoverModal}
                type={type}
+               setShow={setShow}
             />
          )}
          <div className="modal-background"></div>
