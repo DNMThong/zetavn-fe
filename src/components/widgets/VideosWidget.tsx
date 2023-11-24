@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DropdownItem, WidgetDropdown } from "@/components/dropdowns";
 import { HeaderWidget } from ".";
 import { FiTag, FiVideo } from "react-icons/fi";
 import { Overlay } from "@/components/modals";
 import useClickOutside from "@/hooks/useClickOutside";
+import { useLazyGetPostMediaByUserIdQuery } from "@/redux/features/post/post.service";
+import { useParams } from "next/navigation";
+import Post from "@/types/post.type";
 
 interface IDropdownItem {
    icon: any;
@@ -33,7 +36,7 @@ interface VideoContainerProps {
 
 const VideoContainer = ({ videoPath }: VideoContainerProps) => {
    return (
-      <div className="video-container">
+      <div className="video-container" style={{ height: "114.1px" }}>
          <img
             src={videoPath}
             data-demo-src="assets/img/demo/widgets/videos/1.jpg"
@@ -48,6 +51,18 @@ const VideoContainer = ({ videoPath }: VideoContainerProps) => {
 };
 
 const VideosWidget = () => {
+   const { username: userId } = useParams();
+   const [videos, setVideos] = useState<Post[]>();
+   const [getPosts] = useLazyGetPostMediaByUserIdQuery(userId as any);
+   useEffect(() => {
+      async function fetchData() {
+         const { data }: any = await getPosts(userId as string).unwrap();
+         if (data?.data) {
+            setVideos(data?.data);
+         }
+      }
+      fetchData();
+   }, [getPosts, userId]);
    return (
       <>
          <HeaderWidget header="Videos">
@@ -68,9 +83,23 @@ const VideosWidget = () => {
          </HeaderWidget>
 
          <div className="is-videos-widget">
-            <VideoContainer videoPath="https://via.placeholder.com/200x200"></VideoContainer>
-            <VideoContainer videoPath="https://via.placeholder.com/200x200"></VideoContainer>
-            <VideoContainer videoPath="https://via.placeholder.com/200x200"></VideoContainer>
+            {videos &&
+               videos.length > 0 &&
+               videos.map((v, i) => {
+                  return (
+                     v.medias &&
+                     v.medias.length > 0 &&
+                     v.medias.map((vm, index) => {
+                        if (vm.mediaType !== "video") return null;
+                        return (
+                           <VideoContainer
+                              key={vm.mediaPath}
+                              videoPath={vm.mediaPath}
+                           ></VideoContainer>
+                        );
+                     })
+                  );
+               })}
          </div>
       </>
    );

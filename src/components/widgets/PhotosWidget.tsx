@@ -16,19 +16,19 @@ interface IDropdownItem {
 const dropdownItems: IDropdownItem[] = [
    {
       icon: FiImage,
-      href: "#more",
+      href: "/photos",
       title: "Ảnh",
       subTitle: "Xem tất cả ảnh.",
    },
    {
       icon: FiTag,
-      href: "#moreee",
+      href: "/photos",
       title: "Được gắn thẻ",
       subTitle: "Xem ảnh bạn được gắn thẻ.",
    },
    {
       icon: FiFolder,
-      href: "#moreeeee",
+      href: "/photos",
       title: "Bộ sưu tập",
       subTitle: "Xem bộ sưu tập.",
    },
@@ -53,7 +53,7 @@ const PhotosWidget = ({ userId }: PhotosWidgetProps) => {
          }
       }
       fetchData();
-   }, [userId]);
+   }, [getPosts, userId]);
    return (
       <>
          <HeaderWidget header="Ảnh">
@@ -62,7 +62,7 @@ const PhotosWidget = ({ userId }: PhotosWidgetProps) => {
                   return (
                      <DropdownItem
                         key={index}
-                        href={item.href}
+                        href={`/${userId}/${item.href}`}
                         title={item.title}
                         subTitle={item.subTitle}
                      >
@@ -82,10 +82,10 @@ const PhotosWidget = ({ userId }: PhotosWidgetProps) => {
          >
             {posts &&
                posts.length > 0 &&
-               posts.slice(0, 3).map((p, index) => {
+               posts.map((p, index) => {
                   return (
                      <PhotoItems
-                        key={index}
+                        key={p.id + index}
                         postId={p.id}
                         medias={p.medias}
                      ></PhotoItems>
@@ -109,11 +109,11 @@ const PhotoItems = ({ medias, postId }: PhotoItemsProps) => {
       <>
          {medias &&
             medias.length > 0 &&
-            medias.slice(0, 2).map((m, index2) => {
+            medias.map((m, index2) => {
                if (m.mediaType === "image") {
                   return (
                      <img
-                        key={m.mediaPath}
+                        key={index2}
                         src={m.mediaPath}
                         alt=""
                         style={{ height: "85px", objectFit: "cover" }}

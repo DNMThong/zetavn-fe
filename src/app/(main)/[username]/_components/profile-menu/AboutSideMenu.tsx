@@ -5,22 +5,22 @@ import React from "react";
 const sideMenuItems: IMenuItem[] = [
    {
       icon: <i className="mdi mdi-progress-check"></i>,
-      title: "Overview",
+      title: "Tổng quan",
       dataContent: ProfileAboutContent.OVERVIEW,
    },
    {
       icon: <i className="mdi mdi-apps"></i>,
-      title: "Personal Info",
+      title: "Thông tin cá nhân",
       dataContent: ProfileAboutContent.PERSONAL,
    },
    {
       icon: <i className="mdi mdi-school"></i>,
-      title: "Education",
+      title: "Học vấn",
       dataContent: ProfileAboutContent.EDUCATION,
    },
    {
       icon: <i className="mdi mdi-briefcase-plus"></i>,
-      title: "Jobs",
+      title: "Công việc",
       dataContent: ProfileAboutContent.JOB,
    },
 ];
