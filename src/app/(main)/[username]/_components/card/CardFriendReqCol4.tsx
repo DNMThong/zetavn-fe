@@ -76,6 +76,7 @@ const CardFriendReqCol4 = ({
 
    return (
       <div className="card-flex friend-card">
+         <Tooltip id="action-friend-tooltip" place="bottom"></Tooltip>
          <div className={`action-friend`}>
             {statusFriend === StatusFriend.FRIEND && (
                <span

@@ -1,11 +1,11 @@
 import React from "react";
+import { PlacesType, Tooltip } from "react-tooltip";
 
 interface AvatarButtonProps {
    id?: string;
    className: string;
-   dataPlacement: string;
+   dataPlacement: PlacesType;
    dataModal?: string;
-   dataTitle: string;
    children: React.ReactNode;
    show: boolean;
    onClick?: any;
@@ -18,7 +18,6 @@ const AvatarButton = ({
    id,
    className,
    dataPlacement,
-   dataTitle,
    tooltipId,
    tooltipContent,
    children,
@@ -34,12 +33,11 @@ const AvatarButton = ({
          }`}
          data-tooltip-content={tooltipContent}
          data-tooltip-id={tooltipId}
-         data-placement={dataPlacement}
-         data-title={dataTitle}
          onClick={onClick}
          style={style}
       >
          {children}
+         <Tooltip id={tooltipId} place={dataPlacement}></Tooltip>
       </div>
    );
 };
