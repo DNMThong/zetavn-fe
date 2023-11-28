@@ -8,14 +8,14 @@ const FakeNavbar = () => {
       <Link href="/login" className="logo">
         <Image
           className="light-image"
-          src="/img/vector/logo/friendkit-bold.svg"
+          src="/img/vector/logo/logo.svg"
           width="112"
           height="28"
           alt=""
         />
         <Image
           className="dark-image"
-          src="/img/vector/logo/friendkit-white.svg"
+          src="/img/vector/logo/logo-white.svg"
           width="112"
           height="28"
           alt=""

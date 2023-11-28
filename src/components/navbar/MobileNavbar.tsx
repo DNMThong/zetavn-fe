@@ -67,12 +67,12 @@ const MobileNavbar = () => {
         <Link className="navbar-item" href="/">
           <img
             className="light-image"
-            src="img/vector/logo/friendkit-bold.svg"
+            src="img/vector/logo/logo.svg"
             alt=""
           />
           <img
             className="dark-image"
-            src="img/vector/logo/friendkit-white.svg"
+            src="img/vector/logo/logo-white.svg"
             alt=""
           />
         </Link>
