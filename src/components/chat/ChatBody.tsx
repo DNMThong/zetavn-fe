@@ -30,8 +30,7 @@ const ChatBody = () => {
   useEffect(() => {
     const fetchGetChatMessages = async () => {
       const response = await getChatMessages({
-        userIdGetChat: user?.id || "",
-        userIdContact: userContactSelected?.id || "",
+        userId: userContactSelected?.id || "",
         pageNumber: page,
         pageSize: 20,
       }).unwrap();

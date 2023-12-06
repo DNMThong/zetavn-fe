@@ -1,0 +1,245 @@
+"use client";
+import { useAppSelector } from "@/redux/hooks";
+import React, { useEffect, useState } from "react";
+import {
+  MdMic,
+  MdMicOff,
+  MdVideocam,
+  MdVideocamOff,
+  MdCallEnd,
+} from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { offCall } from "@/redux/features/chat/chat.slice";
+import { CallStatus, CallType, ImageDefault } from "@/types/contants.type";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useLazyGetTokenCallQuery } from "@/redux/features/chat/chat.service";
+import { ZegoExpressEngine } from "zego-express-engine-webrtc";
+import { v4 as uuidv4 } from "uuid";
+
+const CallPage = () => {
+  const user = useAppSelector((selector) => selector.auth.user);
+  const call = useAppSelector((selector) => selector.chat.call);
+  const clientStomp = useAppSelector((selector) => selector.global.clientStomp);
+  const dispatch = useDispatch();
+  const [openVideo, setOpenVideo] = useState(true);
+  const [openMic, setOpenMic] = useState(true);
+  const [openCam, setOpenCam] = useState(true);
+  const [acceptCall, setAcceptCall] = useState(false);
+  const [getTokenCall] = useLazyGetTokenCallQuery();
+  const [tokenCall, setTokenCall] = useState("");
+  const [zgVar, setZgVar] = useState<ZegoExpressEngine | null>(null);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [publishStream, setPublishStream] = useState("");
+  console.log("CALL", call);
+
+  useEffect(() => {
+    const startCall = async () => {
+      if (call && user) {
+        const appId: number = parseInt(process.env.ZEGO_APP_ID as string);
+        const serverSercet: string = process.env.ZEGO_SERVER_SECRET as string;
+        const zg = new ZegoExpressEngine(appId, serverSercet);
+        setZgVar(zg);
+
+        zg.on(
+          "roomStreamUpdate",
+          async (roomId, updateType, streamList, extendedData) => {
+            if (updateType === "ADD") {
+              const rmStream = document.getElementById("remote-stream");
+              const el = document.createElement(
+                call.callType === CallType.VIDEO ? "video" : "audio"
+              );
+              el.id = streamList[0].streamID;
+              el.autoplay = true;
+              el.muted = false;
+              if (el instanceof HTMLVideoElement) el.playsInline = true;
+              if (rmStream) rmStream.appendChild(el);
+
+              zg.startPlayingStream(streamList[0].streamID, {
+                audio: true,
+                video: true,
+              }).then((stream) => {
+                if (stream) {
+                  el.srcObject = stream;
+                }
+              });
+            } else if (
+              updateType === "DELETE" &&
+              zg &&
+              localStream &&
+              streamList[0].streamID
+            ) {
+              zg.destroyStream(localStream);
+              zg.stopPublishingStream(streamList[0].streamID);
+              zg.logoutRoom(call.roomId);
+              dispatch(offCall());
+            }
+          }
+        );
+        const result = await zg.loginRoom(
+          call.roomId,
+          tokenCall,
+          {
+            userID: user.id,
+            userName: user.display,
+          },
+          { userUpdate: true }
+        );
+        if (result) {
+          const _localStream = await zg.createStream({
+            camera: {
+              audio: true,
+              video: call.callType === CallType.VIDEO,
+            },
+          });
+          const localStreamEl = document.getElementById("local-stream");
+
+          const element = document.createElement(
+            call.callType === CallType.VIDEO ? "video" : "audio"
+          );
+          element.autoplay = true;
+          element.muted = true;
+          if (element instanceof HTMLVideoElement) element.playsInline = true;
+
+          if (localStreamEl)
+            localStreamEl.appendChild(element);
+
+          element.srcObject = _localStream;
+
+          const streamId = new Date().getTime().toString();
+          setPublishStream(streamId);
+          setLocalStream(_localStream);
+          zg.startPublishingStream(streamId, _localStream);
+        }
+      }
+    };
+    if (tokenCall) {
+      startCall();
+    }
+  }, [tokenCall]);
+
+  useEffect(() => {
+    const fetchGetTokenCall = async () => {
+      const rs = await getTokenCall().unwrap();
+      if (rs.code === 200) {
+        setTokenCall(rs.data.token);
+      }
+    };
+    if (user) {
+      fetchGetTokenCall();
+    }
+  }, [user, getTokenCall]);
+
+  useEffect(() => {
+    if (clientStomp && clientStomp.connected && call && user) {
+      if (call.status === CallStatus.OUT_GOING) {
+        const request = {
+          type: call.callType,
+          roomId: call.roomId,
+          to: call.user.id,
+          from: {
+            id: user.id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            display: user.display,
+            avatar: user.avatar,
+            poster: user.poster,
+          },
+        };
+        clientStomp.publish({
+          destination: "/app/outgoing-call",
+          body: JSON.stringify(request),
+        });
+
+        clientStomp.subscribe(`/user/${user.id}/topic/accept-call`, () => {
+          setAcceptCall(true);
+        });
+      } else if (call?.status === CallStatus.IN_COMING) {
+        setTimeout(() => {
+          setAcceptCall(true);
+        }, 1000);
+      }
+    }
+  }, [clientStomp, call, user]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (clientStomp && call) {
+        clientStomp.publish({
+          destination: "/app/reject-incoming-call",
+          body: call.user.id,
+        });
+        dispatch(offCall());
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [dispatch, clientStomp, call]);
+
+  const handleCloseCall = () => {
+    if (zgVar && localStream && publishStream && call) {
+      zgVar.destroyStream(localStream);
+      zgVar.stopPublishingStream(publishStream);
+      zgVar.logoutRoom(call.roomId);
+    }
+    if (clientStomp && call) {
+      window.close();
+    }
+  };
+
+  if (!call) return <>123132123</>;
+
+  return (
+    <div className="call-wrapper">
+      {call.callType === CallType.VIDEO && (
+        <div
+          className={`call-video ${openVideo ? "is-active" : ""}`}
+          onClick={() => setOpenVideo((prev) => !prev)}>
+          <div className="action">
+            {openVideo ? <FiChevronRight /> : <FiChevronLeft />}
+          </div>
+          <div
+            id="local-stream"
+            ></div>
+        </div>
+      )}
+      <div className="call-main">
+        {call.callType !== CallType.VIDEO && acceptCall && (
+          <div className="call-info">
+            <img
+              className="avatar"
+              src={call.user.avatar || ImageDefault.AVATAR}
+              alt=""
+            />
+            <span className="display-name">{call.user.display}</span>
+            <span className="status">Đang gọi</span>
+          </div>
+        )}
+        <div id="remote-stream"></div>
+      </div>
+      <div className="call-action">
+        {call.callType === CallType.VIDEO && (
+          <div
+            className={`action-item ${openCam ? "" : "is-active"}`}
+            onClick={() => setOpenCam((prev) => !prev)}>
+            {openCam ? <MdVideocam /> : <MdVideocamOff />}
+          </div>
+        )}
+        <div
+          className={`action-item ${openMic ? "" : "is-active"}`}
+          onClick={() => setOpenMic((prev) => !prev)}>
+          {openMic ? <MdMic /> : <MdMicOff />}
+        </div>
+        <div className="action-item is-red" onClick={handleCloseCall}>
+          <MdCallEnd />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CallPage;

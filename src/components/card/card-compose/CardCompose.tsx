@@ -125,7 +125,7 @@ const ComposeCard = () => {
         } else {
           toast.warn("Đã có lỗi xảy ra vui lòng thử lại");
         }
-      }else if (video) {
+      } else if (video) {
         const responseVideo = await uploadVideBase64([video]).unwrap();
         if (responseVideo.code === 201) {
           medias = [
@@ -139,7 +139,6 @@ const ComposeCard = () => {
       }
 
       const response = await createPost({
-        userId: user?.id as string,
         content: textContent,
         accessModifier,
         activityId: activityMood?.detail.id,
@@ -150,7 +149,6 @@ const ComposeCard = () => {
         handleCloseComposeCard();
         toast.success("Tạo bài viết thành công");
         const responseNewsFeed = await fetchPostsNewsFeed({
-          userId: user?.id || "",
           pageNumber: 0,
           pageSize: 5,
         }).unwrap();

@@ -121,3 +121,13 @@ export enum MessageStatus {
   SENT = "SENT",
   READ = "READ",
 }
+
+export enum CallType {
+  VIDEO = "video",
+  VOICE = "voice",
+}
+
+export enum CallStatus {
+  OUT_GOING = "out-going",
+  IN_COMING = "in-coming",
+}

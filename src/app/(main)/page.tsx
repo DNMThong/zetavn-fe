@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostPlaceload from "@/components/placeloads/PostPlaceload";
+import { IncomingCallModal } from "@/components/modals";
 
 export default function Home() {
   const { user, newsfeed } = useAppSelector((selector) => selector.auth);
@@ -29,7 +30,6 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetchPostsNewsFeed({
-        userId: user?.id || "",
         pageNumber: page,
         pageSize: 5,
       }).unwrap();

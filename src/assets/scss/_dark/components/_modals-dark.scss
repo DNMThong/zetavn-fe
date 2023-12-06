@@ -862,3 +862,32 @@ body {
     }
   }
 }
+
+
+/* ==========================================================================
+13. Incoming Call Modal
+========================================================================== */
+body {
+  &.is-dark {
+    .incoming-call-modal {
+      .btn-close-incoming {
+        background-color: darken($dark, 4%);
+        svg {
+          fill: $white;
+          stroke: $white;
+        }
+    
+      }
+    
+      .content {
+    
+        .content-title,
+        .content-desc {
+          color: $white-light
+        }
+    
+    
+      }
+    }
+  }
+}

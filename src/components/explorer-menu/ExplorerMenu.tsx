@@ -8,7 +8,7 @@ const ExplorerMenu = () => {
     (selector) => selector.global.openExplorerMenu
   );
   return (
-    <div className={`explorer-menu ${openExplorerMenu && "is-active"}`}>
+    <div className={`explorer-menu ${openExplorerMenu ? "is-active" : ""}`}>
       <div className="explorer-inner">
         <div className="explorer-container">
           {/* <!--Header--> */}

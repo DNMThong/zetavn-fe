@@ -13,7 +13,7 @@ const ChatWrapper = () => {
 
   return (
     <>
-      <div className={`chat-wrapper ${openChat && "is-active"}`}>
+      <div className={`chat-wrapper ${openChat ? "is-active" : ""}`}>
         <div className="chat-inner">
           {/* Chat top navigation */}
           <ChatNav />

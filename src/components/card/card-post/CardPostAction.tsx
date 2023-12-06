@@ -28,7 +28,6 @@ const CardPostAction = ({
   useEffect(() => {
     const fetchCheckLikePost = async () => {
       const response = await checkLikePost({
-        userId: user?.id || "",
         postId: postId,
       }).unwrap();
       if (response.code === 200) {
@@ -41,13 +40,11 @@ const CardPostAction = ({
   const handleLikePost = async () => {
     if (liked) {
       const response = await unlike({
-        userId: user?.id || "",
         postId,
       }).unwrap();
       console.log("unlike", response);
     } else {
       const response = await like({
-        userId: user?.id || "",
         postId,
       }).unwrap();
       console.log("like", response);

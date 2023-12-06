@@ -29,8 +29,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
 
   const handleAddFriend = async () => {
     const response = await addFriend({
-      senderId: user?.id || "",
-      receiverId: data.user.id,
+      userId: data.user.id,
     }).unwrap();
     if (response.code == 200) {
       setStatusFriend(StatusFriend.SENDER);
@@ -39,8 +38,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
 
   const handleCancelAddFriend = async () => {
     const response = await rejectFriend({
-      senderId: user?.id || "",
-      receiverId: data.user.id,
+      userId: data.user.id,
     }).unwrap();
     if (response.code) {
       setStatusFriend(StatusFriend.NONE);
@@ -49,8 +47,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
 
   const handleAcceptFriend = async () => {
     const response = await acceptFriend({
-      senderId: data.user.id,
-      receiverId: user?.id || "",
+      userId: user?.id || "",
     }).unwrap();
     if (response.code == 200) {
       setStatusFriend(StatusFriend.FRIEND);
@@ -59,8 +56,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
 
   const handleRejectFriend = async () => {
     const response = await rejectFriend({
-      senderId: data.user.id,
-      receiverId: user?.id || "",
+      userId: user?.id || "",
     }).unwrap();
     if (response.code == 200) {
       setStatusFriend(StatusFriend.NONE);

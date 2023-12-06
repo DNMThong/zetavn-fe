@@ -63,7 +63,6 @@ const NotificationsDropdown = () => {
   useEffect(() => {
     const fetchFriendRequest = async () => {
       const response = await getPostNotifications({
-        userId: user?.id || "",
         pageNumber: page,
         pageSize: 10,
       }).unwrap();

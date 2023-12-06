@@ -16,8 +16,8 @@ import { UserContact } from "@/types/user.type";
 
 export const chatApi = apiAuthorization.injectEndpoints({
   endpoints: (build) => ({
-    getContacts: build.query<GetContactResponse, string>({
-      query: (id) => `${API_URL.USERS}/${id}/contacts`,
+    getContacts: build.query<GetContactResponse, void>({
+      query: () => `${API_URL.USERS}/contacts`,
     }),
     getChatMessages: build.query<
       GetChatMessagesResponse,
@@ -26,8 +26,7 @@ export const chatApi = apiAuthorization.injectEndpoints({
       query: (request) => ({
         url: API_URL.MESSAGES,
         params: {
-          userIdGetChat: request.userIdGetChat,
-          userIdContact: request.userIdContact,
+          userId: request.userId,
           pageNumber: request.pageNumber || 0,
           pageSize: request.pageSize || 10,
         },
@@ -59,13 +58,15 @@ export const chatApi = apiAuthorization.injectEndpoints({
         body: (() => {
           const formData = new FormData();
           formData.append("file", request.file);
-          formData.append("senderId", request.senderId);
           formData.append("recieverId", request.recieverId);
           formData.append("message", request.message);
           formData.append("type", request.type);
           return formData;
         })(),
       }),
+    }),
+    getTokenCall: build.query<ApiResponse<{ token: string }>, void>({
+      query: () => `${API_URL.MESSAGES}/token-call`,
     }),
   }),
 });
@@ -76,4 +77,5 @@ export const {
   useCreateChatMessageMutation,
   useUpdateReadChatMessageMutation,
   useUploadFileChatMessageMutation,
+  useLazyGetTokenCallQuery,
 } = chatApi;

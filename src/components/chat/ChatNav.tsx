@@ -63,11 +63,7 @@ const ChatNav = () => {
 
         <div className="chat-search">
           <div className="control has-icon">
-            <input
-              type="text"
-              className="input"
-              placeholder="Search messages"
-            />
+            <input type="text" className="input" placeholder="Tìm kiếm" />
             <div className="form-icon">
               <FiSearch />
             </div>

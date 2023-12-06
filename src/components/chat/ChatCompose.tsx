@@ -35,7 +35,6 @@ const ChatCompose = () => {
   const handleSendMessage = async () => {
     console.log(value);
     const message = {
-      senderId: user?.id || "",
       recieverId: userContactSelected?.id || "",
       message: value,
       type: MessageType.TEXT,

@@ -14,14 +14,20 @@ import { useUpdateReadChatMessageMutation } from "@/redux/features/chat/chat.ser
 import {
   addChatMessageSelectedHead,
   addUserContactNew,
+  offCall,
+  setIncomingCall,
   updateChatMessageSelected,
   updateUserContactsByMessage,
 } from "@/redux/features/chat/chat.slice";
 import { setClientStomp } from "@/redux/features/global.slice";
 import { useLazyGetFriendsQuery } from "@/redux/features/user/user.service";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Message } from "@/types/chat.type";
-import { API_URL, NotificationFriendRequest } from "@/types/contants.type";
+import { IncomingCall, Message } from "@/types/chat.type";
+import {
+  API_URL,
+  CallStatus,
+  NotificationFriendRequest,
+} from "@/types/contants.type";
 import { PostNotification } from "@/types/post.type";
 import { FriendRequestResponse } from "@/types/response.type";
 import User, { UserProfile } from "@/types/user.type";
@@ -70,13 +76,14 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
         Authorization: `Bearer ${accessToken}`,
         ip_address,
         device_information,
+        saveActivityLog: "true",
       };
 
       const client = new Client({
         brokerURL: `ws://${API_URL._DOMAIN}/ws`,
-        // debug: function (str) {
-        //   console.log(str);
-        // },
+        debug: function (str) {
+          console.log(str);
+        },
       });
       client.onConnect = () => {
         if (user?.id) {
@@ -150,6 +157,30 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
             }
           );
           subscriptions.current.push(subscribeUpdateRead);
+
+          const subscribeIncomingCall = client.subscribe(
+            `/user/${user.id}/topic/incoming-call`,
+            (data) => {
+              const incomingCall: IncomingCall = JSON.parse(data.body);
+              dispatch(
+                setIncomingCall({
+                  user: incomingCall.from,
+                  callType: incomingCall.type,
+                  roomId: incomingCall.roomId,
+                  status: CallStatus.IN_COMING,
+                })
+              );
+            }
+          );
+          subscriptions.current.push(subscribeIncomingCall);
+
+          const subscribeRejectCall = client.subscribe(
+            `/user/${user.id}/topic/reject-call`,
+            () => {
+              dispatch(offCall())
+            }
+          );
+          subscriptions.current.push(subscribeRejectCall);
         }
       };
 

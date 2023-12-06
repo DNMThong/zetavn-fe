@@ -253,6 +253,42 @@ body {
         }
       }
     }
+
+    .call-wrapper {
+
+      .call-video {
+        .action {
+          svg {
+            stroke: $white !important;
+          }
+        }
+      }     
+
+      .call-info {
+    
+        .display-name {
+          color: $white-light;
+        }
+        .status {
+          color: $white-light;
+        }
+      }
+      .call-action {
+        .action-item {
+          background-color: darken($dark, 12%);
+          &.is-active {
+            background-color: $white;
+            svg {
+              fill: darken($dark, 12%);
+            }
+          }
+
+          svg {
+            fill: $white-light;
+          }
+        }
+      }
+    }
   }
 }
 

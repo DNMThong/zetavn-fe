@@ -1,5 +1,10 @@
-import { Message } from "@/types/chat.type";
+import { Call, Message } from "@/types/chat.type";
 import { UserContact, UserShort, UserShortPrivate } from "@/types/user.type";
+import {
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "@/utils/localstorage.util";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ChatState {
@@ -8,6 +13,8 @@ interface ChatState {
   userContacts: UserContact[];
   chatMessageSelected: Message[];
   userContactSelected: UserShortPrivate | null;
+  call: Call | null;
+  incomingCall: Call | null;
 }
 
 const initialState: ChatState = {
@@ -16,6 +23,8 @@ const initialState: ChatState = {
   userContacts: [],
   chatMessageSelected: [],
   userContactSelected: null,
+  call: getLocalStorageItem<Call>("call"),
+  incomingCall: null,
 };
 
 const slice = createSlice({
@@ -122,6 +131,18 @@ const slice = createSlice({
         };
       }
     },
+    setCall(state, action: PayloadAction<Call | null>) {
+      state.call = action.payload;
+      setLocalStorageItem("call", action.payload);
+    },
+    setIncomingCall(state, action: PayloadAction<Call | null>) {
+      state.incomingCall = action.payload;
+    },
+    offCall(state) {
+      state.call = null;
+      state.incomingCall = null;
+      removeLocalStorageItem("call");
+    },
   },
 });
 
@@ -139,6 +160,9 @@ export const {
   updateChatMessageSelected,
   updateUserContactsByMessage,
   addChatMessageSelected,
+  setCall,
+  setIncomingCall,
+  offCall,
 } = slice.actions;
 
 export default ChatReducer;

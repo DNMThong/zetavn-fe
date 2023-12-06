@@ -2,8 +2,10 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setOpenChatDetails } from "@/redux/features/chat/chat.slice";
-import { ImageDefault } from "@/types/contants.type";
+import { setCall, setOpenChatDetails } from "@/redux/features/chat/chat.slice";
+import { CallStatus, CallType, ImageDefault } from "@/types/contants.type";
+import { useRouter } from "next/navigation";
+import { generateShortId } from "@/utils/random.util";
 
 const ChatDetail = () => {
   const { openChatDetails, userContactSelected } = useAppSelector(
@@ -12,6 +14,48 @@ const ChatDetail = () => {
   const dispatch = useAppDispatch();
   const handleCloseChatDetails = () => {
     dispatch(setOpenChatDetails(false));
+  };
+
+  const router = useRouter();
+
+  const handleVoiceCall = () => {
+    if (userContactSelected) {
+      const randomId = generateShortId(5);
+      const { isOnline, ...userCall } = userContactSelected;
+      dispatch(
+        setCall({
+          user: userCall,
+          status: CallStatus.OUT_GOING,
+          callType: CallType.VOICE,
+          roomId: randomId,
+        })
+      );
+      window.open(
+        `/call/${randomId}`,
+        "_blank",
+        `height=${screen.availHeight},width=${screen.availWidth}`
+      );
+    }
+  };
+
+  const handleVideoCall = () => {
+    if (userContactSelected) {
+      const randomId = generateShortId(5);
+      const { isOnline, ...userCall } = userContactSelected;
+      dispatch(
+        setCall({
+          user: userCall,
+          status: CallStatus.OUT_GOING,
+          callType: CallType.VIDEO,
+          roomId: randomId,
+        })
+      );
+      window.open(
+        `/call/${randomId}`,
+        "_blank",
+        `height=${screen.availHeight},width=${screen.availWidth}`
+      );
+    }
   };
 
   return (
@@ -28,11 +72,11 @@ const ChatDetail = () => {
         <div className="panel-body is-user-details">
           <div className="panel-body-inner">
             <div className="subheader">
-              <div className="action-icon">
-                <i className="mdi mdi-video"></i>
+              <div className="action-icon" onClick={handleVoiceCall}>
+                <i className="mdi mdi-phone"></i>
               </div>
-              <div className="action-icon">
-                <i className="mdi mdi-camera"></i>
+              <div className="action-icon" onClick={handleVideoCall}>
+                <i className="mdi mdi-video"></i>
               </div>
               <div className="action-icon">
                 <i className="mdi mdi-microphone"></i>
@@ -78,7 +122,7 @@ const ChatDetail = () => {
               </div>
             </div>
 
-            <div className="user-about">
+            {/* <div className="user-about">
               <label>About Me</label>
               <div className="about-block">
                 <i className="mdi mdi-domain"></i>
@@ -102,7 +146,7 @@ const ChatDetail = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

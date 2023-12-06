@@ -30,7 +30,9 @@ const SearchPage = () => {
 
   useEffect(() => {
     setCurrentPage(parseInt(params.get("p") || "1"));
-    setOptionSearch((params.get("o") as SearchUserOption) || SearchUserOption.ALL)
+    setOptionSearch(
+      (params.get("o") as SearchUserOption) || SearchUserOption.ALL
+    );
   }, [params]);
 
   useEffect(() => {
@@ -44,7 +46,6 @@ const SearchPage = () => {
     const fetchSearchUser = async () => {
       const response = await searchUser({
         kw: params.get("q") || "",
-        userId: user?.id || "",
         option: optionSearch,
         pageNumber: currentPage - 1,
         pageSize: 1,

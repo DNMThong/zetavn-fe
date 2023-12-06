@@ -23,7 +23,7 @@ const ChatSidebar = () => {
 
   useEffect(() => {
     const fetchGetContacts = async () => {
-      const response = await getContacts(user?.id || "").unwrap();
+      const response = await getContacts().unwrap();
 
       if (response.code === 200) {
         dispatch(setUserContacts(response.data));

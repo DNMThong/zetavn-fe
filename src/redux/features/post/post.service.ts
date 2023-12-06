@@ -37,7 +37,7 @@ const apiPost = apiAuthorization.injectEndpoints({
       PostPaginationRequest
     >({
       query: (request) => ({
-        url: `${API_URL.USERS}/${request.userId}/newsfeed`,
+        url: `${API_URL.USERS}/newsfeed`,
         params: {
           pageNumber: request.pageNumber,
           pageSize: request.pageSize,
@@ -78,13 +78,12 @@ const apiPost = apiAuthorization.injectEndpoints({
       query: (request) => ({
         url: API_URL.LIKE,
         params: {
-          userId: request.userId,
           postId: request.postId,
         },
       }),
     }),
     getPostMediaByUserId: build.query<PostsUsersResponse, string>({
-      query: (userId: any) => ({
+      query: (userId) => ({
         url: `${API_URL.POSTS}/postMedia`,
         params: {
           userId,

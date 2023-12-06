@@ -2,13 +2,8 @@ import "@/assets/scss/core.scss";
 import type { Metadata } from "next";
 import { Montserrat, Roboto } from "next/font/google";
 import { Providers } from "@/redux/provider";
-import { MobileNavbar, Navbar } from "@/components/navbar";
-import { PageLoader } from "@/components/pageloader";
-import { CallWrapper, ChatWrapper } from "@/components/chat";
-import { ExplorerMenu } from "@/components/explorer-menu";
-import { PrivateRoute } from "../../components/route";
 import "react-toastify/dist/ReactToastify.css";
-import { IncomingCallModal } from "@/components/modals";
+import CallRoute from "@/components/route/CallRoute";
 
 export const metadata: Metadata = {
   title: "Zetavn",
@@ -48,16 +43,7 @@ export default function RootLayout({
       </head>
       <body className={`${roboto.className}`}>
         <Providers>
-          <PrivateRoute>
-            <div className="app-overlay"></div>
-            <Navbar />
-            <MobileNavbar />
-            <div className="view-wrapper">{children}</div>
-            <ChatWrapper />
-            <CallWrapper />
-            <ExplorerMenu />
-            <IncomingCallModal />
-          </PrivateRoute>
+          <CallRoute>{children}</CallRoute>
         </Providers>
       </body>
     </html>

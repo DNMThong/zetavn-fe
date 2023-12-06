@@ -76,7 +76,7 @@ const defaultValues: IFormValues = {
 const GeneralSetting = () => {
   const user = useAppSelector((selector) => selector.auth.user);
 
-  console.log(user)
+  console.log(user);
 
   const dispatch = useAppDispatch();
   const { control, handleSubmit, reset } = useForm<IFormValues>({
@@ -109,20 +109,17 @@ const GeneralSetting = () => {
 
     try {
       const response = await updateUserInfo({
-        userId: user?.id as string,
-        info: {
-          email,
-          firstName,
-          lastName,
-          genderEnum: gender as string,
-          birthday: birthday.toLocaleDateString("en-GB"),
-          username: username as string,
-          aboutMe: aboutMe as string,
-          livesAt: livesIn as string,
-          worksAt: worksAt as string,
-          studiedAt: studiedAt as string,
-          phone: phone as string,
-        },
+        email,
+        firstName,
+        lastName,
+        genderEnum: gender as string,
+        birthday: birthday.toLocaleDateString("en-GB"),
+        username: username as string,
+        aboutMe: aboutMe as string,
+        livesAt: livesIn as string,
+        worksAt: worksAt as string,
+        studiedAt: studiedAt as string,
+        phone: phone as string,
       }).unwrap();
       const { code, status, message, data } = response;
       if (code === 200) {
@@ -134,7 +131,11 @@ const GeneralSetting = () => {
           lastName: data?.lastName || "",
           gender: data?.information?.genderEnum,
           birthday:
-            parse(user?.information.birthday as string, "dd/MM/yyyy", new Date()) || "",
+            parse(
+              user?.information.birthday as string,
+              "dd/MM/yyyy",
+              new Date()
+            ) || "",
           username: data?.username === user?.id ? "" : data?.username,
           aboutMe: data?.information?.aboutMe || "",
           livesIn: data?.information?.livesAt || "",
@@ -151,7 +152,11 @@ const GeneralSetting = () => {
           lastName: user?.lastName || "",
           gender: user?.information?.genderEnum,
           birthday:
-            parse(user?.information.birthday as string, "dd/MM/yyyy", new Date()) || undefined,
+            parse(
+              user?.information.birthday as string,
+              "dd/MM/yyyy",
+              new Date()
+            ) || undefined,
           username: user?.username === user?.id ? "" : user?.username,
           aboutMe: user?.information?.aboutMe || "",
           livesIn: user?.information?.livesAt || "",
@@ -168,7 +173,11 @@ const GeneralSetting = () => {
 
   useEffect(() => {
     if (user) {
-      const date: any = parse(user?.information.birthday as string, "dd/MM/yyyy", new Date());
+      const date: any = parse(
+        user?.information.birthday as string,
+        "dd/MM/yyyy",
+        new Date()
+      );
       reset({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
