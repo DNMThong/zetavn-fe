@@ -18,14 +18,14 @@ const CardSubComment = () => {
             src="https://via.placeholder.com/300x300"
             alt=""
           />
-          {hover && (
+          {/* {hover && (
             <UserPopover
               stylesArrow={{
                 borderWidth: "18px",
                 top: "-28px",
               }}
             />
-          )}
+          )} */}
         </div>
       </div>
       {/* <!-- Content --> */}

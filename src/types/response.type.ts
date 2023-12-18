@@ -6,6 +6,7 @@ import {
 import Post, {
   ActivityStatus,
   Comment,
+  Media,
   PostNewsfeed,
   PostNotification,
 } from "./post.type";
@@ -86,6 +87,7 @@ export type FriendRequestPagination = Pagination<FriendRequestResponse[]>;
 export type CommentPagination = Pagination<Comment[]>;
 export type PostNotificationPagination = Pagination<PostNotification[]>;
 export type ChatMessagesPagination = Pagination<Message[]>;
+export type SuggestionFriendsPagination = Pagination<UserShort[]>;
 
 export type CreatePostResponse = ApiResponse<Post>;
 export type ActivitiesResponse = ApiResponse<ActivityStatus[]>;
@@ -110,3 +112,6 @@ export type FileUploadResponse = ApiResponse<FileUpload>;
 export type GetContactResponse = ApiResponse<UserContact[]>;
 export type GetChatMessagesResponse = ApiResponse<ChatMessagesPagination>;
 export type CreateChatMessagesResponse = ApiResponse<Message>;
+export type MediaPostResponse = ApiResponse<Media[]>;
+export type SuggestionFriendsResponse =
+  ApiResponse<SuggestionFriendsPagination>;

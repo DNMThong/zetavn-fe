@@ -135,12 +135,23 @@ body {
             }
 
             .chat-message {
+              
               &.is-sent {
                 .message-content {
                   background: lighten($dark, 1%);
+                  color: $white-light;
 
                   &:before {
                     border-top-color: lighten($dark, 1%);
+                  }
+                }
+
+                .message-call {
+                  .mc-icon {
+                    background:lighten($dark, 12%);
+                    svg {
+                      fill: $white
+                    }
                   }
                 }
               }
@@ -257,6 +268,8 @@ body {
     .call-wrapper {
 
       .call-video {
+        background: lighten($dark, 4%);
+
         .action {
           svg {
             stroke: $white !important;

@@ -48,7 +48,7 @@ const CardComment = ({ data }: CardCommentProps) => {
       </div>
       {/* <!-- Content --> */}
       <div className="media-content">
-        <Link href={`/${data.user.id}`}>{data.user.display}</Link>
+        <Link href={`/${data.user.username}`}>{data.user.display}</Link>
         <span className="time">{calculateTime(data.createdAt)}</span>
         <p>{data.content}</p>
 
@@ -82,11 +82,11 @@ const CardComment = ({ data }: CardCommentProps) => {
             <span>4</span>
           </div> */}
           <div className="reply">
-            <a>Reply</a>
+            <a>Trả lời</a>
           </div>
           {user?.id === data.user.id && (
             <div className="edit">
-              <a>Edit</a>
+              <a>Chỉnh sửa</a>
             </div>
           )}
         </div>

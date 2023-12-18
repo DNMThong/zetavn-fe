@@ -584,6 +584,8 @@ Main feed styles
       .time {
         font-size: 0.8rem;
         color: $muted-grey;
+        display: flex;
+        gap: 4px;
       }
 
       .user-info {
@@ -2842,10 +2844,23 @@ background: #fff url('img/search.png') no-repeat 15px 15px;
 }
 
 .tipue_drop_item_other {
-  text-align: center;
-  padding: 12px 0;
+  // text-align: center;
+  padding: 16px 12px;
   cursor: pointer;
   color: #3f88e3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  .searchIcon {
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      font-size: 16px;
+    }
+  }
 }
 
 

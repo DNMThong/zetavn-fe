@@ -57,7 +57,7 @@ const CardPost = ({ data }: CardPostProps) => {
               userInfo={data.user}
             />
             {/* <!-- Right side dropdown --> */}
-            <FeedPostDropdown />
+            <FeedPostDropdown postId={data.id} userId={data.user.id} />
           </div>
           {/* <!-- /Post header --> */}
 

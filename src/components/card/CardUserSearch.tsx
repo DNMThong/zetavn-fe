@@ -2,6 +2,7 @@ import {
   useAcceptFriendMutation,
   useAddFriendMutation,
   useRejectFriendMutation,
+  useUnfriendMutation,
 } from "@/redux/features/user/user.service";
 import { useAppSelector } from "@/redux/hooks";
 import { ImageDefault, StatusFriend } from "@/types/contants.type";
@@ -26,6 +27,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
   const user = useAppSelector((selector) => selector.auth.user);
   const [acceptFriend] = useAcceptFriendMutation();
   const [rejectFriend] = useRejectFriendMutation();
+  const [unfriend] = useUnfriendMutation();
 
   const handleAddFriend = async () => {
     const response = await addFriend({
@@ -37,7 +39,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
   };
 
   const handleCancelAddFriend = async () => {
-    const response = await rejectFriend({
+    const response = await unfriend({
       userId: data.user.id,
     }).unwrap();
     if (response.code) {
@@ -126,7 +128,7 @@ const CardUserSearch = ({ isFriend = false, data }: CardUserSearchProps) => {
         /> */}
       </div>
       <div className="friend-info">
-        <Link href={`/${data.user.id}`}>
+        <Link href={`/${data.user.username}`}>
           <h3>{data.user.display}</h3>
         </Link>
         <p></p>

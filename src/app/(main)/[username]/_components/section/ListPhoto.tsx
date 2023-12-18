@@ -1,24 +1,36 @@
 import { DropdownItem, WidgetDropdown } from "@/components/dropdowns";
 import { useLazyGetPostMediaByUserIdQuery } from "@/redux/features/post/post.service";
-import Post from "@/types/post.type";
+import Post, { Media } from "@/types/post.type";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FiImage, FiUploadCloud, FiUser, FiUsers } from "react-icons/fi";
 import { CardPhoto } from "../card";
+import { MediaType } from "@/types/contants.type";
+import Link from "next/link";
 
-const ListPhoto = () => {
+interface ListPhotoProps {
+  userId: string;
+}
+
+const ListPhoto = ({ userId }: ListPhotoProps) => {
   const { username } = useParams();
-  const [getPosts] = useLazyGetPostMediaByUserIdQuery();
-  const [postMediaList, setPostMediaList] = useState<Post[]>();
+  const [medias, setMedias] = useState<Media[]>([]);
+  const [getMediaPost] = useLazyGetPostMediaByUserIdQuery();
   useEffect(() => {
-    async function fetchPosts() {
-      const { data, code }: any = await getPosts(username as string).unwrap();
-      if (code === 200) {
-        setPostMediaList(data?.data);
+    async function fetchData() {
+      const { data }: any = await getMediaPost({
+        userId,
+        type: MediaType.IMAGE,
+        pageSize: 5,
+        pageNumber: 0,
+      }).unwrap();
+      if (data?.data) {
+        setMedias(data?.data);
       }
     }
-    fetchPosts();
-  }, []);
+    fetchData();
+  }, [username]);
+
   return (
     <div className="about-card">
       {/* <!-- Header --> */}
@@ -29,7 +41,9 @@ const ListPhoto = () => {
         </div>
         <div className="actions">
           <div className="button-wrapper">
-            <a className="button">Bộ sưu tập</a>
+            <Link href={`/${username}/photos`} className="button">
+              Bộ sưu tập
+            </Link>
           </div>
           {/* <!-- Dropdown --> */}
           <WidgetDropdown wclassName=" is-accent is-right">
@@ -76,10 +90,10 @@ const ListPhoto = () => {
         {/* <!-- Photos --> */}
         <div className="photo-list">
           {/* <!-- Photo item --> */}
-          {postMediaList &&
-            postMediaList.length > 0 &&
-            postMediaList.map((p, index) => (
-              <CardPhoto key={index} post={p}></CardPhoto>
+          {medias &&
+            medias.length > 0 &&
+            medias.map((m, index) => (
+              <CardPhoto key={`${index}_image`} path={m.mediaPath}></CardPhoto>
             ))}
         </div>
       </div>

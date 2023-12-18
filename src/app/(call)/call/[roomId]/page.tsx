@@ -1,6 +1,6 @@
 "use client";
 import { useAppSelector } from "@/redux/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   MdMic,
   MdMicOff,
@@ -9,28 +9,104 @@ import {
   MdCallEnd,
 } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { offCall } from "@/redux/features/chat/chat.slice";
-import { CallStatus, CallType, ImageDefault } from "@/types/contants.type";
+import {
+  addChatMessageSelectedHead,
+  addUserContactNew,
+  offCall,
+} from "@/redux/features/chat/chat.slice";
+import {
+  CallStatus,
+  CallType,
+  ImageDefault,
+  MessageCallStatus,
+  MessageType,
+} from "@/types/contants.type";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { useLazyGetTokenCallQuery } from "@/redux/features/chat/chat.service";
+import {
+  useCreateChatMessageMutation,
+  useLazyGetTokenCallQuery,
+} from "@/redux/features/chat/chat.service";
 import { ZegoExpressEngine } from "zego-express-engine-webrtc";
 import { v4 as uuidv4 } from "uuid";
+import { calculateTimeSeconds } from "@/utils/calculate-time.util";
+import { CreateChatMessagesRequest } from "@/types/request.type";
+import { setLocalStorageItem } from "@/utils/localstorage.util";
 
 const CallPage = () => {
   const user = useAppSelector((selector) => selector.auth.user);
   const call = useAppSelector((selector) => selector.chat.call);
+  const rejectedCall = useAppSelector((selector) => selector.chat.rejectedCall);
   const clientStomp = useAppSelector((selector) => selector.global.clientStomp);
   const dispatch = useDispatch();
   const [openVideo, setOpenVideo] = useState(true);
-  const [openMic, setOpenMic] = useState(true);
-  const [openCam, setOpenCam] = useState(true);
+  const [muteMic, setMuteMic] = useState(false);
+  const [muteCam, setMuteCam] = useState(false);
   const [acceptCall, setAcceptCall] = useState(false);
   const [getTokenCall] = useLazyGetTokenCallQuery();
   const [tokenCall, setTokenCall] = useState("");
   const [zgVar, setZgVar] = useState<ZegoExpressEngine | null>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [publishStream, setPublishStream] = useState("");
-  console.log("CALL", call);
+  const [muteCamRemote, setMuteCamRemote] = useState(true);
+  // const [muteMicRemote, setMuteMicRemote] = useState(false);
+  const [timeCall, setTimeCall] = useState(0);
+  const timeRef = useRef<any>();
+
+  useEffect(() => {
+    if (rejectedCall) {
+      if (zgVar && localStream && publishStream && call) {
+        zgVar.destroyStream(localStream);
+        zgVar.stopPublishingStream(publishStream);
+        zgVar.logoutRoom(call.roomId);
+      }
+      if (clientStomp && call) {
+        if (call.status === CallStatus.OUT_GOING) {
+          const message: CreateChatMessagesRequest = {
+            recieverId: call.user.id || "",
+            message: "",
+            type: MessageType.CALL,
+            call: {
+              duration: timeCall,
+              status: acceptCall
+                ? MessageCallStatus.SUCCESS
+                : rejectedCall
+                ? MessageCallStatus.REJECTED
+                : MessageCallStatus.MISSED,
+              type: call.callType,
+            },
+          };
+          setLocalStorageItem("messageCall", message);
+        }
+
+        window.close();
+      }
+    }
+  }, [rejectedCall]);
+
+  useEffect(() => {
+    if (zgVar && localStream) {
+      zgVar.mutePublishStreamVideo(localStream, muteCam);
+      // const videoTrack = localStream.getVideoTracks()[0];
+      // if (videoTrack) {
+      //   videoTrack.enabled = !muteCam;
+      // }
+    }
+    setOpenVideo(!muteCam);
+  }, [muteCam]);
+
+  useEffect(() => {
+    if (zgVar && localStream) {
+      zgVar.mutePublishStreamAudio(localStream, muteMic);
+    }
+  }, [muteMic]);
+
+  useEffect(() => {
+    return () => {
+      if (timeRef.current) {
+        clearInterval(timeRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const startCall = async () => {
@@ -39,6 +115,14 @@ const CallPage = () => {
         const serverSercet: string = process.env.ZEGO_SERVER_SECRET as string;
         const zg = new ZegoExpressEngine(appId, serverSercet);
         setZgVar(zg);
+
+        zg.on("remoteCameraStatusUpdate", (streamId, status) => {
+          setMuteCamRemote(status === "MUTE");
+        });
+
+        // zg.on("remoteMicStatusUpdate", (streamId, status) => {
+        //   setMuteMicRemote(status==="MUTE")
+        // });
 
         zg.on(
           "roomStreamUpdate",
@@ -60,6 +144,9 @@ const CallPage = () => {
               }).then((stream) => {
                 if (stream) {
                   el.srcObject = stream;
+                  timeRef.current = setInterval(() => {
+                    setTimeCall((prev) => prev + 1);
+                  }, 1000);
                 }
               });
             } else if (
@@ -100,8 +187,7 @@ const CallPage = () => {
           element.muted = true;
           if (element instanceof HTMLVideoElement) element.playsInline = true;
 
-          if (localStreamEl)
-            localStreamEl.appendChild(element);
+          if (localStreamEl) localStreamEl.appendChild(element);
 
           element.srcObject = _localStream;
 
@@ -165,11 +251,30 @@ const CallPage = () => {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (clientStomp && call) {
-        clientStomp.publish({
-          destination: "/app/reject-incoming-call",
-          body: call.user.id,
-        });
-        dispatch(offCall());
+        if (!rejectedCall) {
+          clientStomp.publish({
+            destination: "/app/reject-incoming-call",
+            body: call.user.id,
+          });
+        }
+
+        if (call.status === CallStatus.OUT_GOING) {
+          const message: CreateChatMessagesRequest = {
+            recieverId: call.user.id || "",
+            message: "",
+            type: MessageType.CALL,
+            call: {
+              duration: timeCall,
+              status: acceptCall
+                ? MessageCallStatus.SUCCESS
+                : rejectedCall
+                ? MessageCallStatus.REJECTED
+                : MessageCallStatus.MISSED,
+              type: call.callType,
+            },
+          };
+          setLocalStorageItem("messageCall", message);
+        }
       }
     };
 
@@ -178,7 +283,7 @@ const CallPage = () => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [dispatch, clientStomp, call]);
+  }, [acceptCall, call, clientStomp, rejectedCall, timeCall]);
 
   const handleCloseCall = () => {
     if (zgVar && localStream && publishStream && call) {
@@ -191,7 +296,9 @@ const CallPage = () => {
     }
   };
 
-  if (!call) return <>123132123</>;
+  if (!call) return <></>;
+
+  if (!user) return <></>;
 
   return (
     <div className="call-wrapper">
@@ -202,13 +309,21 @@ const CallPage = () => {
           <div className="action">
             {openVideo ? <FiChevronRight /> : <FiChevronLeft />}
           </div>
-          <div
-            id="local-stream"
-            ></div>
+          {muteCam && (
+            <div className="call-info">
+              <img
+                className="avatar"
+                src={user.avatar || ImageDefault.AVATAR}
+                alt=""
+              />
+            </div>
+          )}
+          <div id="local-stream" className={`${muteCam ? "hidden" : ""}`}></div>
         </div>
       )}
       <div className="call-main">
-        {call.callType !== CallType.VIDEO && acceptCall && (
+        {(call.callType !== CallType.VIDEO ||
+          (call.callType === CallType.VIDEO && muteCamRemote)) && (
           <div className="call-info">
             <img
               className="avatar"
@@ -216,23 +331,27 @@ const CallPage = () => {
               alt=""
             />
             <span className="display-name">{call.user.display}</span>
-            <span className="status">Đang gọi</span>
+            <span className="status">
+              {acceptCall ? calculateTimeSeconds(timeCall) : "Đang gọi"}
+            </span>
           </div>
         )}
-        <div id="remote-stream"></div>
+        <div
+          id="remote-stream"
+          className={`${muteCamRemote ? "hidden" : ""}`}></div>
       </div>
       <div className="call-action">
         {call.callType === CallType.VIDEO && (
           <div
-            className={`action-item ${openCam ? "" : "is-active"}`}
-            onClick={() => setOpenCam((prev) => !prev)}>
-            {openCam ? <MdVideocam /> : <MdVideocamOff />}
+            className={`action-item ${muteCam ? "is-active" : ""}`}
+            onClick={() => setMuteCam((prev) => !prev)}>
+            {muteCam ? <MdVideocamOff /> : <MdVideocam />}
           </div>
         )}
         <div
-          className={`action-item ${openMic ? "" : "is-active"}`}
-          onClick={() => setOpenMic((prev) => !prev)}>
-          {openMic ? <MdMic /> : <MdMicOff />}
+          className={`action-item ${muteMic ? "is-active" : ""}`}
+          onClick={() => setMuteMic((prev) => !prev)}>
+          {muteMic ? <MdMicOff /> : <MdMic />}
         </div>
         <div className="action-item is-red" onClick={handleCloseCall}>
           <MdCallEnd />

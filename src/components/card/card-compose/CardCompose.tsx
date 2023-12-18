@@ -227,13 +227,10 @@ const ComposeCard = () => {
           {/* <!-- Compose form --> */}
           <div className="compose">
             <div className="compose-form">
-              <Image
+              <img
                 style={{ objectFit: "cover" }}
                 src={user?.avatar || ImageDefault.AVATAR}
                 alt=""
-                sizes="100vw"
-                width={0}
-                height={0}
               />
               <div
                 className="control"
@@ -356,66 +353,66 @@ const ComposeCard = () => {
                     <div className="gif-block">
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/1.gif"
+                        data-demo-src="/img/demo/gif/1.gif"
                         alt=""
                       />
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/2.gif"
+                        data-demo-src="/img/demo/gif/2.gif"
                         alt=""
                       />
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/3.gif"
+                        data-demo-src="/img/demo/gif/3.gif"
                         alt=""
                       />
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/4.gif"
-                        alt=""
-                      />
-                    </div>
-                    <div className="gif-block">
-                      <img
-                        src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/5.gif"
-                        alt=""
-                      />
-                      <img
-                        src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/6.gif"
-                        alt=""
-                      />
-                      <img
-                        src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/7.gif"
-                        alt=""
-                      />
-                      <img
-                        src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/8.gif"
+                        data-demo-src="/img/demo/gif/4.gif"
                         alt=""
                       />
                     </div>
                     <div className="gif-block">
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/9.gif"
+                        data-demo-src="/img/demo/gif/5.gif"
                         alt=""
                       />
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/10.gif"
+                        data-demo-src="/img/demo/gif/6.gif"
                         alt=""
                       />
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/11.gif"
+                        data-demo-src="/img/demo/gif/7.gif"
                         alt=""
                       />
                       <img
                         src="https://via.placeholder.com/478x344"
-                        data-demo-src="img/demo/gif/12.gif"
+                        data-demo-src="/img/demo/gif/8.gif"
+                        alt=""
+                      />
+                    </div>
+                    <div className="gif-block">
+                      <img
+                        src="https://via.placeholder.com/478x344"
+                        data-demo-src="/img/demo/gif/9.gif"
+                        alt=""
+                      />
+                      <img
+                        src="https://via.placeholder.com/478x344"
+                        data-demo-src="/img/demo/gif/10.gif"
+                        alt=""
+                      />
+                      <img
+                        src="https://via.placeholder.com/478x344"
+                        data-demo-src="/img/demo/gif/11.gif"
+                        alt=""
+                      />
+                      <img
+                        src="https://via.placeholder.com/478x344"
+                        data-demo-src="/img/demo/gif/12.gif"
                         alt=""
                       />
                     </div>
@@ -445,7 +442,7 @@ const ComposeCard = () => {
                   id="extended-show-activities"
                   onClick={handleOpenActivities}
                   className="compose-option is-centered">
-                  <img src="img/icons/emoji/emoji-1.svg" alt="" />
+                  <img src="/img/icons/emoji/emoji-1.svg" alt="" />
                   <span>Hoạt động</span>
                 </div>
               </div>
@@ -505,7 +502,7 @@ const ComposeCard = () => {
               id="show-activities"
               className="compose-option"
               onClick={handleOpenActivities}>
-              <img src="img/icons/emoji/emoji-1.svg" alt="" />
+              <img src="/img/icons/emoji/emoji-1.svg" alt="" />
               <span>Hoạt động</span>
             </div>
             {/* <!-- Expand action --> */}
@@ -538,7 +535,7 @@ const ComposeCard = () => {
                 <div className="channel-icon">
                   <FiBell />
                 </div>
-                <div className="channel-name">Activity Feed</div>
+                <div className="channel-name">Bảng Tin Hoạt Động</div>
                 {/* <!-- Dropdown menu --> */}
                 <AccessModifierDropdown />
               </div>

@@ -10,7 +10,11 @@ import { useLazyReloginQuery } from "@/redux/features/auth/auth.service";
 import { API_URL } from "@/types/contants.type";
 import { UserProfile } from "@/types/user.type";
 import { useRouter } from "next/navigation";
-import { offCall, setCall } from "@/redux/features/chat/chat.slice";
+import {
+  offCall,
+  setCall,
+  setRejectedCall,
+} from "@/redux/features/chat/chat.slice";
 
 const CallRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector((selector) => selector.auth.user);
@@ -48,7 +52,7 @@ const CallRoute = ({ children }: { children: React.ReactNode }) => {
           const subscribeRejectCall = client.subscribe(
             `/user/${user.id}/topic/reject-call`,
             () => {
-              window.close();
+              dispatch(setRejectedCall(true));
             }
           );
           subscriptions.current.push(subscribeRejectCall);

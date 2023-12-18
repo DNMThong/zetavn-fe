@@ -4,127 +4,131 @@ import { FiFolder, FiImage, FiTag } from "react-icons/fi";
 import useClickOutside from "@/hooks/useClickOutside";
 import { DropdownItem, WidgetDropdown } from "../dropdowns";
 import { useLazyGetPostMediaByUserIdQuery } from "@/redux/features/post/post.service";
-import Post from "@/types/post.type";
+import Post, { Media } from "@/types/post.type";
+import { MediaType } from "@/types/contants.type";
+import { Fancybox } from "../fancybox";
 
 interface IDropdownItem {
-   icon: any;
-   href: string;
-   title: string;
-   subTitle: string;
+  icon: any;
+  href: string;
+  title: string;
+  subTitle: string;
 }
 
 const dropdownItems: IDropdownItem[] = [
-   {
-      icon: FiImage,
-      href: "#more",
-      title: "Ảnh",
-      subTitle: "Xem tất cả ảnh.",
-   },
-   {
-      icon: FiTag,
-      href: "#moreee",
-      title: "Được gắn thẻ",
-      subTitle: "Xem ảnh bạn được gắn thẻ.",
-   },
-   {
-      icon: FiFolder,
-      href: "#moreeeee",
-      title: "Bộ sưu tập",
-      subTitle: "Xem bộ sưu tập.",
-   },
+  {
+    icon: FiImage,
+    href: "#",
+    title: "Ảnh",
+    subTitle: "Xem tất cả ảnh.",
+  },
+  {
+    icon: FiTag,
+    href: "#",
+    title: "Được gắn thẻ",
+    subTitle: "Xem ảnh bạn được gắn thẻ.",
+  },
+  {
+    icon: FiFolder,
+    href: "#",
+    title: "Bộ sưu tập",
+    subTitle: "Xem bộ sưu tập.",
+  },
 ];
 
 interface PhotosWidgetProps {
-   userId: string;
+  userId: string;
 }
 
 const PhotosWidget = ({ userId }: PhotosWidgetProps) => {
-   const [posts, setPosts] = useState<Post[]>([]);
-   const [getPosts] = useLazyGetPostMediaByUserIdQuery(userId as any);
-   useEffect(() => {
-      async function fetchData() {
-         const { data }: any = await getPosts(userId).unwrap();
-         console.log(
-            "🚀 ~ file: PhotosWidget.tsx:46 ~ fetchData ~ data:",
-            data
-         );
-         if (data?.data) {
-            setPosts(data?.data);
-         }
+  const [medias, setMedias] = useState<Media[]>([]);
+  const [getMediaPost] = useLazyGetPostMediaByUserIdQuery();
+  useEffect(() => {
+    async function fetchData() {
+      const { data }: any = await getMediaPost({
+        userId,
+        type: MediaType.IMAGE,
+        pageSize: 4,
+        pageNumber: 0,
+      }).unwrap();
+      if (data?.data) {
+        setMedias(data?.data);
       }
-      fetchData();
-   }, [userId]);
-   return (
-      <>
-         <HeaderWidget header="Ảnh">
-            <WidgetDropdown wclassName="is-neutral is-right">
-               {dropdownItems.map((item, index) => {
-                  return (
-                     <DropdownItem
-                        key={index}
-                        href={item.href}
-                        title={item.title}
-                        subTitle={item.subTitle}
-                     >
-                        {<item.icon />}
-                     </DropdownItem>
-                  );
-               })}
-            </WidgetDropdown>
-         </HeaderWidget>
+    }
+    fetchData();
+  }, [userId]);
+  return (
+    <>
+      <HeaderWidget header="Ảnh">
+        <WidgetDropdown wclassName="is-neutral is-right">
+          {dropdownItems.map((item, index) => {
+            return (
+              <DropdownItem
+                key={index}
+                href={item.href}
+                title={item.title}
+                subTitle={item.subTitle}>
+                {<item.icon />}
+              </DropdownItem>
+            );
+          })}
+        </WidgetDropdown>
+      </HeaderWidget>
 
-         <div
-            className="is-photos-widget"
-            style={{
-               justifyContent: "flex-start",
-               columnGap: "8px",
-            }}
-         >
-            {posts &&
-               posts.length > 0 &&
-               posts.slice(0, 3).map((p, index) => {
-                  return (
-                     <PhotoItems
-                        key={index}
-                        postId={p.id}
-                        medias={p.medias}
-                     ></PhotoItems>
-                  );
-               })}
-         </div>
-      </>
-   );
-};
-
-interface PhotoItemsProps {
-   postId: string;
-   medias: {
-      mediaPath: string;
-      mediaType: string;
-   }[];
-}
-
-const PhotoItems = ({ medias, postId }: PhotoItemsProps) => {
-   return (
-      <>
-         {medias &&
+      <Fancybox
+        options={{
+          Carousel: {
+            infinite: false,
+          },
+        }}>
+        <div
+          className="is-photos-widget"
+          style={{
+            justifyContent: "flex-start",
+            columnGap: "8px",
+          }}>
+          {medias &&
             medias.length > 0 &&
-            medias.slice(0, 2).map((m, index2) => {
-               if (m.mediaType === "image") {
-                  return (
-                     <img
-                        key={m.mediaPath}
-                        src={m.mediaPath}
-                        alt=""
-                        style={{ height: "85px", objectFit: "cover" }}
-                        onClick={() => console.log(postId)}
-                     />
-                  );
-               }
-               return <></>;
+            medias.map((media, index) => {
+              return (
+                <a
+                  key={index}
+                  data-fancybox={`post-image ${index}`}
+                  data-lightbox-type="image"
+                  href={media.mediaPath}>
+                  <img src={media.mediaPath} alt="" />
+                </a>
+              );
             })}
-      </>
-   );
+        </div>
+      </Fancybox>
+    </>
+  );
 };
+
+// interface PhotoItemsProps {
+//   postId: string;
+//   medias: {
+//     mediaPath: string;
+//     mediaType: string;
+//   }[];
+// }
+
+// const PhotoItems = ({ medias, postId }: PhotoItemsProps) => {
+//   return (
+//     <>
+//       {medias &&
+//         medias.length > 0 &&
+//         medias.slice(0, 1).map((m, index2) => {
+//           if (m.mediaType === "image") {
+//             return (
+
+//             );
+//           }
+//           return <></>;
+//         })}
+//     </>
+//   );
+// };
 
 export default PhotosWidget;

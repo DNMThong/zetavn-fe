@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: "Zetavn",
   viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
   icons: {
-    icon: "favicon.png",
+    icon: "/favicon.png",
   },
 };
 

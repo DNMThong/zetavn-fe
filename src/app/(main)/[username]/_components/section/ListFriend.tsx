@@ -11,7 +11,11 @@ import { FiEye, FiSearch, FiSmile } from "react-icons/fi";
 import { CardFriend, CardFriendRequest } from "../card";
 import { setFriendRequest, setFriends } from "@/redux/features/auth/auth.slice";
 
-const ListFriend = () => {
+interface ListFriendProps {
+  userId: string;
+}
+
+const ListFriend = ({ userId }: ListFriendProps) => {
   const router = useRouter();
   const user = useAppSelector((selector) => selector.auth.user);
   const friends = useAppSelector((selector) => selector.auth.friends);
@@ -62,7 +66,7 @@ const ListFriend = () => {
   useEffect(() => {
     const fetchFriendList = async () => {
       const { data, code }: any = await getFriendsList({
-        userId: username as string,
+        userId,
         pageSize: 6,
       }).unwrap();
       if (code === 200) {
@@ -71,7 +75,7 @@ const ListFriend = () => {
     };
 
     fetchFriendList();
-  }, [dispatch, getFriendsList, username]);
+  }, [dispatch, getFriendsList, userId]);
 
   return (
     <div className="about-card">

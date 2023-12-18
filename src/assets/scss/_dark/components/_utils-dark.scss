@@ -238,3 +238,31 @@ body {
     }
   }
 }
+
+// 
+
+body {
+  &.is-dark {
+    .swal2-popup {
+      background: darken($dark, 8%);
+
+      .swal2-title {
+        color: $white;
+      }
+
+      .swal2-html-container {
+        color: $light-text;
+      }
+
+      .swal2-actions {
+        .swal2-cancel {
+          background: #151a23;
+          border-color: #283143;
+          color: #fff;
+        }
+      }
+
+
+    }
+  }
+}

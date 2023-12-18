@@ -10,117 +10,71 @@ import User, { UserProfile } from "@/types/user.type";
 import { useAppSelector } from "@/redux/hooks";
 import { useLazyGetUserQuery } from "@/redux/features/user/user.service";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { ImageDefault } from "@/types/contants.type";
 
 interface TopPartProps {
-   userId: string;
+  isSelfProfile: boolean;
+  userProfile: UserProfile;
 }
 
-const TopPart = () => {
-   const user = useAppSelector((selector) => selector.auth.user);
-   const router = useRouter();
-   const pathname = usePathname();
-   const { username } = useParams();
-   const isSelfProfile =
-      (user && user?.id === username) || user?.username === username;
-   const [userProfile, setUserProfile] = useState<UserProfile>();
-   const [getUserQuery] = useLazyGetUserQuery();
+const TopPart = ({ isSelfProfile, userProfile }: TopPartProps) => {
+  const [editCoverModal, setEditCoverModal] = useState(false);
 
-   useEffect(() => {
-      const fetchUserProfile = async () => {
-         const response = await getUserQuery(username as string).unwrap();
-         console.log(
-            "🚀 ~ file: TopPart.tsx:31 ~ fetchUserProfile ~ response:",
-            response
-         );
-         if (response?.code === 200) {
-            const { data }: any | undefined = response;
-            setUserProfile(data);
-         } else {
-            console.log("ERROR Fetching");
-            // router.push(pathname + "/404");
-         }
-      };
-      if (isSelfProfile) {
-         if (user) {
-            setUserProfile(user);
-         }
-      } else {
-         fetchUserProfile();
-      }
-   }, [
-      username,
-      isSelfProfile,
-      userProfile,
-      getUserQuery,
-      user,
-      router,
-      pathname,
-   ]);
+  const handleCloseEditCoverModal = () => {
+    setEditCoverModal(false);
+  };
+  return (
+    <>
+      <div className="columns is-multiline no-margin">
+        {/* <!-- Left side column --> */}
+        <div className="column is-paddingless">
+          {/* <!-- Timeline Header --> */}
+          {/* <!-- html/partials/pages/profile/timeline/timeline-header.html --> */}
+          <div className="cover-bg">
+            <UserImage
+              imageClass="cover-image"
+              path={userProfile?.poster || ImageDefault.POSTER}
+            />
+            <UserAvatar
+              avatarPath={userProfile?.avatar || ImageDefault.AVATAR}
+              userProfile={userProfile}
+            />
+            <Overlay overlayClassName="cover-overlay" />
 
-   const [editCoverModal, setEditCoverModal] = useState(false);
+            {isSelfProfile && editCoverModal && (
+              <ChangeCoverImageModal
+                show={editCoverModal}
+                handleCloseModal={handleCloseEditCoverModal}
+                type="poster"
+                setShow={setEditCoverModal}
+              />
+            )}
+            {isSelfProfile && (
+              <div
+                className="cover-edit modal-trigger"
+                data-modal="change-cover-modal"
+                onClick={() => setEditCoverModal(true)}>
+                <i className="mdi mdi-camera"></i>
+                <span>Thay đổi ảnh bìa</span>
+              </div>
+            )}
+            {/* <!--/html/partials/pages/profile/timeline/dropdowns/timeline-mobile-dropdown.html--> */}
+            <TimelineMobileDropdown></TimelineMobileDropdown>
+          </div>
 
-   const handleCloseEditCoverModal = () => {
-      setEditCoverModal(false);
-   };
-   return (
-      <>
-         <div className="columns is-multiline no-margin">
-            {/* <!-- Left side column --> */}
-            <div className="column is-paddingless">
-               {/* <!-- Timeline Header --> */}
-               {/* <!-- html/partials/pages/profile/timeline/timeline-header.html --> */}
-               <div className="cover-bg">
-                  <UserImage
-                     imageClass="cover-image"
-                     path={
-                        userProfile?.poster ||
-                        "https://via.placeholder.com/1600x460"
-                     }
-                  />
-                  <UserAvatar
-                     avatarPath={
-                        userProfile?.avatar ||
-                        "https://via.placeholder.com/300x300"
-                     }
-                  />
-                  <Overlay overlayClassName="cover-overlay" />
+          <ProfileMenu></ProfileMenu>
 
-                  {isSelfProfile && editCoverModal && (
-                     <ChangeCoverImageModal
-                        show={editCoverModal}
-                        handleCloseModal={handleCloseEditCoverModal}
-                        type="poster"
-                        setShow={setEditCoverModal}
-                     />
-                  )}
-                  {isSelfProfile && (
-                     <div
-                        className="cover-edit modal-trigger"
-                        data-modal="change-cover-modal"
-                        onClick={() => setEditCoverModal(true)}
-                     >
-                        <i className="mdi mdi-camera"></i>
-                        <span>Thay đổi ảnh bìa</span>
-                     </div>
-                  )}
-                  {/* <!--/html/partials/pages/profile/timeline/dropdowns/timeline-mobile-dropdown.html--> */}
-                  <TimelineMobileDropdown></TimelineMobileDropdown>
-               </div>
-
-               <ProfileMenu></ProfileMenu>
-
-               <ProfileSubHeader
-                  display={userProfile?.display as string}
-                  totalFriends={
-                     userProfile?.information?.totalFriends as number
-                  }
-               ></ProfileSubHeader>
-            </div>
-         </div>
-         <div id="edit-cover-modal"></div>
-         <div id="upload-crop-cover-modal-container"></div>
-      </>
-   );
+          <ProfileSubHeader
+            display={userProfile?.display as string}
+            totalFriends={
+              userProfile?.information?.totalFriends as number
+            }></ProfileSubHeader>
+        </div>
+      </div>
+      <div id="edit-cover-modal"></div>
+      <div id="upload-crop-cover-modal-container"></div>
+    </>
+  );
 };
 
 export default TopPart;

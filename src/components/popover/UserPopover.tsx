@@ -4,6 +4,7 @@ import {
   setUserContactSelected,
 } from "@/redux/features/chat/chat.slice";
 import { useAppDispatch } from "@/redux/hooks";
+import { ImageDefault } from "@/types/contants.type";
 import User, { UserShort } from "@/types/user.type";
 import Link from "next/link";
 import React from "react";
@@ -46,23 +47,17 @@ const UserPopover = ({ stylesArrow, userInfo }: UserPopoverProps) => {
 
             <div className="profile-popover-wrapper">
               <div className="popover-cover">
-                <img
-                  src={
-                    userInfo?.poster || "https://via.placeholder.com/1600x900"
-                  }
-                />
+                <img src={userInfo?.poster || ImageDefault.POSTER} />
                 <div className="popover-avatar">
                   <img
                     className="avatar"
-                    src={
-                      userInfo?.avatar || "https://via.placeholder.com/300x300"
-                    }
+                    src={userInfo?.avatar || ImageDefault.AVATAR}
                   />
                 </div>
               </div>
 
               <div className="popover-meta">
-                <Link href={`/${userInfo.id}`} className="user-meta">
+                <Link href={`/${userInfo.username}`} className="user-meta">
                   <span className="username">{userInfo?.display}</span>
                 </Link>
                 {/* <span className="job-title">{123}</span> */}

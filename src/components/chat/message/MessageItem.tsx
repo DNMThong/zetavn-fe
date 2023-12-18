@@ -8,6 +8,7 @@ import { ImageDefault, MessageType } from "@/types/contants.type";
 import { Fancybox } from "@/components/fancybox";
 import VideoUploadDisplay from "@/components/card/card-compose/VideoUploadDisplay";
 import ReactPlayer from "react-player";
+import MessageItemCall from "./MessageItemCall";
 
 interface MessageItemProps {
   message: Message;
@@ -47,6 +48,12 @@ const MessageItem = ({ message }: MessageItemProps) => {
               url={message.message}
             />
           </div>
+        )}
+        {message.type === MessageType.CALL && message.call && (
+          <MessageItemCall
+            data={message.call}
+            isSent={message.sender.id === user?.id}
+          />
         )}
       </div>
     </div>

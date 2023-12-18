@@ -19,6 +19,9 @@ const nextConfig = {
     ZEGO_APP_ID: 851941891,
     ZEGO_SERVER_SECRET: "41c60a73d8036693a7d4503ee90c3a94",
   },
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 module.exports = nextConfig;

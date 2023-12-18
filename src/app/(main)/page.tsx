@@ -6,23 +6,15 @@ import {
   SuggestedFriendsWidget,
 } from "@/components/widgets";
 import { addNewsfeed } from "@/redux/features/auth/auth.slice";
-import {
-  useGetPostsByUserIdQuery,
-  useLazyGetPostsNewsFeedQuery,
-} from "@/redux/features/post/post.service";
-import { useGetUsersQuery } from "@/redux/features/user/user.service";
+import { useLazyGetPostsNewsFeedQuery } from "@/redux/features/post/post.service";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostPlaceload from "@/components/placeloads/PostPlaceload";
-import { IncomingCallModal } from "@/components/modals";
 
 export default function Home() {
   const { user, newsfeed } = useAppSelector((selector) => selector.auth);
   const dispatch = useAppDispatch();
-  // const { data } = useGetPostsByUserIdQuery(user?.id || "");
   const [fetchPostsNewsFeed] = useLazyGetPostsNewsFeedQuery();
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -45,19 +37,13 @@ export default function Home() {
   return (
     <>
       <div id="main-feed" className="container">
-        {/* <!-- Content placeholders at page load -->
-  {{> feed-shadow-dom}} */}
-
         {/* <!-- Feed page main wrapper --> */}
         <div id="activity-feed" className="view-wrap true-dom">
           <div className="columns">
-            {/* <!-- Left side column --> */}
             <div className="column is-3 is-hidden-mobile">
-              <RecommendedPagesWidget />
+              {/* <RecommendedPagesWidget /> */}
+              <SuggestedFriendsWidget page={0} />
             </div>
-            {/* <!-- /Left side column --> */}
-
-            {/* <!-- Middle column --> */}
             <div className="column is-6">
               <ComposeCard />
               <InfiniteScroll
@@ -69,25 +55,13 @@ export default function Home() {
                   <CardPost key={post.id} data={post} />
                 ))}
               </InfiniteScroll>
-
-              {/* <!-- Load more posts --> */}
-              {/* <div className="load-more-wrap narrow-top has-text-centered">
-                <a href="#" className="load-more-button">
-                  Load More
-                </a>
-              </div> */}
-              {/* <!-- /Load more posts --> */}
             </div>
-            {/* <!-- /Middle column --> */}
 
-            {/* <!-- Right side column --> */}
             <div className="column is-3">
-              <SuggestedFriendsWidget />
+              <SuggestedFriendsWidget page={1}  />
             </div>
-            {/* <!-- /Right side column --> */}
           </div>
         </div>
-        {/* <!-- /Feed page main wrapper --> */}
       </div>
       {/* <!-- /Container -->
 

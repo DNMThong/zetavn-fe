@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ActivityMood, ActivityStatus, PhotoUpload } from "@/types/post.type";
+import {
+  ActivityMood,
+  ActivityStatus,
+  PhotoUpload,
+  PostNewsfeed,
+} from "@/types/post.type";
 import { PostAccessModifier } from "@/types/contants.type";
 
 interface PostState {
@@ -13,6 +18,7 @@ interface PostState {
   photosLoading: number;
   video: string;
   videoLoading: boolean;
+  postsProfile: PostNewsfeed[];
 }
 
 const initialState: PostState = {
@@ -26,6 +32,7 @@ const initialState: PostState = {
   photosLoading: 0,
   video: "",
   videoLoading: false,
+  postsProfile: [],
 };
 
 const slice = createSlice({
@@ -95,6 +102,18 @@ const slice = createSlice({
     setVideoLoading(state, action: PayloadAction<boolean>) {
       state.videoLoading = action.payload;
     },
+    setPostsProfile(state, action: PayloadAction<PostNewsfeed[]>) {
+      state.postsProfile = action.payload;
+    },
+    addPostsProfile(state, action: PayloadAction<PostNewsfeed[]>) {
+      state.postsProfile = [...state.postsProfile, ...action.payload];
+    },
+    removePostsProfile(state, action: PayloadAction<string>) {
+      const index = state.postsProfile.findIndex(
+        (item) => item.id === action.payload
+      );
+      state.postsProfile.splice(index, 1);
+    },
   },
 });
 const PostReducer = slice.reducer;
@@ -117,6 +136,9 @@ export const {
   setActivities,
   setPhotosLoading,
   setVideoUploadPost,
-  setVideoLoading
+  setVideoLoading,
+  addPostsProfile,
+  removePostsProfile,
+  setPostsProfile,
 } = slice.actions;
 export default PostReducer;

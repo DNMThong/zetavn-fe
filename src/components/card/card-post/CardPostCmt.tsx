@@ -29,7 +29,7 @@ const CardPostCmt = ({
   const { data, isLoading: isLoadingCmt } = useGetCommentsQuery({
     postId,
     pageNumber: page,
-    pageSize: 1,
+    pageSize: 10,
   });
   const user = useAppSelector((selector) => selector.auth.user);
   const [urlPhoto, setUrlPhoto] = useState("");
@@ -98,7 +98,6 @@ const CardPostCmt = ({
         comment: {
           content: value,
           path: photo,
-          userId: user?.id || "",
         },
       }).unwrap();
       console.log(response);
@@ -123,7 +122,7 @@ const CardPostCmt = ({
       {/* <!-- Header --> */}
       <div className="comments-heading">
         <h4>
-          Bình luận <small>({comments.length || 0})</small>
+          Bình luận <small>({data?.data.totalElements || 0})</small>
         </h4>
         <div className="close-comments" onClick={handleClose}>
           <FiX />

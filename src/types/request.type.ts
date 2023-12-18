@@ -1,4 +1,4 @@
-import { Message } from "./chat.type";
+import { Message, MessageCall } from "./chat.type";
 import {
   FollowPriority,
   MessageType,
@@ -134,9 +134,16 @@ export interface CreateChatMessagesRequest {
   recieverId: string;
   message: string;
   type: MessageType;
+  call?: MessageCall;
 }
 
 export interface UploadFileChatMessageRequest
   extends CreateChatMessagesRequest {
   file: File;
+}
+
+export interface GetPostsRequest {
+  userId: string;
+  pageNumber: number;
+  pageSize: number;
 }

@@ -15,7 +15,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { AvatarButton } from ".";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Tooltip } from "@/components/tooltip";
 import { ChangeCoverImageModal } from "@/components/modals";
 import { useParams } from "next/navigation";
@@ -27,21 +27,26 @@ import {
   useLazyGetFriendshipStatusQuery,
   useRejectFriendMutation,
   useUnFollowMutation,
+  useUnfriendMutation,
 } from "@/redux/features/user/user.service";
 import { FollowPriority, FriendshipStatus } from "@/types/contants.type";
 import { toast } from "react-toastify";
 import { UserProfile } from "@/types/user.type";
+import {
+  setOpenChat,
+  setUserContactSelected,
+} from "@/redux/features/chat/chat.slice";
 
 interface UserAvatarProps {
   avatarPath?: string;
   targetId?: string;
+  userProfile: UserProfile;
 }
 
-const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
+const UserAvatar = ({ avatarPath, targetId, userProfile }: UserAvatarProps) => {
   const source: UserProfile | null = useAppSelector(
     (selector) => selector.auth.user
   );
-  const { username } = useParams();
   const [sendFriendRequest] = useAddFriendMutation();
   const [acceptFriendRequest] = useAcceptFriendMutation();
   const [rejectFriendRequest] = useRejectFriendMutation();
@@ -50,11 +55,25 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
   const [unFollow] = useUnFollowMutation();
   const [follow] = useFollowMutation();
   const isSelfProfile =
-    source && (source.id === username || source.username === username);
+    source &&
+    (source.id === userProfile.username ||
+      source.username === userProfile.username);
   const [friendshipStatus, setFriendshipStatus] = useState<FriendshipStatus>();
   const [followStatus, setFollowStatus] = useState(FollowPriority.NONE);
   const [avatarButtonActive, setAvatarButtonActive] = useState(false);
   const [editCoverModal, setEditCoverModal] = useState(false);
+  const [unfriend] = useUnfriendMutation();
+
+  const dispatch = useAppDispatch();
+  const handleChatUser = () => {
+    dispatch(setOpenChat(true));
+    dispatch(
+      setUserContactSelected({
+        ...userProfile,
+        isOnline: false,
+      })
+    );
+  };
 
   const handleAvatarButtonClick = () => {
     setAvatarButtonActive(!avatarButtonActive);
@@ -65,7 +84,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
 
   const handleSendFriendRequest = async (e: any) => {
     const { code, data } = await sendFriendRequest({
-      userId: username as string,
+      userId: userProfile.id,
     }).unwrap();
     if (code === 200) {
       setFriendshipStatus(data?.status);
@@ -74,7 +93,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
 
   const handleAcceptFriendRequest = async () => {
     const { code, data } = await acceptFriendRequest({
-      userId: username as string,
+      userId: userProfile.id,
     }).unwrap();
     if (code === 200) {
       toast.success("Chấp nhận lời mời kết bạn thành công!");
@@ -83,9 +102,23 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
   };
   const handleRejectFriendRequest = async () => {
     const response = await rejectFriendRequest({
-      userId: username as string,
+      userId: userProfile.id,
     }).unwrap();
     const { code, data } = response;
+    console.log(response);
+    if (code === 200) {
+      setFriendshipStatus(FriendshipStatus.NONE);
+    } else {
+      toast.error("Có lỗi xảy ra!");
+    }
+  };
+
+  const handleUnfriendRequest = async () => {
+    const response = await unfriend({
+      userId: userProfile.id,
+    }).unwrap();
+    const { code, data } = response;
+    console.log(response);
     if (code === 200) {
       setFriendshipStatus(FriendshipStatus.NONE);
     } else {
@@ -95,7 +128,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
 
   const handleRetrieveFriendRequest = async () => {
     const response = await rejectFriendRequest({
-      userId: username as string,
+      userId: userProfile.id,
     }).unwrap();
     const { code, data } = response;
     if (code === 200) {
@@ -109,7 +142,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
     if (followStatus === FollowPriority.NONE) {
       const response = await follow({
         followerId: source?.id as string,
-        followingId: username as string,
+        followingId: userProfile.id,
         priority: FollowPriority.MEDIUM,
       }).unwrap();
       const { code, data }: any = response;
@@ -119,7 +152,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
     } else {
       const response = await unFollow({
         sourceId: source?.id as string,
-        targetId: username as string,
+        targetId: userProfile.id,
       }).unwrap();
       const { code, data }: any = response;
       if (code === 204) {
@@ -132,7 +165,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
     async function fetchFriendshipStatus() {
       const { code, data } = await getFriendshipStatus({
         sourceId: source?.id as string,
-        targetId: username as string,
+        targetId: userProfile.id,
       }).unwrap();
       if (code === 200) {
         setFriendshipStatus(data?.status);
@@ -141,13 +174,19 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
     if (!isSelfProfile) {
       fetchFriendshipStatus();
     }
-  }, [getFriendshipStatus, friendshipStatus, source, username, isSelfProfile]);
+  }, [
+    getFriendshipStatus,
+    friendshipStatus,
+    source,
+    userProfile,
+    isSelfProfile,
+  ]);
 
   useEffect(() => {
     async function fetchFollowStatus() {
       const { code, data }: any = await getFollowStatus({
         sourceId: source?.id as string,
-        targetId: username as string,
+        targetId: userProfile.id,
       }).unwrap();
       if (code === 200) {
         setFollowStatus(data?.priority);
@@ -156,7 +195,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
     if (!isSelfProfile) {
       fetchFollowStatus();
     }
-  }, [getFollowStatus, followStatus, source, username, isSelfProfile]);
+  }, [getFollowStatus, followStatus, source, userProfile, isSelfProfile]);
 
   return (
     <div className="avatar">
@@ -258,7 +297,6 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                 show={avatarButtonActive}
                 onClick={handleAcceptFriendRequest}>
                 <a
-                  href="#"
                   className="inner"
                   style={{
                     transform: "translateY(50%)",
@@ -278,7 +316,6 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
                 show={avatarButtonActive}
                 onClick={handleRejectFriendRequest}>
                 <a
-                  href="#"
                   className="inner"
                   style={{
                     transform: "translateY(50%)",
@@ -299,9 +336,9 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
               dataPlacement="top"
               tooltipId="delete-friend-tooltip"
               tooltipContent={"Hủy kết bạn"}
-              show={avatarButtonActive}>
+              show={avatarButtonActive}
+              onClick={handleUnfriendRequest}>
               <a
-                href="#"
                 className="inner"
                 style={{
                   transform: "translateY(50%)",
@@ -324,7 +361,8 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             dataPlacement="top"
             tooltipId="send-message-tooltip"
             tooltipContent={"Nhắn tin"}
-            show={avatarButtonActive}>
+            show={avatarButtonActive}
+            onClick={handleChatUser}>
             <a className="inner">
               <FiMessageCircle />
             </a>
@@ -339,7 +377,7 @@ const UserAvatar = ({ avatarPath, targetId }: UserAvatarProps) => {
             tooltipId="send-mail-tooltip"
             tooltipContent={"Gửi mail"}
             show={avatarButtonActive}>
-            <a href="messages-inbox.html" className="inner">
+            <a className="inner">
               <FiMail />
             </a>
           </AvatarButton>

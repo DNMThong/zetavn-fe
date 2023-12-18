@@ -5,8 +5,8 @@ export enum Gender {
 }
 
 export enum API_URL {
-  DOMAIN = "http://localhost:8888",
-  _DOMAIN = "localhost:8888",
+  DOMAIN = "https://zetavn-be-production.up.railway.app/",
+  _DOMAIN = "api.zetavn.com",
   LOGIN = "/api/v0/auth/login",
   RELOGIN = "/api/v0/auth/re-login",
   REGISTER = "/api/v0/auth/register",
@@ -75,7 +75,8 @@ export enum FollowPriority {
 }
 
 export enum ImageDefault {
-  AVATAR = "https://via.placeholder.com/300x300",
+  AVATAR = "https://res.cloudinary.com/dusmue7d9/image/upload/v1702911274/images/dfuunejyuvotw7fq2ook.png",
+  POSTER = "https://res.cloudinary.com/dusmue7d9/image/upload/v1702911972/images/ush3ngrtnshepnl03j6s.png",
 }
 
 export enum SearchUserOption {
@@ -115,6 +116,7 @@ export enum MessageType {
   VIDEO = "VIDEO",
   IMAGE = "IMAGE",
   AUDIO = "AUDIO",
+  CALL = "CALL",
 }
 
 export enum MessageStatus {
@@ -123,11 +125,17 @@ export enum MessageStatus {
 }
 
 export enum CallType {
-  VIDEO = "video",
-  VOICE = "voice",
+  VIDEO = "VIDEO",
+  VOICE = "VOICE",
 }
 
 export enum CallStatus {
-  OUT_GOING = "out-going",
-  IN_COMING = "in-coming",
+  OUT_GOING = "OUT_GOING",
+  IN_COMING = "IN_COMING",
+}
+
+export enum MessageCallStatus {
+  SUCCESS = "SUCCESS",
+  REJECTED = "REJECTED",
+  MISSED = "MISSED",
 }

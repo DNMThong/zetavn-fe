@@ -7,10 +7,6 @@ interface ProfileSubHeaderProps {
 }
 
 const ProfileSubHeader = ({ display, totalFriends }: ProfileSubHeaderProps) => {
-   console.log(
-      "🚀 ~ file: ProfileSubHeader.tsx:10 ~ ProfileSubHeader ~ totalFriends:",
-      totalFriends
-   );
    return (
       <div className="profile-subheader">
          <div className="subheader-start is-hidden-mobile">

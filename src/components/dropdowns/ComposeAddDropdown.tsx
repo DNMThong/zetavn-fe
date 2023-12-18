@@ -42,7 +42,6 @@ const ComposeAddDropdown = () => {
         } else {
           const request: UploadFileChatMessageRequest = {
             file,
-            senderId: user?.id || "",
             recieverId: userContactSelected?.id || "",
             message: "",
             type: MessageType.IMAGE,
@@ -77,7 +76,6 @@ const ComposeAddDropdown = () => {
         } else {
           const request: UploadFileChatMessageRequest = {
             file,
-            senderId: user?.id || "",
             recieverId: userContactSelected?.id || "",
             message: "",
             type: MessageType.VIDEO,
@@ -136,19 +134,19 @@ const ComposeAddDropdown = () => {
           </label>
           <label>
             <a className="dropdown-item">
-                <div className="media">
-                  <FiVideo />
-                  <div className="media-content">
-                    <h3>Video</h3>
-                    <small>Chọn video bạn muốn gửi</small>
-                  </div>
+              <div className="media">
+                <FiVideo />
+                <div className="media-content">
+                  <h3>Video</h3>
+                  <small>Chọn video bạn muốn gửi</small>
                 </div>
-                <input
-                  hidden
-                  type="file"
-                  accept="video/*"
-                  onChange={handleChangeVideo}
-                />
+              </div>
+              <input
+                hidden
+                type="file"
+                accept="video/*"
+                onChange={handleChangeVideo}
+              />
             </a>
           </label>
           {/* <hr className="dropdown-divider" /> */}

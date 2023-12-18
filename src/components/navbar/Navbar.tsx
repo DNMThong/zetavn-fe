@@ -34,14 +34,14 @@ const Navbar = () => {
           <Link href="/" className="navbar-item">
             <Image
               className="logo light-image"
-              src="img/vector/logo/logo.svg"
+              src="/img/vector/logo/logo.svg"
               width="112"
               height="28"
               alt=""
             />
             <Image
               className="logo dark-image"
-              src="img/vector/logo/logo-white.svg"
+              src="/img/vector/logo/logo-white.svg"
               width="112"
               height="28"
               alt=""

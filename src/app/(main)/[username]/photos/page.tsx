@@ -1,38 +1,28 @@
-"use client";
 import React from "react";
-import TopPart from "../_components/profile-part/TopPart";
-import { PhotosFilterWidget } from "@/components/widgets";
-import { useAppSelector } from "@/redux/hooks";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+import { API_URL } from "@/types/contants.type";
+import { UserResponse } from "@/types/response.type";
+import ProfilePhotosMain from "../_components/profile-photos-main/ProfilePhotosMain";
 
-const ProfilePhotosPage = () => {
-   const { username } = useParams();
-   const user = useAppSelector((selector) => selector.auth.user);
-   const isSelfProfile =
-      user && (user.id === username || user.username === username);
-   return (
-      <>
-         <div className="container is-custom">
-            <div id="profile-about" className="view-wrap is-headless">
-               <TopPart></TopPart>
-               <div className="columns">
-                  <div className="column">
-                     <PhotosFilterWidget></PhotosFilterWidget>
-                     <div className="image-grid-wrap">
-                        <div className="image-grid">
-                           {/* <!--Grid Row--> */}
-                           <div className="image-row">
-                              {/* <!--Photo--> */}
-                              {/* Image here */}
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </>
-   );
+async function getProfile(username: string) {
+  const res = await fetch(
+    `${API_URL.DOMAIN}${API_URL.USERS}/${username}/profile`
+  );
+
+  if (!res.ok) {
+    return null;
+  }
+
+  return res.json();
+}
+
+const ProfilePhotosPage = async ({ params }: { params: { username: string } }) => {
+  const response: UserResponse | null = await getProfile(params.username);
+
+  if (!response) notFound();
+  if (response && response.code === 404) notFound();
+
+  return <>{response && <ProfilePhotosMain userProfile={response.data} />}</>;
 };
 
 export default ProfilePhotosPage;

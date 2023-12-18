@@ -8,26 +8,16 @@ import { FiArrowRight } from "react-icons/fi";
 
 interface OverviewPartProps {
   isActive: boolean;
+  isSelfProfile: boolean;
+  userProfile: UserProfile;
 }
 
-const OverviewPart = ({ isActive }: OverviewPartProps) => {
+const OverviewPart = ({
+  isActive,
+  isSelfProfile,
+  userProfile,
+}: OverviewPartProps) => {
   const user = useAppSelector((selector) => selector.auth.user);
-  const router = useRouter();
-  const { username } = useParams();
-  const isSelfProfile = user && user.id === username;
-  const [getUserInfo] = useLazyGetUserQuery();
-  const [userProfile, setUserProfile] = useState<UserProfile>();
-  useEffect(() => {
-    async function fetchData() {
-      const { data, code }: any | null = await getUserInfo(
-        username as string
-      ).unwrap();
-      if (code === 200) {
-        setUserProfile(data);
-      }
-    }
-    fetchData();
-  }, [username, getUserInfo, user]);
   return (
     <div
       id="overview-content"

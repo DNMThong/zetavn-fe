@@ -15,6 +15,7 @@ interface ChatState {
   userContactSelected: UserShortPrivate | null;
   call: Call | null;
   incomingCall: Call | null;
+  rejectedCall: boolean;
 }
 
 const initialState: ChatState = {
@@ -25,6 +26,7 @@ const initialState: ChatState = {
   userContactSelected: null,
   call: getLocalStorageItem<Call>("call"),
   incomingCall: null,
+  rejectedCall: false
 };
 
 const slice = createSlice({
@@ -141,7 +143,11 @@ const slice = createSlice({
     offCall(state) {
       state.call = null;
       state.incomingCall = null;
+      state.rejectedCall = false;
       removeLocalStorageItem("call");
+    },
+    setRejectedCall(state, action: PayloadAction<boolean>) {
+      state.rejectedCall = action.payload;
     },
   },
 });
@@ -163,6 +169,7 @@ export const {
   setCall,
   setIncomingCall,
   offCall,
+  setRejectedCall
 } = slice.actions;
 
 export default ChatReducer;

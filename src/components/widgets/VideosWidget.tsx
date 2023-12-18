@@ -1,79 +1,114 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DropdownItem, WidgetDropdown } from "@/components/dropdowns";
 import { HeaderWidget } from ".";
 import { FiTag, FiVideo } from "react-icons/fi";
 import { Overlay } from "@/components/modals";
 import useClickOutside from "@/hooks/useClickOutside";
+import { MediaType } from "@/types/contants.type";
+import { useLazyGetPostMediaByUserIdQuery } from "@/redux/features/post/post.service";
+import { Media } from "@/types/post.type";
+import { Fancybox } from "../fancybox";
 
 interface IDropdownItem {
-   icon: any;
-   href: string;
-   title: string;
-   subTitle: string;
+  icon: any;
+  href: string;
+  title: string;
+  subTitle: string;
 }
 
 const dropdownItems: IDropdownItem[] = [
-   {
-      icon: FiVideo,
-      href: "#v1",
-      title: "View Videos",
-      subTitle: "View all your videos",
-   },
-   {
-      icon: FiTag,
-      href: "#v2",
-      title: "Tagged",
-      subTitle: "View videos you are tagged in.",
-   },
+  {
+    icon: FiVideo,
+    href: "#",
+    title: "Video",
+    subTitle: "Xem tất cả video",
+  },
+  {
+    icon: FiTag,
+    href: "#",
+    title: "Được gắn thẻ",
+    subTitle: "Xem ảnh bạn được gắn thẻ.",
+  },
 ];
 
 interface VideoContainerProps {
-   videoPath: string;
+  videoPath: string;
 }
 
 const VideoContainer = ({ videoPath }: VideoContainerProps) => {
-   return (
-      <div className="video-container">
-         <img
-            src={videoPath}
-            data-demo-src="assets/img/demo/widgets/videos/1.jpg"
-            alt=""
-         />
-         <div className="video-button">
-            <img src="assets/img/icons/video/play.svg" alt="" />
-         </div>
-         <Overlay overlayClassName="video-overlay"></Overlay>
-      </div>
-   );
+  return (
+    <div className="video-container">
+      <a
+        data-fancybox={`${videoPath}`}
+        data-lightbox-type="video"
+        href={videoPath}>
+        <img src="/favicon.png" alt="thumbnail" />
+        <div className="video-button">
+          <img src="/img/icons/video/play.svg" alt="" />
+        </div>
+        <Overlay overlayClassName="video-overlay"></Overlay>
+      </a>
+    </div>
+  );
 };
 
-const VideosWidget = () => {
-   return (
-      <>
-         <HeaderWidget header="Videos">
-            <WidgetDropdown wclassName="is-neutral is-right">
-               {dropdownItems.map((item, index) => {
-                  return (
-                     <DropdownItem
-                        key={index}
-                        href={item.href}
-                        title={item.title}
-                        subTitle={item.subTitle}
-                     >
-                        {<item.icon />}
-                     </DropdownItem>
-                  );
-               })}
-            </WidgetDropdown>
-         </HeaderWidget>
+interface VideosWidgetProps {
+  userId: string;
+}
 
-         <div className="is-videos-widget">
-            <VideoContainer videoPath="https://via.placeholder.com/200x200"></VideoContainer>
-            <VideoContainer videoPath="https://via.placeholder.com/200x200"></VideoContainer>
-            <VideoContainer videoPath="https://via.placeholder.com/200x200"></VideoContainer>
-         </div>
-      </>
-   );
+const VideosWidget = ({ userId }: VideosWidgetProps) => {
+  const [medias, setMedias] = useState<Media[]>([]);
+  const [getMediaPost] = useLazyGetPostMediaByUserIdQuery();
+  useEffect(() => {
+    async function fetchData() {
+      const { data }: any = await getMediaPost({
+        userId,
+        type: MediaType.VIDEO,
+        pageSize: 3,
+        pageNumber: 0,
+      }).unwrap();
+      if (data?.data) {
+        setMedias(data?.data);
+      }
+    }
+    fetchData();
+  }, [userId]);
+
+  return (
+    <>
+      <HeaderWidget header="Videos">
+        <WidgetDropdown wclassName="is-neutral is-right">
+          {dropdownItems.map((item, index) => {
+            return (
+              <DropdownItem
+                key={index}
+                href={item.href}
+                title={item.title}
+                subTitle={item.subTitle}>
+                {<item.icon />}
+              </DropdownItem>
+            );
+          })}
+        </WidgetDropdown>
+      </HeaderWidget>
+      <Fancybox
+        options={{
+          Carousel: {
+            infinite: false,
+          },
+        }}>
+        <div className="is-videos-widget">
+          {medias &&
+            medias.length > 0 &&
+            medias.map((media) => (
+              <VideoContainer
+                key={media.mediaPath}
+                videoPath={media.mediaPath}></VideoContainer>
+            ))}
+        </div>
+      </Fancybox>
+    </>
+  );
 };
 
 export default VideosWidget;

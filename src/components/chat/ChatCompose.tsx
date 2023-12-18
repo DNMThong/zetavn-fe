@@ -70,7 +70,10 @@ const ChatCompose = () => {
               </button>
             </div>
 
-            <button className="btn-action" onClick={handleSendMessage}>
+            <button
+              className={`btn-action ${value ? "" : "is-disabled"}`}
+              disabled={!value}
+              onClick={handleSendMessage}>
               <IoMdSend />
             </button>
           </div>

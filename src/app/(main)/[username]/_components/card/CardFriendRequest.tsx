@@ -20,14 +20,14 @@ interface CardFriendProps {
 
 const CardFriendRequest = ({ data }: CardFriendProps) => {
   const source = useAppSelector((selector) => selector.auth.user);
-  const { username } = useParams();
+
   const dispatch = useAppDispatch();
   const [acceptFriendRequest] = useAcceptFriendMutation();
   const [rejectFriendRequest] = useRejectFriendMutation();
   const [getFriendRequest] = useLazyGetFriendRequestQuery();
   const [getFriends] = useLazyGetFriendsListByUserIdQuery();
   const [action, setAction] = useState<string | null>("none");
-  const { user }: any = data;
+  const { user } = data;
   const handleAcceptFriendRequest = async () => {
     const response = await acceptFriendRequest({
       userId: user?.id,
@@ -50,32 +50,32 @@ const CardFriendRequest = ({ data }: CardFriendProps) => {
   };
   useEffect(() => {}, [dispatch, getFriendRequest, source]);
 
-  useEffect(() => {
-    const fetchFriendRequest = async () => {
-      const response = await getFriendRequest({
-        pageNumber: 0,
-        pageSize: 6,
-      }).unwrap();
-      if (response.code === 200) {
-        const { data } = response;
-        dispatch(setFriendRequest(data.data));
-      }
-    };
-    const fetchFriendList = async () => {
-      const { data, code }: any = await getFriends({
-        userId: username as string,
-        pageSize: 6,
-      }).unwrap();
-      if (code === 200) {
-        dispatch(setFriends(data?.data));
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFriendRequest = async () => {
+  //     const response = await getFriendRequest({
+  //       pageNumber: 0,
+  //       pageSize: 6,
+  //     }).unwrap();
+  //     if (response.code === 200) {
+  //       const { data } = response;
+  //       dispatch(setFriendRequest(data.data));
+  //     }
+  //   };
+  //   const fetchFriendList = async () => {
+  //     const response = await getFriends({
+  //       userId: data.user.id,
+  //       pageSize: 6,
+  //     }).unwrap();
+  //     if (response.code === 200) {
+  //       dispatch(setFriendRequest(response.data.data));
+  //     }
+  //   };
 
-    if (action !== null && action !== "none") {
-      fetchFriendRequest();
-      fetchFriendList();
-    }
-  }, [action, dispatch, getFriendRequest, getFriends, source, username]);
+  //   if (action !== null && action !== "none") {
+  //     fetchFriendRequest();
+  //     fetchFriendList();
+  //   }
+  // }, [action, dispatch, getFriendRequest, getFriends, source, data]);
   return (
     <div className="column is-6">
       <div className="friend-small-card">

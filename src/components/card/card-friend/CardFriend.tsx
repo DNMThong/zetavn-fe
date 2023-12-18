@@ -1,23 +1,24 @@
 import React from "react";
 import CardFriendAvatar from "./CardFriendAvatar";
-import { UserProfile } from "@/types/user.type";
+import { useRouter } from "next/navigation";
 
 interface CardFriendProps {
-   user: any;
-   popOver: number;
+  user: any;
+  popOver: number;
 }
 
 const CardFriend = ({ user, popOver }: CardFriendProps) => {
-   return (
-      <a className="friend-item has-text-centered">
-         <CardFriendAvatar
-            avatar={user?.avatar || ""}
-            popOver={popOver}
-         ></CardFriendAvatar>
-         <h3>{user?.display}</h3>
-         <p>From {user?.from}</p>
-      </a>
-   );
+  const router = useRouter();
+  const handleClickUser = (e: any) => {
+    router.push(`/${user.username}`);
+  };
+  return (
+    <a onClick={handleClickUser} className="friend-item has-text-centered">
+      <CardFriendAvatar userInfo={user} popOver={popOver}></CardFriendAvatar>
+      <h3>{user?.display}</h3>
+      {/* <p>From {user?.from}</p> */}
+    </a>
+  );
 };
 
 export default CardFriend;

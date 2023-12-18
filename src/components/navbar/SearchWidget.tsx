@@ -94,7 +94,7 @@ const SearchWidget = ({
           </>
         )}
 
-        {suggestions.length > 0 && (
+        {searchValue && (
           <div
             id={mobile ? "tipue_drop_content_mobile" : "tipue_drop_content"}
             className="tipue-drop-content">
@@ -102,7 +102,7 @@ const SearchWidget = ({
               <div id="tipue_drop_wrapper">
                 {suggestions.map((suggestion) => (
                   <Link
-                    href={`/profile/${suggestion.id}`}
+                    href={`/${suggestion.username}`}
                     key={suggestion.id + suggestion.display}>
                     <div className="tipue_drop_item">
                       <div className="tipue_drop_left">
@@ -124,7 +124,10 @@ const SearchWidget = ({
                   </Link>
                 ))}
                 <div onClick={handleSeeMore} className="tipue_drop_item_other">
-                  Xem thêm
+                  <div className="searchIcon">
+                    <FiSearch />
+                  </div>
+                  <span>Tìm kiếm {searchValue}</span>
                 </div>
               </div>
             </div>

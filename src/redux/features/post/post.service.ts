@@ -4,6 +4,7 @@ import {
   CommentRequest,
   CreateCommentRequest,
   CreatePostRequest,
+  GetPostsRequest,
   LikePostRequest,
   PostPaginationRequest,
 } from "@/types/request.type";
@@ -13,6 +14,7 @@ import {
   CommentsResponse,
   CreateCommentResponse,
   CreatePostResponse,
+  MediaPostResponse,
   PostPaginationResponse,
   PostsUsersResponse,
 } from "@/types/response.type";
@@ -29,8 +31,14 @@ const apiPost = apiAuthorization.injectEndpoints({
     getActivities: build.query<ActivitiesResponse, void>({
       query: () => API_URL.ACTIVITIES,
     }),
-    getPostsByUserId: build.query<PostsUsersResponse, string>({
-      query: (id) => `${API_URL.USERS}/${id}/posts`,
+    getPostsByUserId: build.query<PostPaginationResponse, GetPostsRequest>({
+      query: ({ userId, pageNumber = 0, pageSize = 5 }) => ({
+        url: `${API_URL.USERS}/${userId}/posts`,
+        params: {
+          pageNumber,
+          pageSize,
+        },
+      }),
     }),
     getPostsNewsFeed: build.query<
       PostPaginationResponse,
@@ -82,12 +90,24 @@ const apiPost = apiAuthorization.injectEndpoints({
         },
       }),
     }),
-    getPostMediaByUserId: build.query<PostsUsersResponse, string>({
-      query: (userId) => ({
+    getPostMediaByUserId: build.query<
+      MediaPostResponse,
+      { type: string; userId: string; pageNumber: number; pageSize: number }
+    >({
+      query: ({ type, userId, pageNumber = 0, pageSize = 5 }) => ({
         url: `${API_URL.POSTS}/postMedia`,
         params: {
           userId,
+          type,
+          pageNumber,
+          pageSize,
         },
+      }),
+    }),
+    removePost: build.mutation<ApiResponse<string>, string>({
+      query: (id) => ({
+        url: `${API_URL.POSTS}/${id}`,
+        method: "delete",
       }),
     }),
   }),
@@ -97,6 +117,7 @@ export const {
   useCreatePostMutation,
   useGetActivitiesQuery,
   useGetPostsByUserIdQuery,
+  useLazyGetPostsByUserIdQuery,
   useGetCommentsQuery,
   useLazyGetPostsNewsFeedQuery,
   useGetPostsNewsFeedQuery,
@@ -105,4 +126,5 @@ export const {
   useUnlikePostMutation,
   useLazyCheckLikePostQuery,
   useLazyGetPostMediaByUserIdQuery,
+  useRemovePostMutation,
 } = apiPost;

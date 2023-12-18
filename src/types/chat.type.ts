@@ -1,6 +1,7 @@
 import {
   CallStatus,
   CallType,
+  MessageCallStatus,
   MessageStatus,
   MessageType,
 } from "./contants.type";
@@ -14,6 +15,7 @@ export interface Message {
   createdAt: string;
   sender: UserShortPrivate;
   reciever: UserShortPrivate;
+  call: MessageCall | null;
 }
 
 export interface Call {
@@ -27,4 +29,10 @@ export interface IncomingCall {
   from: UserShort;
   type: CallType;
   roomId: string;
+}
+
+export interface MessageCall {
+  duration: number;
+  status: MessageCallStatus;
+  type: CallType;
 }

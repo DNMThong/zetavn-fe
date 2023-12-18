@@ -65,6 +65,12 @@ const slice = createSlice({
     addNewsfeedHead(state, action: PayloadAction<PostNewsfeed>) {
       state.newsfeed = [action.payload, ...state.newsfeed];
     },
+    removePostNewsfeed(state, action: PayloadAction<string>) {
+      const index = state.newsfeed.findIndex(
+        (item) => item.id === action.payload
+      );
+      state.newsfeed.splice(index, 1);
+    },
     setFriendRequest(state, action: PayloadAction<FriendRequestResponse[]>) {
       state.friendRequest = action.payload;
     },
@@ -123,5 +129,6 @@ export const {
   addPostNotificationHead,
   removePostNotification,
   setPostNotification,
+  removePostNewsfeed,
 } = slice.actions;
 export default AuthReducer;

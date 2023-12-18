@@ -24,18 +24,18 @@ const CommentDropdown = () => {
             <div className="media">
               <FiX />
               <div className="media-content">
-                <h3>Hide</h3>
-                <small>Hide this comment.</small>
+                <h3>Ẩn</h3>
+                <small>Ẩn bình luận này</small>
               </div>
             </div>
           </a>
           <div className="dropdown-divider"></div>
-          <a href="#" className="dropdown-item">
+          <a className="dropdown-item">
             <div className="media">
               <FiFlag />
               <div className="media-content">
-                <h3>Report</h3>
-                <small>Report this comment.</small>
+                <h3>Báo cáo</h3>
+                <small>Báo cáo bình luận này</small>
               </div>
             </div>
           </a>

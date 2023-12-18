@@ -492,8 +492,6 @@ Chat window styles
               }
             }
 
-           
-
             .message-content {
               position: relative;
               display: block;
@@ -516,17 +514,55 @@ Chat window styles
                 border-right: 5px solid transparent;
               }
             }
-          }
 
-          .message-image {
-            img {
-              width: 100%;
-              border-radius: 3px;
-              height: auto;
-              margin: 0 !important;
-              visibility: visible !important;
+            .message-image {
+              img {
+                width: 100%;
+                border-radius: 3px;
+                height: auto;
+                margin: 0 !important;
+                visibility: visible !important;
+              }
+            }
+
+            .message-call {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+  
+              .mc-icon {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+  
+  
+                svg {
+                  font-size: 14px;
+                }
+              }
+
+              .mc-left {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+
+                .mcl-title {
+                  font-weight: 500;
+                  line-height: 14px;
+                }
+
+                .mcl-content {
+                  font-size: 12px;
+                }
+              }
             }
           }
+
+
+          
 
           &.is-sent {
             flex-direction: row-reverse;
@@ -544,6 +580,12 @@ Chat window styles
                 &:before {
                   right: -5px;
                   border-top: 5px solid $white;
+                }
+              }
+
+              .message-call {
+                .mc-icon {
+                  background: lighten($fade-grey, 3%);
                 }
               }
             }
@@ -575,6 +617,20 @@ Chat window styles
                 &:before {
                   left: -5px;
                   border-top: 5px solid lighten($primary, 7%);
+                }
+              }
+
+              .message-call {
+                .mc-icon {
+                  background: lighten($primary, 12%);
+
+                  &.is-missed {
+                    background: #F3425F;
+
+                    svg {
+                      fill: $white;
+                    }
+                  }
                 }
               }
             }
@@ -704,6 +760,7 @@ Chat window styles
               padding: 0;
               border: none;
               cursor: pointer;
+              height: 100%;
 
               &:hover {
                 svg {
@@ -1111,11 +1168,14 @@ Chat window styles
     width: 270px;
     height: 140px;
     border-radius: 4px;
-    background-color: #5f6062;
+    background: #fff;
     transform: translateX(290px);
-    transition: all 0.3s;
+    transition: all linear 0.3s;
     cursor: pointer;
     z-index: 9999;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+
+    
 
     &.is-active {
       transform: translateX(0);
@@ -1125,15 +1185,42 @@ Chat window styles
       }
     }
 
+    .call-info {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      .avatar {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.12);
+      }
+    }
+
     #local-stream {
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 4px;
+      overflow: hidden;
+
+      &.hidden {
+        display: none;
+      }
 
       video {
         width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
 
@@ -1145,6 +1232,7 @@ Chat window styles
       width: 30px;
       display: flex;
       align-items: center;
+      z-index: 9999;
       
       transition: all 0.3s;
       svg {
@@ -1159,13 +1247,21 @@ Chat window styles
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 
     #remote-stream {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+
+      &.hidden {
+        display: none;
+      }
 
       video {
         width: 100%;

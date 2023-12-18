@@ -5,7 +5,12 @@ import {
   setUserContactSelected,
 } from "@/redux/features/chat/chat.slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { MessageType } from "@/types/contants.type";
+import {
+  CallStatus,
+  CallType,
+  MessageCallStatus,
+  MessageType,
+} from "@/types/contants.type";
 import { UserContact, UserShortPrivate } from "@/types/user.type";
 import { calculateTime } from "@/utils/calculate-time.util";
 import React, { useEffect } from "react";
@@ -97,6 +102,38 @@ const ChatSidebar = () => {
                         <span>Video</span>
                       </span>
                     )}
+                    {userContact.newMessage.type === MessageType.CALL &&
+                      userContact.newMessage.call && (
+                        <span className="content-desc-item">
+                          {userContact.newMessage.call.status ===
+                          MessageCallStatus.SUCCESS ? (
+                            <span>
+                              Cuộc gọi{" "}
+                              {userContact.newMessage.call.type ===
+                              CallType.VIDEO
+                                ? "video"
+                                : "thoại"}
+                            </span>
+                          ) : userContact.newMessage.reciever.id ===
+                            user?.id ? (
+                            <span>
+                              Bạn đã bỏ lỡ cuộc gọi{" "}
+                              {userContact.newMessage.call.type ===
+                              CallType.VIDEO
+                                ? "video"
+                                : "thoại"}
+                            </span>
+                          ) : (
+                            <span>
+                              Cuộc gọi{" "}
+                              {userContact.newMessage.call.type ===
+                              CallType.VIDEO
+                                ? "video"
+                                : "thoại"}
+                            </span>
+                          )}
+                        </span>
+                      )}
                   </div>
                 </div>
               </div>

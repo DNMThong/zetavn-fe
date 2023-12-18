@@ -81,9 +81,9 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
       const client = new Client({
         brokerURL: `ws://${API_URL._DOMAIN}/ws`,
-        debug: function (str) {
-          console.log(str);
-        },
+        // debug: function (str) {
+        //   console.log(str);
+        // },
       });
       client.onConnect = () => {
         if (user?.id) {
@@ -177,7 +177,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
           const subscribeRejectCall = client.subscribe(
             `/user/${user.id}/topic/reject-call`,
             () => {
-              dispatch(offCall())
+              dispatch(offCall());
             }
           );
           subscriptions.current.push(subscribeRejectCall);

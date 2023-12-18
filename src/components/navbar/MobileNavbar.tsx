@@ -49,7 +49,7 @@ const MobileNavbar = () => {
   };
 
   const handleClickProfile = () => {
-    router.push(`/${user?.id}`);
+    router.push(`/${user?.username}`);
     setShow(false);
   };
 
@@ -65,14 +65,10 @@ const MobileNavbar = () => {
       {/* Brand */}
       <div className={`navbar-brand ${openSearch && "is-hidden"}`}>
         <Link className="navbar-item" href="/">
-          <img
-            className="light-image"
-            src="img/vector/logo/logo.svg"
-            alt=""
-          />
+          <img className="light-image" src="/img/vector/logo/logo.svg" alt="" />
           <img
             className="dark-image"
-            src="img/vector/logo/logo-white.svg"
+            src="/img/vector/logo/logo-white.svg"
             alt=""
           />
         </Link>

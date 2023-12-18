@@ -34,7 +34,7 @@ const AccountDropdown = () => {
   };
 
   const handleClickProfile = () => {
-    router.push(`/${user?.id}`);
+    router.push(`/${user?.username}`);
     setShow(false);
   };
 

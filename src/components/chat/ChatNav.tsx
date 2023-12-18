@@ -27,10 +27,10 @@ const ChatNav = () => {
   return (
     <div className="chat-nav">
       <div className="nav-logo">
-        <img className="light-image" src="img/vector/logo/logo.svg" alt="" />
+        <img className="light-image" src="/img/vector/logo/logo.svg" alt="" />
         <img
           className="dark-image"
-          src="img/vector/logo/logo-white.svg"
+          src="/img/vector/logo/logo-white.svg"
           alt=""
         />
       </div>

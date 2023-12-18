@@ -1,13 +1,41 @@
-import React from "react";
 import {
+  useGetSuggestionFriendsQuery,
+  useLazyGetSuggestionFriendsQuery,
+} from "@/redux/features/user/user.service";
+import React, { useEffect, useState } from "react";
+import { UserShort } from "@/types/user.type";
+import {
+  FiUserPlus,
   FiMoreVertical,
+  FiUsers,
   FiSettings,
   FiTrash2,
-  FiUserPlus,
-  FiUsers,
 } from "react-icons/fi";
+import { CardFriendSuggestion } from "../card";
 
-const SuggestedFriendsWidget = () => {
+interface SuggestedFriendsWidgetProps {
+  page: number
+}
+
+const SuggestedFriendsWidget = ({page}:SuggestedFriendsWidgetProps) => {
+  const [getSuggestionFriend] = useLazyGetSuggestionFriendsQuery();
+  const [suggestions, setSuggestions] = useState<UserShort[]>([]);
+
+  useEffect(() => {
+    const fetchSuggestionFriend = async () => {
+      const response = await getSuggestionFriend({
+        pageNumber: page,
+        pageSize: 5,
+      }).unwrap();
+
+      if (response.code === 200) {
+        setSuggestions(response.data.data);
+      }
+    };
+
+    fetchSuggestionFriend();
+  }, [getSuggestionFriend]);
+
   return (
     <div className="card">
       <div className="card-heading is-bordered">
@@ -51,6 +79,15 @@ const SuggestedFriendsWidget = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="card-body no-padding">
+        {suggestions.length > 0 &&
+          suggestions.map((suggestion) => (
+            <CardFriendSuggestion
+              key={`${suggestion.id}_suggestions`}
+              userInfo={suggestion}
+            />
+          ))}
       </div>
     </div>
   );

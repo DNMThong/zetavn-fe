@@ -48,7 +48,7 @@ const SearchPage = () => {
         kw: params.get("q") || "",
         option: optionSearch,
         pageNumber: currentPage - 1,
-        pageSize: 1,
+        pageSize: 12,
       }).unwrap();
       if (response.code === 200) {
         setListUserSearch(response.data.data);
@@ -81,7 +81,7 @@ const SearchPage = () => {
             className={`card-row-placeholder ${
               listUserSearch.length > 0 ? "is-hidden" : ""
             }`}>
-            No matching results
+            Không tìm thấy
           </div>
           {listUserSearch.length > 0 && (
             <div className="card-row">

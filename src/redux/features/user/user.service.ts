@@ -25,6 +25,7 @@ import {
   LoginResponse,
   RegisterResponse,
   SearchUserResponse,
+  SuggestionFriendsResponse,
   UserResponse,
 } from "@/types/response.type";
 import User, { UserProfile } from "@/types/user.type";
@@ -70,6 +71,13 @@ export const userApi = apiAuthorization.injectEndpoints({
         body,
       }),
     }),
+    unfriend: builder.mutation<AddFriendResponse, AddFriendRequest>({
+      query: (body) => ({
+        url: `${API_URL.FRIENDSHIP}/unfriend`,
+        method: "DELETE",
+        body,
+      }),
+    }),
     getFriendRequest: builder.query<GetFriendRequestResponse, FriendRequest>({
       query: (data) => ({
         url: API_URL.FRIENDSHIP,
@@ -101,7 +109,7 @@ export const userApi = apiAuthorization.injectEndpoints({
         body,
       }),
     }),
-    getUser: builder.query<SearchUserResponse, string>({
+    getUser: builder.query<UserResponse, string>({
       query: (id) => `${API_URL.USERS}/${id}`,
     }),
     updateUserInfo: builder.mutation<UserResponse, UpdateInfoRequest>({
@@ -111,7 +119,10 @@ export const userApi = apiAuthorization.injectEndpoints({
         method: "PUT",
       }),
     }),
-    getFriendsListByUserId: builder.query<UserProfile, FriendListRequest>({
+    getFriendsListByUserId: builder.query<
+      GetFriendRequestResponse,
+      FriendListRequest
+    >({
       query: ({ userId, pageNumber = 0, pageSize = 5 }) => ({
         url: `${API_URL.FRIENDSHIP}/friends`,
         params: {
@@ -182,6 +193,21 @@ export const userApi = apiAuthorization.injectEndpoints({
         },
       }),
     }),
+    getSuggestionFriends: builder.query<
+      SuggestionFriendsResponse,
+      {
+        pageNumber?: number;
+        pageSize?: number;
+      }
+    >({
+      query: ({ pageNumber = 0, pageSize = 5 }) => ({
+        url: `${API_URL.FRIENDSHIP}/suggestions`,
+        params: {
+          pageNumber,
+          pageSize,
+        },
+      }),
+    }),
   }),
 });
 
@@ -205,4 +231,7 @@ export const {
   useFollowMutation,
   useUpdateUserImageMutation,
   useUploadImageMutation,
+  useLazyGetSuggestionFriendsQuery,
+  useGetSuggestionFriendsQuery,
+  useUnfriendMutation,
 } = userApi;

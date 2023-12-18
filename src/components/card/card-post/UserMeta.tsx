@@ -31,10 +31,9 @@ const UserMeta = ({ userInfo, createdAt, accessModifier }: UserMetaProps) => {
         {hover && <UserPopover userInfo={userInfo}></UserPopover>}
       </div>
       <div className="user-info">
-        <Link className="link" href={`/${userInfo.id}`}>
+        <Link className="link" href={`/${userInfo.username}`}>
           {userInfo.display}
         </Link>
-
         <span className="time">
           {accessModifier === PostAccessModifier.PUBLIC && (
             <i className="mdi mdi-earth"></i>

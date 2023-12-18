@@ -4,11 +4,15 @@ import { ComposeAddDropdown } from "../dropdowns";
 import ChatCompose from "./ChatCompose";
 import { BsCheck, BsCheckAll } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useLazyGetChatMessagesQuery } from "@/redux/features/chat/chat.service";
+import {
+  useCreateChatMessageMutation,
+  useLazyGetChatMessagesQuery,
+} from "@/redux/features/chat/chat.service";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   addChatMessageSelected,
   addChatMessageSelectedHead,
+  addUserContactNew,
   setChatMessageSelected,
 } from "@/redux/features/chat/chat.slice";
 import { ImageDefault } from "@/types/contants.type";
@@ -17,6 +21,11 @@ import MessageChatStatus from "./message/MessageChatStatus";
 import MessageItem from "./message/MessageItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Fancybox } from "../fancybox";
+import { CreateChatMessagesRequest } from "@/types/request.type";
+import {
+  getLocalStorageItem,
+  removeLocalStorageItem,
+} from "@/utils/localstorage.util";
 
 const ChatBody = () => {
   const { openChatDetails, userContactSelected, chatMessageSelected } =
@@ -26,6 +35,7 @@ const ChatBody = () => {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const dispatch = useAppDispatch();
+  const [createChatMessage] = useCreateChatMessageMutation();
 
   useEffect(() => {
     const fetchGetChatMessages = async () => {
@@ -37,6 +47,7 @@ const ChatBody = () => {
 
       if (response.code === 200) {
         const { data } = response;
+        console.log(data);
         if (page === 0) {
           dispatch(setChatMessageSelected(data.data));
         } else {
@@ -54,6 +65,35 @@ const ChatBody = () => {
     setPage(0);
     setHasMore(true);
   }, [userContactSelected]);
+
+  useEffect(() => {
+    const handleStorageChange = async (event: StorageEvent) => {
+      console.log(event);
+      if (event.key === "messageCall") {
+        const messageCall = getLocalStorageItem<CreateChatMessagesRequest>(
+          "messageCall"
+        ) as CreateChatMessagesRequest;
+        const response = await createChatMessage(messageCall).unwrap();
+
+        if (response.code == 201) {
+          dispatch(addChatMessageSelectedHead(response.data));
+          dispatch(
+            addUserContactNew({
+              message: response.data,
+              userId: user?.id || "",
+            })
+          );
+          removeLocalStorageItem("messageCall");
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   return (
     <Fancybox
