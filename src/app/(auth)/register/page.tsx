@@ -1,8 +1,5 @@
-import { RadioButton } from "@/components/checkbox";
-import { Input } from "@/components/input";
 import { FakeNavbar } from "@/components/navbar";
 import { Metadata } from "next";
-import Link from "next/link";
 import React from "react";
 import FormRegister from "./_components/FormRegister";
 

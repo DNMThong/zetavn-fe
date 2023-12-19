@@ -97,10 +97,6 @@ const FormResetPassword = () => {
           Đặt lại mật khẩu
         </button>
       </div>
-
-      {/* <div className="account-link has-text-centered">
-        <Link href="/login">Bạn đã có tài khoản? Đăng nhập</Link>
-      </div> */}
     </form>
   );
 };
