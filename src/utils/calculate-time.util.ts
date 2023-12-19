@@ -66,7 +66,7 @@ export const calculateTime = (dateStr: string) => {
 
 export const calculateTimeAgo = (dateStr: string) => {
   const inputDate: any = parse(dateStr, "hh:mma dd/MM/yyyy", new Date());
-  const currentDate: any = new Date();
+  const currentDate: any = utcToZonedTime(new Date(), "Asia/Ho_Chi_Minh");
   const timeDifference = Math.floor((currentDate - inputDate) / 1000);
 
   if (timeDifference < 60) {
