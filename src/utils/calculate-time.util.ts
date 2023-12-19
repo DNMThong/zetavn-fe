@@ -2,7 +2,7 @@ import { parse } from "date-fns";
 
 export const calculateTime = (dateStr: string) => {
   // Assuming the input date string is in UTC format
-  const inputDate: any = parse(dateStr, "HH:mma dd/MM/yyyy", new Date());
+  const inputDate: any = parse(dateStr, "hh:mma dd/MM/yyyy", new Date());
 
   // Get current date
   const currentDate: any = new Date();
@@ -11,6 +11,7 @@ export const calculateTime = (dateStr: string) => {
   const timeFormat = {
     hour: "numeric" as const,
     minute: "numeric" as const,
+    hour12: true
   };
   const dateFormat = {
     day: "2-digit",
@@ -65,7 +66,7 @@ export const calculateTime = (dateStr: string) => {
 };
 
 export const calculateTimeAgo = (dateStr: string) => {
-  const inputDate: any = parse(dateStr, "HH:mma dd/MM/yyyy", new Date());
+  const inputDate: any = parse(dateStr, "hh:mma dd/MM/yyyy", new Date());
   const currentDate: any = new Date();
   const timeDifference = Math.floor((currentDate - inputDate) / 1000);
 
