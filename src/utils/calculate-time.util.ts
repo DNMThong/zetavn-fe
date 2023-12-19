@@ -1,13 +1,11 @@
 import { parse } from "date-fns";
+import { format, utcToZonedTime } from "date-fns-tz";
 
 export const calculateTime = (dateStr: string) => {
   // Assuming the input date string is in UTC format
   const inputDate: any = parse(dateStr, "hh:mma dd/MM/yyyy", new Date());
 
-  console.log(dateStr, inputDate);
-
-  // Get current date
-  const currentDate: any = new Date();
+  const currentDate: any = utcToZonedTime(new Date(), "Asia/Ho_Chi_Minh");
 
   // Set up date formats for tiếng Việt
   const timeFormat = {
