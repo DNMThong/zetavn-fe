@@ -5,7 +5,7 @@ import {
   RecommendedPagesWidget,
   SuggestedFriendsWidget,
 } from "@/components/widgets";
-import { addNewsfeed } from "@/redux/features/auth/auth.slice";
+import { addNewsfeed, setNewsfeed } from "@/redux/features/auth/auth.slice";
 import { useLazyGetPostsNewsFeedQuery } from "@/redux/features/post/post.service";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect, useState } from "react";
@@ -27,7 +27,11 @@ export default function Home() {
       }).unwrap();
       if (response.code === 200) {
         const { data } = response;
-        dispatch(addNewsfeed(data.data));
+        if (page === 0) {
+          dispatch(setNewsfeed(data.data));
+        } else {
+          dispatch(addNewsfeed(data.data));
+        }
         if (data.lastPage) setHasMore(false);
       }
     };
@@ -58,7 +62,7 @@ export default function Home() {
             </div>
 
             <div className="column is-3">
-              <SuggestedFriendsWidget page={1}  />
+              <SuggestedFriendsWidget page={1} />
             </div>
           </div>
         </div>
