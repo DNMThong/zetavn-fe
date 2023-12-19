@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   CallStatus,
   CallType,
+  ImageDefault,
   MessageCallStatus,
   MessageType,
 } from "@/types/contants.type";
@@ -66,7 +67,7 @@ const ChatSidebar = () => {
               <div className="avatar-container">
                 <img
                   className="user-avatar"
-                  src={userContact.user.avatar || ""}
+                  src={userContact.user.avatar || ImageDefault.AVATAR}
                   alt=""
                 />
                 <div
