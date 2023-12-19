@@ -46,16 +46,20 @@ const FormResetPassword = () => {
   const params = useSearchParams();
 
   const onSubmit: SubmitHandler<IFormValues> = async (values) => {
-    const response = await resetPassword({
-      token: params.get("t") || "",
-      password: values.password,
-    }).unwrap();
-    if (response.code === 200) {
-      toast.success("Đặt lại mật khẩu thành công");
-      router.push("/login");
-    } else {
-      toast.warning("Đã có lỗi xảy ra vui lòng xác nhận lại");
-      router.push("/forgot-password");
+    try {
+      const response = await resetPassword({
+        token: params.get("t") || "",
+        password: values.password,
+      }).unwrap();
+      if (response.code === 200) {
+        toast.success("Đặt lại mật khẩu thành công");
+        router.push("/login");
+      } else {
+        toast.warning("Đã có lỗi xảy ra vui lòng xác nhận lại");
+        router.push("/forgot-password");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 

@@ -18,14 +18,20 @@ const ConfirmationEmail = () => {
 
   useEffect(() => {
     const fetchConfirmationEmail = async () => {
-      const response = await confirmationEmail(params.get("t") || "").unwrap();
+      try {
+        const response = await confirmationEmail(
+          params.get("t") || ""
+        ).unwrap();
 
-      if (response.code === 200) {
-        setSuccess(true);
-      } else {
-        setSuccess(false);
+        if (response.code === 200) {
+          setSuccess(true);
+        } else {
+          setSuccess(false);
+        }
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
       }
-      setLoading(false);
     };
     fetchConfirmationEmail();
   }, [confirmationEmail, params]);
