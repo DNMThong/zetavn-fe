@@ -96,45 +96,50 @@ const ChatBody = () => {
   }, []);
 
   return (
-    <Fancybox
-      options={{
-        Carousel: {
-          infinite: false,
-        },
-      }}>
-      <div
-        id="chat-body"
-        className={`chat-body ${openChatDetails ? "is-opened" : ""}`}>
-        <div id="chat-scroll" className="chat-body-inner has-slimscroll">
-          <InfiniteScroll
-            inverse={true}
-            loader={<></>}
-            hasMore={hasMore}
-            next={() => setPage((prev) => prev + 1)}
-            style={{
-              display: "flex",
-              flexDirection: "column-reverse",
-              overflow: "unset",
-              height: "100%",
-            }}
-            dataLength={chatMessageSelected.length}
-            scrollableTarget="chat-scroll">
-            {chatMessageSelected.map((chatMessage) => (
-              <MessageItem
-                key={chatMessage.id + chatMessage.createdAt}
-                message={chatMessage}
-              />
-            ))}
-          </InfiniteScroll>
-        </div>
-        {/* <div className="date-divider">
+    <>
+      <Fancybox
+        options={{
+          Carousel: {
+            infinite: false,
+          },
+        }}>
+        <div
+          id="chat-body"
+          className={`chat-body ${openChatDetails ? "is-opened" : ""}`}>
+          {userContactSelected && (
+            <>
+              <div id="chat-scroll" className="chat-body-inner has-slimscroll">
+                <InfiniteScroll
+                  inverse={true}
+                  loader={<></>}
+                  hasMore={hasMore}
+                  next={() => setPage((prev) => prev + 1)}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column-reverse",
+                    overflow: "unset",
+                    height: "100%",
+                  }}
+                  dataLength={chatMessageSelected.length}
+                  scrollableTarget="chat-scroll">
+                  {chatMessageSelected.map((chatMessage) => (
+                    <MessageItem
+                      key={chatMessage.id + chatMessage.createdAt}
+                      message={chatMessage}
+                    />
+                  ))}
+                </InfiniteScroll>
+              </div>
+              {/* <div className="date-divider">
           <hr className="date-divider-line" />
           <span className="date-divider-text">Today</span>
         </div> */}
-        {/* Compose message area */}
-        <ChatCompose />
-      </div>
-    </Fancybox>
+              <ChatCompose />
+            </>
+          )}
+        </div>
+      </Fancybox>
+    </>
   );
 };
 

@@ -36,6 +36,7 @@ import { getLocalStorageItem } from "@/utils/localstorage.util";
 import { getSessionData, setSessionData } from "@/utils/session.util";
 import { Client, StompSubscription } from "@stomp/stompjs";
 import { useRouter } from "next/navigation";
+import { userInfo } from "os";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
 
@@ -214,10 +215,14 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
           const {
             data: { userInfo },
           } = response;
-          dispatch(setUser(userInfo));
-          setSessionData("userLogin", userInfo);
-          setLoading(false);
-          connectStomp();
+          if (!userInfo.isAuthorized) {
+            router.push(`/confirmation?u=${userInfo.id}`);
+          } else {
+            dispatch(setUser(userInfo));
+            setSessionData("userLogin", userInfo);
+            setLoading(false);
+            connectStomp();
+          }
         } else {
           router.push("/login");
         }
@@ -228,11 +233,15 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
     const userLogin = getSessionData<UserProfile>("userLogin");
     if (userLogin) {
-      if (!user) {
-        dispatch(setUser(userLogin));
+      if (!userLogin.isAuthorized) {
+        router.push(`/confirmation?u=${userLogin.id}`);
+      } else {
+        if (!user) {
+          dispatch(setUser(userLogin));
+        }
+        setLoading(false);
+        connectStomp();
       }
-      setLoading(false);
-      connectStomp();
     } else {
       handleRelogin();
     }

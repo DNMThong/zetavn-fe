@@ -9,6 +9,7 @@ import {
   toggleOpenChatDetails,
 } from "@/redux/features/chat/chat.slice";
 import { useAppSelector } from "@/redux/hooks";
+import { ImageDefault } from "@/types/contants.type";
 
 const ChatNav = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const ChatNav = () => {
             <div className="avatar-container">
               <img
                 className="user-avatar"
-                src={userContactSelected?.avatar || ""}
+                src={userContactSelected?.avatar || ImageDefault.AVATAR}
                 alt="avatar"
               />
             </div>
@@ -76,9 +77,12 @@ const ChatNav = () => {
           <FiStar />
         </a> */}
 
-        <a className="chat-nav-item is-icon" onClick={handleOpenChatDetails}>
-          <FiMenu />
-        </a>
+        {userContactSelected && (
+          <a className="chat-nav-item is-icon" onClick={handleOpenChatDetails}>
+            <FiMenu />
+          </a>
+        )}
+
         <a
           className="chat-nav-item is-icon close-chat"
           onClick={handleCloseChat}>
