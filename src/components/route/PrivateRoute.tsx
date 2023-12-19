@@ -81,7 +81,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
       };
 
       const client = new Client({
-        brokerURL: `ws://${API_URL._DOMAIN}/ws`,
+        brokerURL: `wss://${API_URL._DOMAIN}/ws`,
         // debug: function (str) {
         //   console.log(str);
         // },
