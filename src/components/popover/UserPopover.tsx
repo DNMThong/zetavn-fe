@@ -57,9 +57,11 @@ const UserPopover = ({ stylesArrow, userInfo }: UserPopoverProps) => {
               </div>
 
               <div className="popover-meta">
-                <Link href={`/${userInfo.username}`} className="user-meta">
-                  <span className="username">{userInfo?.display}</span>
-                </Link>
+                <div className="user-meta">
+                  <Link href={`/${userInfo.username}`}>
+                    <span className="username">{userInfo?.display}</span>
+                  </Link>
+                </div>
                 {/* <span className="job-title">{123}</span> */}
                 {/* <div className="common-friends">
                   <FiUser />

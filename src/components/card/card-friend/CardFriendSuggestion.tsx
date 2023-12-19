@@ -8,6 +8,7 @@ import {
   useRejectFriendMutation,
   useUnfriendMutation,
 } from "@/redux/features/user/user.service";
+import Link from "next/link";
 
 interface CardFriendSuggestion {
   userInfo: UserShort;
@@ -42,7 +43,9 @@ const CardFriendSuggestion = ({ userInfo }: CardFriendSuggestion) => {
     <div className="add-friend-block transition-block">
       <img src={userInfo.avatar || ImageDefault.AVATAR} alt="" />
       <div className="page-meta">
-        <span>{userInfo.display}</span>
+        <Link href={`/${userInfo.username}`}>
+          <span>{userInfo.display}</span>
+        </Link>
         {/* <span>Melbourne</span> */}
       </div>
       <div className="add-friend add-transition">
