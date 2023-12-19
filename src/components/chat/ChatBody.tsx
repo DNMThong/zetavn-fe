@@ -47,6 +47,7 @@ const ChatBody = () => {
 
       if (response.code === 200) {
         const { data } = response;
+        console.log(data)
         if (page === 0) {
           dispatch(setChatMessageSelected(data.data));
         } else {
