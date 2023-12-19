@@ -5,8 +5,8 @@ export enum Gender {
 }
 
 export enum API_URL {
-  DOMAIN = "https://api.zetavn.com",
-  _DOMAIN = "api.zetavn.com",
+  DOMAIN = "http://localhost:8888",
+  _DOMAIN = "localhost:8888",
   LOGIN = "/api/v0/auth/login",
   RELOGIN = "/api/v0/auth/re-login",
   REGISTER = "/api/v0/auth/register",

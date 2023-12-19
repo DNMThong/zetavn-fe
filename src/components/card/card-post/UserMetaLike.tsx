@@ -1,4 +1,5 @@
 import { UserPopover } from "@/components/popover";
+import { ImageDefault } from "@/types/contants.type";
 import { UserShort } from "@/types/user.type";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -12,7 +13,7 @@ const UserMetaLike = ({ data }: { data: UserShort }) => {
       onMouseLeave={() => setHover(false)}>
       <Image
         className="img"
-        src={data.avatar || "https://via.placeholder.com/300x300"}
+        src={data.avatar || ImageDefault.AVATAR}
         alt=""
         width={320}
         height={320}

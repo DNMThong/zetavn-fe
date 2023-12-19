@@ -55,7 +55,7 @@ const CardPostAction = ({
             );
             const userLikeNew = [...prev.userLike];
             if (index >= 0) {
-              userLikeNew.splice(index, 0);
+              userLikeNew.splice(index, 1);
             }
             return {
               ...prev,

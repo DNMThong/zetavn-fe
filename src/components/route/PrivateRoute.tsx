@@ -39,6 +39,7 @@ import { useRouter } from "next/navigation";
 import { userInfo } from "os";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import { IncomingCallModal } from "../modals";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector((selector) => selector.auth.user);
@@ -278,6 +279,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {children}
+      <IncomingCallModal />
       <ToastContainer
         position="top-right"
         autoClose={5000}

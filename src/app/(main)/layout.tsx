@@ -55,7 +55,6 @@ export default function RootLayout({
             <ChatWrapper />
             <CallWrapper />
             <ExplorerMenu />
-            <IncomingCallModal />
           </PrivateRoute>
         </Providers>
       </body>

@@ -58,7 +58,7 @@ const FriendItem = ({
 }: FriendItemProps) => {
   return (
     <div className="friend-item">
-      <img src={avatar || "https://via.placeholder.com/400x400"} alt="" />
+      <img src={avatar || ImageDefault.AVATAR} alt="" />
       <div className="text-content">
         <Link href={username || id}>{display}</Link>
         {/* <span>{mutualFriends} bạn chung</span> */}
