@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/redux/hooks";
-import { SettingsTab } from "@/types/contants.type";
+import { ImageDefault, SettingsTab } from "@/types/contants.type";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -11,6 +11,7 @@ import {
   FiSettings,
   FiShield,
   FiSliders,
+  FiX,
 } from "react-icons/fi";
 
 const SettingsSidebar = () => {
@@ -26,11 +27,11 @@ const SettingsSidebar = () => {
       <div className="settings-sidebar-inner">
         <div className="user-block">
           <a className="close-settings-sidebar is-hidden">
-            <i data-feather="x"></i>
+            <FiX />
           </a>
           <div className="avatar-wrap">
             <Image
-              src={user?.avatar || ""}
+              src={user?.avatar || ImageDefault.AVATAR}
               width={58}
               height={58}
               alt="image"

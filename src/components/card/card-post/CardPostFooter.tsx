@@ -3,17 +3,14 @@ import React from "react";
 import { FiHeart, FiLink2, FiMessageCircle } from "react-icons/fi";
 import UserMetaLike from "./UserMetaLike";
 import { UserShort } from "@/types/user.type";
+import { DataPostFooter } from "./CardPost";
 
 interface CardPostFooterProps {
-  countLike: number;
-  countComment: number;
-  userLike: UserShort[];
+  dataPostFooter: DataPostFooter;
 }
 
 const CardPostFooter = ({
-  countComment,
-  countLike,
-  userLike,
+  dataPostFooter: { countComment, countLike, userLike },
 }: CardPostFooterProps) => {
   return (
     <div className="card-footer">

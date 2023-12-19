@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { setFriendRequest, setFriends } from "@/redux/features/auth/auth.slice";
 import { useParams } from "next/navigation";
+import { ImageDefault } from "@/types/contants.type";
 
 interface CardFriendProps {
   data: FriendRequestResponse;
@@ -81,7 +82,7 @@ const CardFriendRequest = ({ data }: CardFriendProps) => {
       <div className="friend-small-card">
         <UserImage
           id={user?.id as string}
-          path={(user?.avatar as string) || ""}
+          path={(user?.avatar as string) || ImageDefault.AVATAR}
         />
         <div className="meta">
           <span>{user?.display}</span>

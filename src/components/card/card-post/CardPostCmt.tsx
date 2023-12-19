@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { fileImageToUrl } from "@/utils/file.util";
 import { useUploadImageBase64Mutation } from "@/redux/features/upload/upload.service";
 import { Comment } from "@/types/post.type";
+import { ImageDefault } from "@/types/contants.type";
 
 interface CardPostCmtProps {
   open: boolean;
@@ -194,7 +195,7 @@ const CardPostCmt = ({
               <div className="image is-32x32">
                 <Image
                   className="is-rounded img-custom"
-                  src={user?.avatar || "https://via.placeholder.com/300x300"}
+                  src={user?.avatar || ImageDefault.AVATAR}
                   alt=""
                   width={320}
                   height={320}

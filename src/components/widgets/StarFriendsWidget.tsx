@@ -7,6 +7,7 @@ import { useLazyGetFriendsListByUserIdQuery } from "@/redux/features/user/user.s
 import Image from "next/image";
 import Link from "next/link";
 import { FriendRequestResponse } from "@/types/response.type";
+import { ImageDefault } from "@/types/contants.type";
 
 interface IDropdownItem {
   icon: any;
@@ -117,7 +118,7 @@ const StarFriendsWidget = ({
                   key={index}
                   id={user?.id}
                   username={user?.username}
-                  avatar={user?.avatar}
+                  avatar={user?.avatar || ImageDefault.AVATAR}
                   userPopover={index}
                   display={user?.display}
                   mutualFriends={0}

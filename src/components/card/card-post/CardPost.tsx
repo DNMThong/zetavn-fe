@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import UserMeta from "./UserMeta";
 import CardPostFooter from "./CardPostFooter";
 import CardPostCmt from "./CardPostCmt";
@@ -13,14 +13,26 @@ import Post, { PostNewsfeed } from "@/types/post.type";
 import { MediaType } from "@/types/contants.type";
 import MoodDisplay from "../card-compose/MoodDisplay";
 import ReactPlayer from "react-player";
+import { UserShort } from "@/types/user.type";
 
 interface CardPostProps {
   data: PostNewsfeed;
 }
 
+export interface DataPostFooter {
+  userLike: UserShort[];
+  countComment: number;
+  countLike: number;
+}
+
 const CardPost = ({ data }: CardPostProps) => {
   const [openComment, setOpenComment] = useState(false);
   const [openShare, setOpenShare] = useState(false);
+  const [dataPostFooter, setDataPostFooter] = useState<DataPostFooter>({
+    userLike: data.usersLike,
+    countComment: data.countComment,
+    countLike: data.countLike,
+  });
 
   const images = useMemo<string[]>(() => {
     let images: string[] = [];
@@ -77,6 +89,7 @@ const CardPost = ({ data }: CardPostProps) => {
             {images.length === 0 && (
               <div className="post-actions">
                 <CardPostAction
+                  setDataPostFooter={setDataPostFooter}
                   postId={data.id}
                   onClickComment={() => setOpenComment(true)}
                   onClickShare={() => setOpenShare(true)}
@@ -89,6 +102,7 @@ const CardPost = ({ data }: CardPostProps) => {
                 images={images}
                 postAction={
                   <CardPostAction
+                    setDataPostFooter={setDataPostFooter}
                     postId={data.id}
                     onClickComment={() => setOpenComment(true)}
                     onClickShare={() => setOpenShare(true)}
@@ -100,11 +114,7 @@ const CardPost = ({ data }: CardPostProps) => {
           {/* <!-- /Post body --> */}
 
           {/* <!-- Post footer --> */}
-          <CardPostFooter
-            userLike={data.usersLike}
-            countComment={data.countComment}
-            countLike={data.countLike}
-          />
+          <CardPostFooter dataPostFooter={dataPostFooter} />
           {/* <!-- /Post footer --> */}
         </div>
         {/* <!-- /Main wrap --> */}

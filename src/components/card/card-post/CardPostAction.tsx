@@ -5,19 +5,24 @@ import {
   useUnlikePostMutation,
 } from "@/redux/features/post/post.service";
 import { useAppSelector } from "@/redux/hooks";
+import { UserShort } from "@/types/user.type";
 import { useEffect, useState } from "react";
 import { FiLink2, FiMessageCircle } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { DataPostFooter } from "./CardPost";
 
 interface CardPostActionProps {
   onClickComment?: () => void;
   onClickShare?: () => void;
   postId: string;
+  setDataPostFooter: React.Dispatch<React.SetStateAction<DataPostFooter>>;
 }
 
 const CardPostAction = ({
   onClickComment = () => {},
   onClickShare = () => {},
   postId,
+  setDataPostFooter,
 }: CardPostActionProps) => {
   const user = useAppSelector((selector) => selector.auth.user);
   const [checkLikePost] = useLazyCheckLikePostQuery();
@@ -38,18 +43,57 @@ const CardPostAction = ({
   }, [checkLikePost, user, postId]);
 
   const handleLikePost = async () => {
-    if (liked) {
-      const response = await unlike({
-        postId,
-      }).unwrap();
-      console.log("unlike", response);
-    } else {
-      const response = await like({
-        postId,
-      }).unwrap();
-      console.log("like", response);
+    try {
+      if (liked) {
+        const response = await unlike({
+          postId,
+        }).unwrap();
+        if (response.code === 200) {
+          setDataPostFooter((prev) => {
+            const index = prev.userLike.findIndex(
+              (item) => item.id === user?.id
+            );
+            const userLikeNew = [...prev.userLike];
+            if (index >= 0) {
+              userLikeNew.splice(index, 0);
+            }
+            return {
+              ...prev,
+              countLike: prev.countLike - 1,
+              userLike: userLikeNew,
+            };
+          });
+        }
+      } else {
+        const response = await like({
+          postId,
+        }).unwrap();
+        if (response.code === 200) {
+          const userShort: UserShort = {
+            avatar: user?.avatar || "",
+            display: user?.display || "",
+            firstName: user?.firstName || "",
+            id: user?.id || "",
+            lastName: user?.lastName || "",
+            poster: user?.poster || "",
+            username: user?.username || "",
+          };
+          setDataPostFooter((prev) => {
+            return {
+              ...prev,
+              countLike: prev.countLike + 1,
+              userLike:
+                prev.userLike?.length >= 5
+                  ? [...prev.userLike]
+                  : [...prev.userLike, userShort],
+            };
+          });
+        }
+      }
+      setLiked((prev) => !prev);
+    } catch (error) {
+      toast.error("Đã có lỗi xảy ra vui lòng thử lại");
     }
-    setLiked((prev) => !prev);
   };
 
   return (
