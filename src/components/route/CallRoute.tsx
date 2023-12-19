@@ -42,12 +42,13 @@ const CallRoute = ({ children }: { children: React.ReactNode }) => {
       };
 
       const client = new Client({
-        brokerURL: `wss://${API_URL._DOMAIN}/ws`,
+        brokerURL: `ws://${API_URL._DOMAIN}/ws`,
         // debug: function (str) {
         //   console.log(str);
         // },
       });
       client.onConnect = () => {
+        dispatch(setClientStomp(client));
         if (user?.id) {
           const subscribeRejectCall = client.subscribe(
             `/user/${user.id}/topic/reject-call`,
@@ -70,7 +71,6 @@ const CallRoute = ({ children }: { children: React.ReactNode }) => {
         console.log("ERROR!!!!!!!!!!!!!!!", err);
       };
       client.activate();
-      dispatch(setClientStomp(client));
     }
   }, [dispatch, user, accessToken]);
 

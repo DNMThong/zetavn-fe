@@ -42,7 +42,7 @@ import { ToastContainer } from "react-toastify";
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector((selector) => selector.auth.user);
-  const { userContactSelected, openChat, userContacts } = useAppSelector(
+  const { userContactSelected, openChat } = useAppSelector(
     (selector) => selector.chat
   );
 
@@ -81,12 +81,13 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
       };
 
       const client = new Client({
-        brokerURL: `wss://${API_URL._DOMAIN}/ws`,
+        brokerURL: `ws://${API_URL._DOMAIN}/ws`,
         // debug: function (str) {
         //   console.log(str);
         // },
       });
       client.onConnect = () => {
+        dispatch(setClientStomp(client));
         if (user?.id) {
           const subscribeFriendship = client.subscribe(
             `/user/${user.id}/topic/friendship`,
@@ -196,7 +197,6 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
         console.log("ERROR!!!!!!!!!!!!!!!", err);
       };
       client.activate();
-      dispatch(setClientStomp(client));
     }
   }, [
     dispatch,

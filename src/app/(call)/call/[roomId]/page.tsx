@@ -218,6 +218,7 @@ const CallPage = () => {
   useEffect(() => {
     if (clientStomp && clientStomp.connected && call && user) {
       if (call.status === CallStatus.OUT_GOING) {
+
         const request = {
           type: call.callType,
           roomId: call.roomId,
@@ -241,11 +242,14 @@ const CallPage = () => {
           setAcceptCall(true);
         });
       } else if (call?.status === CallStatus.IN_COMING) {
+
         setTimeout(() => {
           setAcceptCall(true);
         }, 1000);
       }
+
     }
+
   }, [clientStomp, call, user]);
 
   useEffect(() => {
