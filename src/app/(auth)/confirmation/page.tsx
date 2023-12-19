@@ -14,14 +14,18 @@ const ConfirmationPage = () => {
 
   useEffect(() => {
     const fetchSendConfirmationEmail = async () => {
-      const response = await sendConfirmationEmail(
-        params.get("u") || ""
-      ).unwrap();
+      try {
+        const response = await sendConfirmationEmail(
+          params.get("u") || ""
+        ).unwrap();
 
-      if (response.code === 200) {
-        setLoading(false);
-      } else {
-        router.push("/login");
+        if (response.code === 200) {
+          setLoading(false);
+        } else {
+          router.push("/login");
+        }
+      } catch (err) {
+        console.log(err);
       }
     };
     fetchSendConfirmationEmail();
