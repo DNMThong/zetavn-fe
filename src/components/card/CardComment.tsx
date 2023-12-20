@@ -10,6 +10,7 @@ import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { calculateTime } from "@/utils/calculate-time.util";
 import { Fancybox } from "@/components/fancybox";
+import { ImageDefault } from "@/types/contants.type";
 
 interface CardCommentProps {
   data: Comment;
@@ -30,7 +31,7 @@ const CardComment = ({ data }: CardCommentProps) => {
           <Image
             className="img"
             style={{ objectFit: "cover" }}
-            src={data.user.avatar || "https://via.placeholder.com/300x300"}
+            src={data.user.avatar || ImageDefault.AVATAR}
             alt="avatar"
             width={420}
             height={420}

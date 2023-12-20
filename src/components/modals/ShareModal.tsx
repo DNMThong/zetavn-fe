@@ -1,4 +1,4 @@
-import { PostAccessModifier } from "@/types/contants.type";
+import { ImageDefault, PostAccessModifier } from "@/types/contants.type";
 import Post from "@/types/post.type";
 import React from "react";
 import { createPortal } from "react-dom";
@@ -236,9 +236,7 @@ const ShareModal = ({ open, handleClose, data }: ShareModalProps) => {
                 <div className="inner-flex">
                   <img
                     id="share-modal-avatar"
-                    src={
-                      data.user.avatar || "https://via.placeholder.com/300x300"
-                    }
+                    src={data.user.avatar || ImageDefault.AVATAR}
                     alt=""
                   />
                   <p id="share-modal-text">
@@ -295,7 +293,7 @@ const ShareModal = ({ open, handleClose, data }: ShareModalProps) => {
                   className="input is-sm no-radius share-input simple-locations-autocpl"
                   placeholder="Where are you?"
                 />
-                <div className="input-heading">Location :</div>
+                <div className="input-heading">Vị trí :</div>
               </div>
             </div>
 
@@ -311,7 +309,7 @@ const ShareModal = ({ open, handleClose, data }: ShareModalProps) => {
                   className="input is-sm no-radius share-input"
                   placeholder="Who are you with"
                 />
-                <div className="input-heading">Friends :</div>
+                <div className="input-heading">Bạn bè :</div>
               </div>
               <div
                 id="share-modal-tag-list"
