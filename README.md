@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Giới thiệu dự án Zetavn
 
-## Getting Started
+Zetavn là một dự án mạng xã hội thu nhỏ nhưng đầy đủ với một loạt các chức năng bao gồm đăng bài, thích, chia sẻ, bình luận, tìm kiếm và kết bạn, nhận thông báo, gửi tin nhắn với đa dạng hình thức như (text, file, emoji), cũng như voice call và video call. Với mục tiêu tạo ra một không gian trực tuyến đa chiều và phong phú, Zetavn cung cấp cho người dùng một trải nghiệm mạng xã hội toàn diện, nơi họ có thể kết nối và tương tác một cách tự do và linh hoạt. Tất cả những tính năng này được tích hợp vào một giao diện thân thiện và dễ sử dụng, giúp người dùng dễ dàng tiếp cận và tận hưởng các chức năng mạng xã hội mà họ mong muốn.
 
-First, run the development server:
+Dự án này là dự án tốt nghiệp của một nhóm sinh viên Cao đẳng FPT Polytechnic. Mục tiêu của dự án này là áp dụng tất cả các kiến thức đã học để chứng minh những gì đã học. Dự án cũng bao gồm các công nghệ mới mà trong quá trình làm đã tìm hiểu. Với sự hỗ trợ và chỉ đạo của các giảng viên, nhóm sinh viên đã đặt mục tiêu cao để tạo ra một sản phẩm mạng xã hội đa chức năng và chất lượng cao, đồng thời thể hiện sự tiến bộ và sự sẵn sàng trong việc thực hiện các dự án phức tạp.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Source code của dự án đã được chia thành hai phần: backend và frontend. Đây là phần frontend của dự án
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Công nghệ sử dụng
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Nextjs, Typescript, Redux, Zego cloud, React hook form, Yup, SCSS, Bulma,...
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Các giao diện dự án
 
-## Learn More
+### Giao diện người dùng
 
-To learn more about Next.js, take a look at the following resources:
+1. Trang newfeed
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![Alt text](images/newfeed.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. Trang cá nhân
 
-## Deploy on Vercel
+![Alt text](images/profile.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Giao diện chat
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Alt text](images/chat.png)
+
+4. Giao diện bài đăng
+
+![Alt text](images/post.png)
+
+5. Giao diện đăng bài
+
+![Alt text](images/createPost.png)
+
+6. Giao diện đăng nhập
+
+![Alt text](images/login.png)
+
+7. Giao diện đăng ký
+
+![Alt text](images/register.png)
+
+8. Giao diện quên mật khẩu
+
+![Alt text](images/forgotPassword.png)
+
+9. Giao diện thông báo
+
+![Alt text](images/notification.png)
+
+10. Giao diện tìm kiếm
+
+![Alt text](images/search.png)
+
+11. Giao diện bình luận
+
+![Alt text](images/comment.png)
